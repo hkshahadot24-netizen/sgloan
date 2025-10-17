@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>সমিতি ম্যানেজমেন্ট ড্যাশবোর্ড</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Hind Siliguri', sans-serif; }
+    .spinner { border: 3px solid rgba(0,0,0,0.1); border-left-color:#2563eb; border-radius:50%; width:20px; height:20px; animation:spin 1s linear infinite;}
+    @keyframes spin { 100% { transform: rotate(360deg);} }
+    .modal-enter { opacity: 0; transform: scale(0.95); }
+    .modal-enter-active { opacity: 1; transform: scale(1); transition: all 300ms ease-out; }
+    .modal-exit { opacity: 1; transform: scale(1); }
+    .modal-exit-active { opacity: 0; transform: scale(0.95); transition: all 300ms ease-in; }
+    [type='date']::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        filter: invert(0.5) sepia(0.6) saturate(5) hue-rotate(200deg);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Password Modal -->
+  <div id="password-modal" class="fixed inset-0 bg-gray-800 z-[200] flex justify-center items-center">
+      <div class="bg-white w-full max-w-sm p-8 rounded-xl shadow-2xl text-center">
+          <h2 class="text-2xl font-bold mb-4 text-indigo-700">প্রবেশ করুন</h2>
+          <p class="text-gray-600 mb-6">অ্যাপটি ব্যবহার করতে অনুগ্রহ করে পাসওয়ার্ড দিন।</p>
+          <form id="password-form">
+              <input type="password" id="password-input" class="w-full p-3 border border-gray-300 rounded-lg text-center text-lg tracking-widest focus:ring-indigo-500 focus:border-indigo-500" placeholder="••••••">
+              <p id="password-error" class="text-red-500 text-sm mt-2 h-5"></p>
+              <button type="submit" class="w-full mt-4 bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition duration-200 shadow-md">প্রবেশ করুন</button>
+          </form>
+      </div>
+  </div>
+
+  <div id="main-app-content" class="hidden">
+      <div id="message-box" class="fixed top-5 right-5 z-[100] transition-opacity duration-300 opacity-0">
+        <div id="message-content" class="shadow-xl rounded-lg p-4 font-semibold max-w-sm text-white flex items-center space-x-2"></div>
+      </div>
+
+      <div class="container mx-auto p-4 sm:p-6 max-w-7xl"> 
+        <h1 class="text-3xl font-bold text-center mb-8 text-indigo-700">🏠 সমিতি ম্যানেজমেন্ট ড্যাশবোর্ড</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <div class="bg-white shadow-xl rounded-lg p-6 border-t-4 border-indigo-500">
+            <h2 class="text-2xl font-semibold mb-4 text-indigo-600">👤 নতুন সদস্য যোগ করুন</h2>
+            <form id="add-member-form" class="space-y-4">
+              <input type="text" id="member-name" placeholder="নাম" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+              <input type="email" id="member-email" placeholder="ইমেইল (ঐচ্ছিক)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+              <input type="text" id="member-phone" placeholder="ফোন নম্বর" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+              <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition duration-200 shadow-md">সদস্য যোগ করুন</button>
+            </form>
+          </div>
+
+          <div class="bg-white shadow-xl rounded-lg p-6 md:col-span-2 border-t-4 border-emerald-500">
+            <h2 class="text-2xl font-semibold mb-4 text-emerald-600">📊 মোট অবস্থা</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+              <div class="bg-emerald-50 p-4 rounded-lg shadow-inner">
+                <p class="text-sm text-gray-500">মোট সদস্য</p>
+                <p id="total-members" class="text-3xl font-bold text-emerald-700">০</p>
+              </div>
+              <div class="bg-emerald-50 p-4 rounded-lg shadow-inner">
+                <p class="text-sm text-gray-500">মোট জমা</p>
+                <p id="total-paid" class="text-3xl font-bold text-emerald-700">৳ ০</p>
+              </div>
+              <div class="bg-emerald-50 p-4 rounded-lg shadow-inner">
+                <p class="text-sm text-gray-500">মোট ঋণ প্রদান</p>
+                <p id="total-loan-given" class="text-3xl font-bold text-emerald-700">৳ ০</p>
+              </div>
+            </div>
+             <button id="open-fund-modal-btn" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600 transition duration-200 shadow-md">
+                💰 মাসিক তহবিল দেখুন
+            </button>
+          </div>
+        </div>
+        
+        <div class="bg-white shadow-xl rounded-lg p-6 mt-8 border-t-4 border-yellow-500">
+          <h2 class="text-2xl font-semibold mb-4 text-yellow-600">👥 সদস্য তালিকা</h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">নাম</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ফোন</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">মোট জমা (৳)</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">বর্তমান ঋণ (৳)</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">অ্যাকশন</th>
+                </tr>
+              </thead>
+              <tbody id="member-list" class="bg-white divide-y divide-gray-200">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- প্রোফাইল মডাল (Profile Modal) -->
+      <div id="profile-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-center p-4">
+        <div id="profile-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-4xl p-6 relative modal-exit">
+          <button id="close-profile" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
+          
+          <div id="profile-modal-content">
+            <h2 id="profile-name" class="text-3xl font-bold mb-4 text-indigo-700 text-center"></h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-sm">
+              <p class="text-gray-600"><span class="font-semibold text-gray-800">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-400 select-all"></span></p>
+              <p class="text-gray-600"><span class="font-semibold text-gray-800">ইমেইল:</span> <span id="profile-email"></span></p>
+              <p class="text-gray-600"><span class="font-semibold text-gray-800">ফোন:</span> <span id="profile-phone"></span></p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center border-t border-b py-4 mb-6">
+              <div>
+                <p class="text-sm text-gray-500">মোট জমা</p>
+                <p id="paid-total" class="text-2xl font-bold text-green-600">৳ ০</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">মোট ঋণ গ্রহণ</p>
+                <p id="loan-taken" class="text-2xl font-bold text-blue-600">৳ ০</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">মোট ঋণ পরিশোধ</p>
+                <p id="loan-repaid" class="text-2xl font-bold text-yellow-600">৳ ০</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">বর্তমান ঋণ</p>
+                <p id="current-loan" class="text-2xl font-bold text-red-600">৳ ০</p>
+              </div>
+            </div>
+
+            <div class="mt-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-xl font-semibold text-indigo-600">লেনদেনের তালিকা 🧾</h3>
+                    <button id="open-transaction-modal-btn" class="bg-indigo-500 text-white py-2 px-4 rounded-lg font-bold hover:bg-indigo-600 transition duration-200 shadow-md">
+                        + নতুন লেনদেন
+                    </button>
+                </div>
+                <div class="overflow-x-auto max-h-64 border rounded-lg shadow-inner">
+                    <table class="min-w-full bg-gray-50">
+                        <thead class="bg-indigo-100 sticky top-0">
+                            <tr>
+                                <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">তারিখ</th>
+                                <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">বিবরণ</th>
+                                <th class="py-2 px-4 text-right text-xs font-medium text-gray-600 uppercase">পরিমাণ (৳)</th>
+                                <th class="py-2 px-4 text-center text-xs font-medium text-gray-600 uppercase">অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-table-body" class="divide-y divide-gray-200">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- নতুন/এডিট লেনদেন মডাল -->
+      <div id="transaction-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-[60] justify-center items-center p-4">
+        <div id="transaction-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 relative modal-exit">
+            <button id="close-transaction-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
+            <h3 id="transaction-modal-title" class="text-2xl font-bold mb-6 text-center text-indigo-600"></h3>
+            
+            <form id="transaction-form" class="space-y-4">
+                <input type="hidden" id="transaction-id">
+                <div>
+                    <label for="transaction-date" class="block text-sm font-medium text-gray-700 mb-1">তারিখ</label>
+                    <input type="date" id="transaction-date" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label for="transaction-type" class="block text-sm font-medium text-gray-700 mb-1">লেনদেনের ধরন</label>
+                    <select id="transaction-type" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                        <option value="deposit">কিস্তি/জমা</option>
+                        <option value="loanTaken">ঋণ গ্রহণ</option>
+                        <option value="loanRepayment">ঋণ পরিশোধ</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="transaction-amount" class="block text-sm font-medium text-gray-700 mb-1">পরিমাণ (৳)</label>
+                    <input type="number" id="transaction-amount" placeholder="0.00" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label for="transaction-description" class="block text-sm font-medium text-gray-700 mb-1">মন্তব্য (ঐচ্ছিক)</label>
+                    <textarea id="transaction-description" rows="2" placeholder="লেনদেনের সংক্ষিপ্ত বিবরণ..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition duration-200 shadow-md">লেনদেন সেভ করুন</button>
+            </form>
+        </div>
+      </div>
+
+      <!-- মাসিক তহবিল মডাল -->
+      <div id="fund-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-start p-4 pt-16">
+          <div id="fund-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 relative modal-exit">
+              <button id="close-fund-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
+              <h3 class="text-2xl font-bold mb-6 text-center text-blue-600">মাসিক তহবিল ব্যবস্থাপনা</h3>
+              <div id="fund-list-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+                  <!-- Monthly fund cards will be here -->
+              </div>
+          </div>
+      </div>
+
+      <!-- কাস্টম কনফার্মেশন মডাল -->
+        <div id="confirmation-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-[70] justify-center items-center p-4">
+            <div id="confirmation-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 text-center modal-exit">
+                <p id="confirmation-message" class="text-lg mb-6"></p>
+                <div class="flex justify-center gap-4">
+                    <button id="confirm-yes" class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-700">হ্যাঁ</button>
+                    <button id="confirm-no" class="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg font-bold hover:bg-gray-400">না</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    
+    setLogLevel('Debug');
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-samiti-app-id';
+    const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+    let app, db, auth, userId = null;
+    let members = [];
+    let fundDistribution = {}; // New: To store monthly fund receiver
+    let activeMember = null;
+    
+    // UI Elements
+    const memberListContainer = document.getElementById('member-list');
+    const profileModal = document.getElementById('profile-modal');
+    const profileModalBox = document.getElementById('profile-modal-box');
+    const transactionModal = document.getElementById('transaction-modal');
+    const transactionModalBox = document.getElementById('transaction-modal-box');
+    const fundModal = document.getElementById('fund-modal');
+    const fundModalBox = document.getElementById('fund-modal-box');
+    const confirmationModal = document.getElementById('confirmation-modal');
+    const confirmationModalBox = document.getElementById('confirmation-modal-box');
+
+    const getBengaliNumber = (n) => {
+        if (n === null || n === undefined || isNaN(n)) return "০";
+        return new Intl.NumberFormat('bn-BD', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n);
+    };
+
+    const formatDate = (dateString, format = 'long') => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        if (format === 'long') {
+            const day = new Intl.NumberFormat('bn-BD').format(date.getDate());
+            const month = date.toLocaleString('bn-BD', { month: 'long' });
+            const year = new Intl.NumberFormat('bn-BD').format(date.getFullYear());
+            return `${day} ${month}, ${year}`;
+        }
+        if (format === 'monthYear') {
+            return date.toLocaleString('bn-BD', { month: 'long', year: 'numeric'});
+        }
+        return '';
+    };
+
+    const showMessage = (message, type = 'success') => {
+      const messageBox = document.getElementById('message-box');
+      const messageContent = document.getElementById('message-content');
+      let bgColor = 'bg-green-500';
+      let icon = '✔';
+      if (type === 'error') {
+        bgColor = 'bg-red-500';
+        icon = '❌';
+      } else if (type === 'info') {
+        bgColor = 'bg-blue-500';
+        icon = 'ℹ️';
+      }
+
+      messageContent.className = `shadow-xl rounded-lg p-4 font-semibold text-white ${bgColor} flex items-center space-x-2`;
+      messageContent.innerHTML = `<span class="text-xl">${icon}</span> <span>${message}</span>`;
+      messageBox.classList.remove('opacity-0');
+
+      setTimeout(() => {
+        messageBox.classList.add('opacity-0');
+      }, 3000);
+    };
+
+    const showConfirmation = (message) => {
+        return new Promise((resolve) => {
+            const messageEl = document.getElementById('confirmation-message');
+            const yesBtn = document.getElementById('confirm-yes');
+            const noBtn = document.getElementById('confirm-no');
+            
+            messageEl.textContent = message;
+            
+            const close = (value) => {
+                confirmationModalBox.classList.remove('modal-enter-active');
+                confirmationModalBox.classList.add('modal-exit-active');
+                setTimeout(() => {
+                    confirmationModal.classList.add('hidden');
+                    resolve(value);
+                }, 300);
+            };
+
+            yesBtn.onclick = () => close(true);
+            noBtn.onclick = () => close(false);
+
+            confirmationModal.classList.remove('hidden');
+            confirmationModal.classList.add('flex');
+            confirmationModalBox.classList.remove('modal-exit', 'modal-exit-active');
+            confirmationModalBox.classList.add('modal-enter', 'modal-enter-active');
+        });
+    };
+    
+    const calculateMemberTotals = (member) => {
+        const totals = {
+            totalDeposit: 0,
+            totalLoanTaken: 0,
+            totalLoanRepaid: 0,
+            currentLoan: 0,
+        };
+
+        if(member && member.transactions) {
+            member.transactions.forEach(t => {
+                switch (t.type) {
+                    case 'deposit': totals.totalDeposit += t.amount; break;
+                    case 'loanTaken': totals.totalLoanTaken += t.amount; break;
+                    case 'loanRepayment': totals.totalLoanRepaid += t.amount; break;
+                }
+            });
+        }
+        
+        totals.currentLoan = totals.totalLoanTaken - totals.totalLoanRepaid;
+        return totals;
+    };
+
+    const updateOverallStats = () => {
+        const totalMembersEl = document.getElementById('total-members');
+        const totalPaidEl = document.getElementById('total-paid');
+        const totalLoanGivenEl = document.getElementById('total-loan-given');
+
+        let totalDeposit = 0;
+        let totalDistributed = 0;
+
+        members.forEach(member => {
+            const totals = calculateMemberTotals(member);
+            totalDeposit += totals.totalDeposit;
+        });
+
+        Object.values(fundDistribution).forEach(dist => {
+            if (dist.amount) {
+                totalDistributed += dist.amount;
+            }
+        });
+
+
+        totalMembersEl.textContent = getBengaliNumber(members.length);
+        totalPaidEl.textContent = `৳ ${getBengaliNumber(totalDeposit)}`;
+        totalLoanGivenEl.textContent = `৳ ${getBengaliNumber(totalDistributed)}`;
+    };
+
+    const renderMemberList = () => {
+        memberListContainer.innerHTML = ''; 
+        if (members.length === 0) {
+            memberListContainer.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-500">এখনও কোনো সদস্য যোগ করা হয়নি।</td></tr>`;
+            return;
+        }
+        members.forEach(member => {
+            const totals = calculateMemberTotals(member);
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-indigo-50 transition duration-150';
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${member.name}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${member.phone}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">৳ ${getBengaliNumber(totals.totalDeposit)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">৳ ${getBengaliNumber(totals.currentLoan)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="view-profile-btn bg-indigo-500 text-white px-3 py-1 rounded-full text-xs font-bold hover:bg-indigo-600 transition duration-150 shadow-md" data-id="${member.id}">
+                        বিস্তারিত দেখুন
+                    </button>
+                </td>
+            `;
+            memberListContainer.appendChild(row);
+        });
+    };
+
+    const showProfile = (id) => {
+        const member = members.find(m => m.id === id);
+        activeMember = member;
+        if (!member) return;
+
+        const totals = calculateMemberTotals(member);
+        document.getElementById('profile-name').textContent = member.name;
+        document.getElementById('profile-id').textContent = member.id;
+        document.getElementById('profile-email').textContent = member.email || 'প্রদান করা হয়নি';
+        document.getElementById('profile-phone').textContent = member.phone;
+        document.getElementById('paid-total').textContent = `৳ ${getBengaliNumber(totals.totalDeposit)}`;
+        document.getElementById('loan-taken').textContent = `৳ ${getBengaliNumber(totals.totalLoanTaken)}`;
+        document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(totals.totalLoanRepaid)}`;
+        document.getElementById('current-loan').textContent = `৳ ${getBengaliNumber(totals.currentLoan)}`;
+
+        const transactionsTableBody = document.getElementById('transactions-table-body');
+        transactionsTableBody.innerHTML = '';
+        
+        if (!member.transactions || member.transactions.length === 0) {
+            transactionsTableBody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-gray-500">কোনো লেনদেন রেকর্ড করা হয়নি।</td></tr>';
+        } else {
+            const sortedTransactions = [...member.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            sortedTransactions.forEach(t => {
+                const row = document.createElement('tr');
+                let typeText = '', amountColor = '';
+                switch (t.type) {
+                    case 'deposit': typeText = 'কিস্তি/জমা'; amountColor = 'text-green-600'; break;
+                    case 'loanTaken': typeText = 'ঋণ গ্রহণ'; amountColor = 'text-blue-600'; break;
+                    case 'loanRepayment': typeText = 'ঋণ পরিশোধ'; amountColor = 'text-yellow-700'; break;
+                }
+                
+                row.className = 'hover:bg-gray-100';
+                row.innerHTML = `
+                    <td class="py-2 px-4 whitespace-nowrap text-sm text-gray-600">${formatDate(t.date)}</td>
+                    <td class="py-2 px-4 whitespace-nowrap text-sm">
+                        <span class="font-semibold">${typeText}</span>
+                        ${t.description ? `<br><span class="text-xs text-gray-500">${t.description}</span>` : ''}
+                    </td>
+                    <td class="py-2 px-4 whitespace-nowrap text-right font-mono font-semibold ${amountColor}">${getBengaliNumber(t.amount)}</td>
+                    <td class="py-2 px-4 whitespace-nowrap text-center space-x-2">
+                        <button class="edit-transaction-btn text-blue-500 hover:text-blue-700 font-bold" data-tid="${t.id}" title="সম্পাদনা করুন">✏️</button>
+                        <button class="delete-transaction-btn text-red-500 hover:text-red-700 font-bold" data-tid="${t.id}" title="ডিলিট করুন">🗑️</button>
+                    </td>
+                `;
+                transactionsTableBody.appendChild(row);
+            });
+        }
+        
+        profileModal.classList.remove('hidden');
+        profileModal.classList.add('flex');
+        profileModalBox.classList.remove('modal-exit', 'modal-exit-active');
+        profileModalBox.classList.add('modal-enter', 'modal-enter-active');
+    };
+    
+    const closeProfileModal = () => {
+        profileModalBox.classList.remove('modal-enter-active');
+        profileModalBox.classList.add('modal-exit-active');
+        setTimeout(() => {
+            profileModal.classList.add('hidden');
+            activeMember = null;
+        }, 300);
+    };
+
+    const openTransactionModal = (transactionId = null) => {
+        const form = document.getElementById('transaction-form');
+        form.reset();
+        const modalTitle = document.getElementById('transaction-modal-title');
+        const transactionIdInput = document.getElementById('transaction-id');
+
+        if (transactionId) {
+            const transaction = activeMember.transactions.find(t => t.id === transactionId);
+            if(transaction){
+                modalTitle.textContent = "লেনদেন সম্পাদনা করুন";
+                transactionIdInput.value = transaction.id;
+                document.getElementById('transaction-date').value = transaction.date;
+                document.getElementById('transaction-type').value = transaction.type;
+                document.getElementById('transaction-amount').value = transaction.amount;
+                document.getElementById('transaction-description').value = transaction.description;
+            }
+        } else {
+            modalTitle.textContent = "নতুন লেনদেন যোগ করুন";
+            transactionIdInput.value = '';
+            document.getElementById('transaction-date').valueAsDate = new Date();
+        }
+
+        transactionModal.classList.remove('hidden');
+        transactionModal.classList.add('flex');
+        transactionModalBox.classList.remove('modal-exit', 'modal-exit-active');
+        transactionModalBox.classList.add('modal-enter', 'modal-enter-active');
+    };
+
+    const closeTransactionModal = () => {
+        transactionModalBox.classList.remove('modal-enter-active');
+        transactionModalBox.classList.add('modal-exit-active');
+        setTimeout(() => transactionModal.classList.add('hidden'), 300);
+    };
+
+    const openFundModal = () => {
+        renderFundModal();
+        fundModal.classList.remove('hidden');
+        fundModal.classList.add('flex');
+        fundModalBox.classList.remove('modal-exit', 'modal-exit-active');
+        fundModalBox.classList.add('modal-enter', 'modal-enter-active');
+    };
+
+    const closeFundModal = () => {
+        fundModalBox.classList.remove('modal-enter-active');
+        fundModalBox.classList.add('modal-exit-active');
+        setTimeout(() => fundModal.classList.add('hidden'), 300);
+    };
+
+    const renderFundModal = () => {
+        const container = document.getElementById('fund-list-container');
+        container.innerHTML = '<div class="text-center text-gray-500">হিসাব লোড হচ্ছে...</div>';
+        
+        const monthlyDeposits = {};
+        members.forEach(member => {
+            member.transactions.forEach(t => {
+                if(t.type === 'deposit') {
+                    const monthKey = t.date.substring(0, 7); // YYYY-MM
+                    if(!monthlyDeposits[monthKey]) {
+                        monthlyDeposits[monthKey] = 0;
+                    }
+                    monthlyDeposits[monthKey] += t.amount;
+                }
+            });
+        });
+
+        const sortedMonths = Object.keys(monthlyDeposits).sort().reverse();
+        if(sortedMonths.length === 0) {
+            container.innerHTML = '<div class="text-center text-gray-500">কোনো মাসের জমার হিসাব পাওয়া যায়নি।</div>';
+            return;
+        }
+
+        container.innerHTML = ''; 
+        sortedMonths.forEach(monthKey => {
+            const total = monthlyDeposits[monthKey];
+            const monthName = formatDate(monthKey + '-01', 'monthYear');
+            const distribution = fundDistribution[monthKey];
+            const receiver = distribution ? members.find(m => m.id === distribution.receiverId) : null;
+
+            const card = document.createElement('div');
+            card.className = 'p-4 border rounded-lg shadow-sm';
+            
+            let content = `
+                <h4 class="text-lg font-semibold text-blue-700">${monthName}</h4>
+                <p class="text-gray-600">এই মাসে মোট জমা: <span class="font-bold">৳ ${getBengaliNumber(total)}</span></p>
+            `;
+
+            if(receiver) {
+                content += `<p class="mt-2 text-green-600 font-semibold">✅ তহবিল গ্রহণকারী: ${receiver.name}</p>`;
+            } else {
+                 const memberOptions = members.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+                content += `
+                    <form class="assign-fund-form mt-3" data-month="${monthKey}" data-amount="${total}">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">তহবিল গ্রহণকারী নির্বাচন করুন:</label>
+                        <div class="flex gap-2">
+                           <select required class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                                <option value="">সদস্য নির্বাচন করুন</option>
+                                ${memberOptions}
+                           </select>
+                           <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-sm">সেভ</button>
+                        </div>
+                    </form>
+                `;
+            }
+            card.innerHTML = content;
+            container.appendChild(card);
+        });
+    };
+
+    const handleAssignFund = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const monthKey = form.dataset.month;
+        const amount = parseFloat(form.dataset.amount);
+        const receiverId = form.querySelector('select').value;
+        
+        if(!receiverId) {
+            showMessage('দয়া করে একজন সদস্য নির্বাচন করুন।', 'error');
+            return;
+        }
+
+        const receiver = members.find(m => m.id === receiverId);
+        if(!receiver) return;
+
+        const confirmation = await showConfirmation(`আপনি কি "${formatDate(monthKey + '-01', 'monthYear')}" মাসের ৳ ${getBengaliNumber(amount)} তহবিলটি "${receiver.name}"-কে প্রদান করতে নিশ্চিত?`);
+
+        if(confirmation) {
+            fundDistribution[monthKey] = {
+                receiverId: receiverId,
+                amount: amount,
+            };
+
+            const fundTransaction = {
+                id: 'T' + Date.now(),
+                date: `${monthKey}-01`, 
+                type: 'loanTaken',
+                amount: amount,
+                description: `${formatDate(monthKey + '-01', 'monthYear')} মাসের সমিতি তহবিল প্রাপ্তি।`,
+            };
+            receiver.transactions.push(fundTransaction);
+            await saveDB();
+            showMessage('তহবিল গ্রহণকারী সফলভাবে সেট করা হয়েছে!', 'success');
+            renderFundModal(); 
+        }
+    };
+
+
+    const initializeFirebase = async () => {
+        if (Object.keys(firebaseConfig).length === 0) {
+            console.warn("Firebase config is missing. Using localStorage.");
+            loadDB(); return;
+        }
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
+            else await signInAnonymously(auth);
+            userId = auth.currentUser?.uid || crypto.randomUUID();
+            loadDB();
+        } catch (error) {
+            console.error("Firebase initialization failed:", error);
+            showMessage("ডাটাবেস সংযোগে সমস্যা হয়েছে।", 'error');
+        }
+    };
+
+    const saveDB = async () => {
+        const dataToSave = { members, fundDistribution };
+        if (!db || !userId) {
+            localStorage.setItem('samitiData', JSON.stringify(dataToSave));
+            updateOverallStats(); renderMemberList(); return;
+        }
+        try {
+            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'samiti-data', 'main');
+            await setDoc(docRef, dataToSave);
+            console.log("Data successfully written to Firestore!");
+        } catch (e) {
+            console.error("Error writing to Firestore: ", e);
+            showMessage("ডেটা সেভ করতে সমস্যা হয়েছে।", 'error');
+        }
+    };
+
+    const loadDB = () => {
+        if (!db || !userId) {
+            const data = JSON.parse(localStorage.getItem('samitiData') || '{ "members": [], "fundDistribution": {} }');
+            members = data.members || [];
+            fundDistribution = data.fundDistribution || {};
+            updateOverallStats(); renderMemberList(); return;
+        }
+
+        const docRef = doc(db, 'artifacts', appId, 'users', userId, 'samiti-data', 'main');
+        onSnapshot(docRef, (doc) => {
+            if (doc.exists()) {
+                const data = doc.data();
+                members = data.members || [];
+                fundDistribution = data.fundDistribution || {};
+            } else {
+                members = []; fundDistribution = {};
+            }
+            updateOverallStats(); renderMemberList();
+            if (activeMember) {
+                const latestData = members.find(m => m.id === activeMember.id);
+                if (latestData) showProfile(latestData.id);
+                else closeProfileModal();
+            }
+        }, (error) => {
+            console.error("Error listening to document:", error);
+            showMessage("ডেটা লোড করতে সমস্যা হয়েছে।", 'error');
+        });
+    };
+    
+    const startApp = () => {
+        initializeFirebase();
+    }
+
+    // --- Event Listeners ---
+    
+    // Password Form Submission
+    document.getElementById('password-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const passwordInput = document.getElementById('password-input');
+        const passwordError = document.getElementById('password-error');
+        if (passwordInput.value === '11353') {
+            document.getElementById('password-modal').style.display = 'none';
+            document.getElementById('main-app-content').classList.remove('hidden');
+            startApp();
+        } else {
+            passwordError.textContent = 'ভুল পাসওয়ার্ড। আবার চেষ্টা করুন।';
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    });
+
+    // Add Member Form
+    document.getElementById('add-member-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('member-name').value.trim();
+      const email = document.getElementById('member-email').value.trim();
+      const phone = document.getElementById('member-phone').value.trim();
+      if (!name || !phone) {
+        showMessage('দয়া করে সঠিক নাম এবং ফোন নম্বর দিন।', 'error'); return;
+      }
+      members.push({ id: 'M' + Date.now(), name, email, phone, transactions: [] });
+      saveDB();
+      e.target.reset();
+      showMessage('সদস্য সফলভাবে যোগ করা হয়েছে!', 'success');
+    });
+
+    // Delegated click listener for profile, edit, delete
+    document.addEventListener('click', async (e) => {
+        if (e.target.closest('.view-profile-btn')) {
+            showProfile(e.target.closest('.view-profile-btn').dataset.id);
+        }
+        if (e.target.closest('.delete-transaction-btn')) {
+            const transactionId = e.target.closest('.delete-transaction-btn').dataset.tid;
+            if (activeMember) {
+                const confirmed = await showConfirmation('আপনি কি এই লেনদেনটি মুছে ফেলতে নিশ্চিত?');
+                if(confirmed) {
+                    activeMember.transactions = active-member.transactions.filter(t => t.id !== transactionId);
+                    saveDB();
+                    showMessage('লেনদেন মুছে ফেলা হয়েছে।', 'success');
+                }
+            }
+        }
+        if (e.target.closest('.edit-transaction-btn')) {
+            const transactionId = e.target.closest('.edit-transaction-btn').dataset.tid;
+            openTransactionModal(transactionId);
+        }
+    });
+    
+    // Fund assignment form submission
+    document.getElementById('fund-list-container').addEventListener('submit', (e) => {
+        if(e.target.classList.contains('assign-fund-form')) {
+            handleAssignFund(e);
+        }
+    });
+
+    // Modal close buttons
+    document.getElementById('close-profile').addEventListener('click', closeProfileModal);
+    document.getElementById('open-transaction-modal-btn').addEventListener('click', () => openTransactionModal());
+    document.getElementById('close-transaction-modal').addEventListener('click', closeTransactionModal);
+    document.getElementById('open-fund-modal-btn').addEventListener('click', openFundModal);
+    document.getElementById('close-fund-modal').addEventListener('click', closeFundModal);
+
+    // Transaction form submission (new/edit)
+    document.getElementById('transaction-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!activeMember) return;
+
+        const id = document.getElementById('transaction-id').value;
+        const date = document.getElementById('transaction-date').value;
+        const type = document.getElementById('transaction-type').value;
+        const amount = parseFloat(document.getElementById('transaction-amount').value);
+        const description = document.getElementById('transaction-description').value.trim();
+
+        if (!date || !type || isNaN(amount) || amount <= 0) {
+            showMessage('অনুগ্রহ করে সব ঘর সঠিকভাবে পূরণ করুন।', 'error'); return;
+        }
+
+        if (id) { // Update existing
+            const transaction = activeMember.transactions.find(t => t.id === id);
+            if (transaction) {
+                transaction.date = date;
+                transaction.type = type;
+                transaction.amount = amount;
+                transaction.description = description;
+            }
+        } else { // Add new
+             activeMember.transactions.push({ id: 'T' + Date.now(), date, type, amount, description });
+        }
+
+        saveDB();
+        showMessage(id ? 'লেনদেন সফলভাবে আপডেট করা হয়েছে!' : 'লেনদেন সফলভাবে যোগ করা হয়েছে!', 'success');
+        closeTransactionModal();
+    });
+    
+  </script>
+</body>
+</html>
+
