@@ -71,9 +71,14 @@
                 <p id="total-loan-given" class="text-3xl font-bold text-emerald-700">৳ ০</p>
               </div>
             </div>
-             <button id="open-fund-modal-btn" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600 transition duration-200 shadow-md">
-                💰 মাসিক তহবিল দেখুন
-            </button>
+             <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                <button id="open-fund-modal-btn" class="w-full sm:w-1/2 bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600 transition duration-200 shadow-md">
+                    💰 মাসিক তহবিল দেখুন
+                </button>
+                <button id="manual-save-btn" class="w-full sm:w-1/2 bg-yellow-500 text-white py-2 rounded-lg font-bold hover:bg-yellow-600 transition duration-200 shadow-md">
+                   💾 ম্যানুয়াল সেভ করুন
+                </button>
+             </div>
           </div>
         </div>
         
@@ -87,7 +92,7 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ফোন</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">মোট জমা (৳)</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">বর্তমান ঋণ (৳)</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">অ্যাকশন</th>
+                  <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody id="member-list" class="bg-white divide-y divide-gray-200">
@@ -152,6 +157,11 @@
                     </table>
                 </div>
             </div>
+             <div class="mt-8 pt-4 border-t text-center">
+                <button id="delete-member-btn" class="bg-red-600 text-white py-2 px-6 rounded-lg font-bold hover:bg-red-700 transition duration-200 shadow-md">
+                    🗑️ সদস্য ডিলেট করুন
+                </button>
+            </div>
           </div>
         </div>
       </div>
@@ -214,20 +224,23 @@
 
 
   <script type="module">
+    // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     
+    // Enable Firestore debugging
     setLogLevel('Debug');
 
+    // App Configuration from environment
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-samiti-app-id';
     const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
+    // Global state variables
     let app, db, auth, userId = null;
     let members = [];
-    let fundDistribution = {}; // New: To store monthly fund receiver
+    let fundDistribution = {};
     let activeMember = null;
     
     // UI Elements
@@ -241,11 +254,15 @@
     const confirmationModal = document.getElementById('confirmation-modal');
     const confirmationModalBox = document.getElementById('confirmation-modal-box');
 
+    // --- UTILITY FUNCTIONS ---
+
+    // Format numbers to Bengali locale
     const getBengaliNumber = (n) => {
         if (n === null || n === undefined || isNaN(n)) return "০";
         return new Intl.NumberFormat('bn-BD', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n);
     };
 
+    // Format date strings to Bengali locale
     const formatDate = (dateString, format = 'long') => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -261,6 +278,7 @@
         return '';
     };
 
+    // Display a temporary message toast
     const showMessage = (message, type = 'success') => {
       const messageBox = document.getElementById('message-box');
       const messageContent = document.getElementById('message-content');
@@ -283,6 +301,7 @@
       }, 3000);
     };
 
+    // Display a confirmation dialog and return a promise
     const showConfirmation = (message) => {
         return new Promise((resolve) => {
             const messageEl = document.getElementById('confirmation-message');
@@ -299,9 +318,22 @@
                     resolve(value);
                 }, 300);
             };
+            
+            const handleYesClick = () => {
+                yesBtn.removeEventListener('click', handleYesClick);
+                noBtn.removeEventListener('click', handleNoClick);
+                close(true);
+            };
+            
+            const handleNoClick = () => {
+                yesBtn.removeEventListener('click', handleYesClick);
+                noBtn.removeEventListener('click', handleNoClick);
+                close(false);
+            };
 
-            yesBtn.onclick = () => close(true);
-            noBtn.onclick = () => close(false);
+            yesBtn.addEventListener('click', handleYesClick);
+            noBtn.addEventListener('click', handleNoClick);
+
 
             confirmationModal.classList.remove('hidden');
             confirmationModal.classList.add('flex');
@@ -310,6 +342,9 @@
         });
     };
     
+    // --- CORE LOGIC & CALCULATIONS ---
+
+    // Calculate financial totals for a single member
     const calculateMemberTotals = (member) => {
         const totals = {
             totalDeposit: 0,
@@ -331,7 +366,23 @@
         totals.currentLoan = totals.totalLoanTaken - totals.totalLoanRepaid;
         return totals;
     };
+    
+    const calculateAvailableFund = () => {
+        let totalDeposit = 0;
+        let totalDistributed = 0;
+        members.forEach(member => {
+            const totals = calculateMemberTotals(member);
+            totalDeposit += totals.totalDeposit;
+        });
+        Object.values(fundDistribution).forEach(dist => {
+            if (dist.amount) {
+                totalDistributed += dist.amount;
+            }
+        });
+        return totalDeposit - totalDistributed;
+    };
 
+    // Update the main dashboard statistics
     const updateOverallStats = () => {
         const totalMembersEl = document.getElementById('total-members');
         const totalPaidEl = document.getElementById('total-paid');
@@ -351,19 +402,22 @@
             }
         });
 
-
         totalMembersEl.textContent = getBengaliNumber(members.length);
         totalPaidEl.textContent = `৳ ${getBengaliNumber(totalDeposit)}`;
         totalLoanGivenEl.textContent = `৳ ${getBengaliNumber(totalDistributed)}`;
     };
 
+    // --- UI RENDERING FUNCTIONS ---
+
+    // Render the main list of members on the dashboard
     const renderMemberList = () => {
         memberListContainer.innerHTML = ''; 
         if (members.length === 0) {
             memberListContainer.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-500">এখনও কোনো সদস্য যোগ করা হয়নি।</td></tr>`;
             return;
         }
-        members.forEach(member => {
+        const sortedMembers = [...members].sort((a, b) => a.name.localeCompare(b.name, 'bn'));
+        sortedMembers.forEach(member => {
             const totals = calculateMemberTotals(member);
             const row = document.createElement('tr');
             row.className = 'hover:bg-indigo-50 transition duration-150';
@@ -372,9 +426,12 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${member.phone}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">৳ ${getBengaliNumber(totals.totalDeposit)}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">৳ ${getBengaliNumber(totals.currentLoan)}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-2">
                     <button class="view-profile-btn bg-indigo-500 text-white px-3 py-1 rounded-full text-xs font-bold hover:bg-indigo-600 transition duration-150 shadow-md" data-id="${member.id}">
-                        বিস্তারিত দেখুন
+                        বিস্তারিত
+                    </button>
+                     <button class="delete-member-btn bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold hover:bg-red-600 transition duration-150 shadow-md" data-id="${member.id}" data-name="${member.name}">
+                        ডিলেট
                     </button>
                 </td>
             `;
@@ -382,6 +439,7 @@
         });
     };
 
+    // Display the detailed profile modal for a member
     const showProfile = (id) => {
         const member = members.find(m => m.id === id);
         activeMember = member;
@@ -436,6 +494,7 @@
         profileModalBox.classList.add('modal-enter', 'modal-enter-active');
     };
     
+    // Close the profile modal with animation
     const closeProfileModal = () => {
         profileModalBox.classList.remove('modal-enter-active');
         profileModalBox.classList.add('modal-exit-active');
@@ -445,11 +504,13 @@
         }, 300);
     };
 
+    // Open the modal for adding or editing a transaction
     const openTransactionModal = (transactionId = null) => {
         const form = document.getElementById('transaction-form');
         form.reset();
         const modalTitle = document.getElementById('transaction-modal-title');
         const transactionIdInput = document.getElementById('transaction-id');
+        const transactionTypeSelect = document.getElementById('transaction-type');
 
         if (transactionId) {
             const transaction = activeMember.transactions.find(t => t.id === transactionId);
@@ -457,14 +518,16 @@
                 modalTitle.textContent = "লেনদেন সম্পাদনা করুন";
                 transactionIdInput.value = transaction.id;
                 document.getElementById('transaction-date').value = transaction.date;
-                document.getElementById('transaction-type').value = transaction.type;
+                transactionTypeSelect.value = transaction.type;
                 document.getElementById('transaction-amount').value = transaction.amount;
                 document.getElementById('transaction-description').value = transaction.description;
+                transactionTypeSelect.disabled = true; // Prevent changing type when editing
             }
         } else {
             modalTitle.textContent = "নতুন লেনদেন যোগ করুন";
             transactionIdInput.value = '';
             document.getElementById('transaction-date').valueAsDate = new Date();
+            transactionTypeSelect.disabled = false;
         }
 
         transactionModal.classList.remove('hidden');
@@ -473,12 +536,14 @@
         transactionModalBox.classList.add('modal-enter', 'modal-enter-active');
     };
 
+    // Close transaction modal with animation
     const closeTransactionModal = () => {
         transactionModalBox.classList.remove('modal-enter-active');
         transactionModalBox.classList.add('modal-exit-active');
         setTimeout(() => transactionModal.classList.add('hidden'), 300);
     };
 
+    // Open the monthly fund management modal
     const openFundModal = () => {
         renderFundModal();
         fundModal.classList.remove('hidden');
@@ -487,20 +552,22 @@
         fundModalBox.classList.add('modal-enter', 'modal-enter-active');
     };
 
+    // Close the fund modal with animation
     const closeFundModal = () => {
         fundModalBox.classList.remove('modal-enter-active');
         fundModalBox.classList.add('modal-exit-active');
         setTimeout(() => fundModal.classList.add('hidden'), 300);
     };
 
+    // Render the content of the monthly fund modal
     const renderFundModal = () => {
         const container = document.getElementById('fund-list-container');
         container.innerHTML = '<div class="text-center text-gray-500">হিসাব লোড হচ্ছে...</div>';
         
         const monthlyDeposits = {};
         members.forEach(member => {
-            member.transactions.forEach(t => {
-                if(t.type === 'deposit') {
+            (member.transactions || []).forEach(t => {
+                if(t.type === 'deposit' && t.date) {
                     const monthKey = t.date.substring(0, 7); // YYYY-MM
                     if(!monthlyDeposits[monthKey]) {
                         monthlyDeposits[monthKey] = 0;
@@ -532,19 +599,25 @@
             `;
 
             if(receiver) {
-                content += `<p class="mt-2 text-green-600 font-semibold">✅ তহবিল গ্রহণকারী: ${receiver.name}</p>`;
+                 content += `<p class="mt-2 text-green-600 font-semibold">✅ তহবিল প্রাপ্ত: ${receiver.name} (৳ ${getBengaliNumber(distribution.amount)})</p>`;
             } else {
+                 const availableFund = calculateAvailableFund();
                  const memberOptions = members.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
                 content += `
-                    <form class="assign-fund-form mt-3" data-month="${monthKey}" data-amount="${total}">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">তহবিল গ্রহণকারী নির্বাচন করুন:</label>
-                        <div class="flex gap-2">
-                           <select required class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                    <form class="assign-fund-form mt-3 space-y-2" data-month="${monthKey}">
+                        <p class="text-xs text-gray-500">সর্বোচ্চ ঋণযোগ্য: ৳ ${getBengaliNumber(availableFund)}</p>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">সদস্য:</label>
+                            <select required class="w-full p-2 border border-gray-300 rounded-lg bg-white">
                                 <option value="">সদস্য নির্বাচন করুন</option>
                                 ${memberOptions}
-                           </select>
-                           <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-sm">সেভ</button>
+                            </select>
                         </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">পরিমাণ:</label>
+                            <input type="number" placeholder="ঋণের পরিমাণ" required class="w-full p-2 border border-gray-300 rounded-lg" max="${availableFund}">
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-sm">ঋণ প্রদান করুন</button>
                     </form>
                 `;
             }
@@ -553,15 +626,108 @@
         });
     };
 
+    // --- FIREBASE & DATA PERSISTENCE ---
+
+    // Initialize Firebase connection and authentication
+    const initializeFirebase = async () => {
+        if (Object.keys(firebaseConfig).length === 0) {
+            console.warn("Firebase config is missing. Using localStorage as fallback.");
+            loadDB(); 
+            return;
+        }
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
+            else await signInAnonymously(auth);
+            userId = auth.currentUser?.uid || crypto.randomUUID();
+            loadDB(); // Start listening for data after authentication
+        } catch (error) {
+            console.error("Firebase initialization failed:", error);
+            showMessage("ডাটাবেস সংযোগে সমস্যা হয়েছে।", 'error');
+            loadDB(); // Fallback to localStorage on error
+        }
+    };
+
+    // Save the entire app state to Firestore or localStorage
+    const saveDB = async (showSuccessMessage = false) => {
+        const dataToSave = { members: JSON.parse(JSON.stringify(members)), fundDistribution };
+        if (!db || !userId) {
+            localStorage.setItem('samitiData', JSON.stringify(dataToSave));
+            updateOverallStats(); 
+            renderMemberList(); 
+            if (showSuccessMessage) showMessage("ডেটা লোকাল স্টোরেজে সেভ হয়েছে।", 'info');
+            return;
+        }
+        try {
+            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'samiti-data', 'main');
+            await setDoc(docRef, dataToSave);
+            console.log("Data successfully written to Firestore!");
+            if (showSuccessMessage) showMessage("ডেটা সফলভাবে ফায়ারবেজে সেভ হয়েছে!", 'success');
+        } catch (e) {
+            console.error("Error writing to Firestore: ", e);
+            showMessage("ডেটা সেভ করতে সমস্যা হয়েছে।", 'error');
+        }
+    };
+
+    // Load data from Firestore with real-time updates or from localStorage
+    const loadDB = () => {
+        if (!db || !userId) {
+            const data = JSON.parse(localStorage.getItem('samitiData') || '{ "members": [], "fundDistribution": {} }');
+            members = data.members || [];
+            fundDistribution = data.fundDistribution || {};
+            updateOverallStats(); 
+            renderMemberList(); 
+            return;
+        }
+
+        const docRef = doc(db, 'artifacts', appId, 'users', userId, 'samiti-data', 'main');
+        // This onSnapshot ensures auto-update/real-time synchronization
+        onSnapshot(docRef, (doc) => {
+            if (doc.exists()) {
+                const data = doc.data();
+                members = data.members || [];
+                fundDistribution = data.fundDistribution || {};
+            } else {
+                console.log("No data found in Firestore, starting fresh.");
+                members = []; 
+                fundDistribution = {};
+            }
+            // Update UI whenever data changes
+            updateOverallStats(); 
+            renderMemberList();
+            // If a profile was open, refresh its data
+            if (activeMember) {
+                const latestData = members.find(m => m.id === activeMember.id);
+                if (latestData) {
+                    showProfile(latestData.id);
+                } else {
+                    closeProfileModal();
+                }
+            }
+        }, (error) => {
+            console.error("Error listening to Firestore document:", error);
+            showMessage("ডেটা লোড করতে সমস্যা হয়েছে।", 'error');
+        });
+    };
+    
+    // --- EVENT HANDLERS ---
+    
+    // Handle monthly fund assignment form
     const handleAssignFund = async (e) => {
         e.preventDefault();
         const form = e.target;
         const monthKey = form.dataset.month;
-        const amount = parseFloat(form.dataset.amount);
+        const amount = parseFloat(form.querySelector('input[type="number"]').value);
         const receiverId = form.querySelector('select').value;
         
-        if(!receiverId) {
-            showMessage('দয়া করে একজন সদস্য নির্বাচন করুন।', 'error');
+        if (!receiverId) { showMessage('দয়া করে একজন সদস্য নির্বাচন করুন।', 'error'); return; }
+        if (isNaN(amount) || amount <= 0) { showMessage('সঠিক পরিমাণ লিখুন।', 'error'); return; }
+
+        const availableFund = calculateAvailableFund();
+        if (amount > availableFund) {
+            showMessage(`ঋণের পরিমাণ সর্বোচ্চ ঋণযোগ্য (${getBengaliNumber(availableFund)} ৳) এর বেশি হতে পারে না।`, 'error');
             return;
         }
 
@@ -571,97 +737,30 @@
         const confirmation = await showConfirmation(`আপনি কি "${formatDate(monthKey + '-01', 'monthYear')}" মাসের ৳ ${getBengaliNumber(amount)} তহবিলটি "${receiver.name}"-কে প্রদান করতে নিশ্চিত?`);
 
         if(confirmation) {
-            fundDistribution[monthKey] = {
-                receiverId: receiverId,
-                amount: amount,
-            };
+            fundDistribution[monthKey] = { receiverId, amount };
 
             const fundTransaction = {
                 id: 'T' + Date.now(),
-                date: `${monthKey}-01`, 
+                date: `${monthKey}-01`,
                 type: 'loanTaken',
                 amount: amount,
-                description: `${formatDate(monthKey + '-01', 'monthYear')} মাসের সমিতি তহবিল প্রাপ্তি।`,
+                description: `${formatDate(monthKey + '-01', 'monthYear')} মাসের তহবিল প্রাপ্তি।`,
             };
+            
+            if(!receiver.transactions) receiver.transactions = [];
             receiver.transactions.push(fundTransaction);
             await saveDB();
-            showMessage('তহবিল গ্রহণকারী সফলভাবে সেট করা হয়েছে!', 'success');
-            renderFundModal(); 
+            showMessage('তহবিল সফলভাবে প্রদান করা হয়েছে!', 'success');
+            renderFundModal();
         }
     };
-
-
-    const initializeFirebase = async () => {
-        if (Object.keys(firebaseConfig).length === 0) {
-            console.warn("Firebase config is missing. Using localStorage.");
-            loadDB(); return;
-        }
-        try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
-            else await signInAnonymously(auth);
-            userId = auth.currentUser?.uid || crypto.randomUUID();
-            loadDB();
-        } catch (error) {
-            console.error("Firebase initialization failed:", error);
-            showMessage("ডাটাবেস সংযোগে সমস্যা হয়েছে।", 'error');
-        }
-    };
-
-    const saveDB = async () => {
-        const dataToSave = { members, fundDistribution };
-        if (!db || !userId) {
-            localStorage.setItem('samitiData', JSON.stringify(dataToSave));
-            updateOverallStats(); renderMemberList(); return;
-        }
-        try {
-            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'samiti-data', 'main');
-            await setDoc(docRef, dataToSave);
-            console.log("Data successfully written to Firestore!");
-        } catch (e) {
-            console.error("Error writing to Firestore: ", e);
-            showMessage("ডেটা সেভ করতে সমস্যা হয়েছে।", 'error');
-        }
-    };
-
-    const loadDB = () => {
-        if (!db || !userId) {
-            const data = JSON.parse(localStorage.getItem('samitiData') || '{ "members": [], "fundDistribution": {} }');
-            members = data.members || [];
-            fundDistribution = data.fundDistribution || {};
-            updateOverallStats(); renderMemberList(); return;
-        }
-
-        const docRef = doc(db, 'artifacts', appId, 'users', userId, 'samiti-data', 'main');
-        onSnapshot(docRef, (doc) => {
-            if (doc.exists()) {
-                const data = doc.data();
-                members = data.members || [];
-                fundDistribution = data.fundDistribution || {};
-            } else {
-                members = []; fundDistribution = {};
-            }
-            updateOverallStats(); renderMemberList();
-            if (activeMember) {
-                const latestData = members.find(m => m.id === activeMember.id);
-                if (latestData) showProfile(latestData.id);
-                else closeProfileModal();
-            }
-        }, (error) => {
-            console.error("Error listening to document:", error);
-            showMessage("ডেটা লোড করতে সমস্যা হয়েছে।", 'error');
-        });
-    };
+    
+    // --- INITIALIZATION & EVENT LISTENERS ---
     
     const startApp = () => {
         initializeFirebase();
     }
-
-    // --- Event Listeners ---
     
-    // Password Form Submission
     document.getElementById('password-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const passwordInput = document.getElementById('password-input');
@@ -677,7 +776,6 @@
         }
     });
 
-    // Add Member Form
     document.getElementById('add-member-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('member-name').value.trim();
@@ -692,29 +790,63 @@
       showMessage('সদস্য সফলভাবে যোগ করা হয়েছে!', 'success');
     });
 
-    // Delegated click listener for profile, edit, delete
     document.addEventListener('click', async (e) => {
+        // View Profile
         if (e.target.closest('.view-profile-btn')) {
             showProfile(e.target.closest('.view-profile-btn').dataset.id);
         }
+        
+        // Delete Transaction
         if (e.target.closest('.delete-transaction-btn')) {
             const transactionId = e.target.closest('.delete-transaction-btn').dataset.tid;
             if (activeMember) {
                 const confirmed = await showConfirmation('আপনি কি এই লেনদেনটি মুছে ফেলতে নিশ্চিত?');
                 if(confirmed) {
-                    activeMember.transactions = active-member.transactions.filter(t => t.id !== transactionId);
+                    activeMember.transactions = activeMember.transactions.filter(t => t.id !== transactionId);
                     saveDB();
                     showMessage('লেনদেন মুছে ফেলা হয়েছে।', 'success');
                 }
             }
         }
+
+        // Edit Transaction
         if (e.target.closest('.edit-transaction-btn')) {
             const transactionId = e.target.closest('.edit-transaction-btn').dataset.tid;
             openTransactionModal(transactionId);
         }
+
+        // Delete Member from List
+        if (e.target.closest('.delete-member-btn')) {
+            const btn = e.target.closest('.delete-member-btn');
+            const memberId = btn.dataset.id;
+            const memberName = btn.dataset.name;
+            const confirmed = await showConfirmation(`আপনি কি "${memberName}"-কে মুছে ফেলতে নিশ্চিত? তার সমস্ত লেনদেনের তথ্য মুছে যাবে।`);
+            if(confirmed) {
+                members = members.filter(m => m.id !== memberId);
+                await saveDB();
+                showMessage('সদস্যকে সফলভাবে ডিলেট করা হয়েছে।', 'success');
+            }
+        }
+
+        // Delete Member from Profile
+        if (e.target.closest('#delete-member-btn')) {
+            if (activeMember) {
+                const confirmed = await showConfirmation(`আপনি কি "${activeMember.name}"-কে মুছে ফেলতে নিশ্চিত? এটি ফেরত আনা যাবে না।`);
+                if (confirmed) {
+                    members = members.filter(m => m.id !== activeMember.id);
+                    await saveDB();
+                    showMessage('সদস্যকে সফলভাবে ডিলেট করা হয়েছে।', 'success');
+                    closeProfileModal();
+                }
+            }
+        }
     });
     
-    // Fund assignment form submission
+    // Manual Save Button
+    document.getElementById('manual-save-btn').addEventListener('click', () => {
+        saveDB(true); // Manually trigger save and show success message
+    });
+    
     document.getElementById('fund-list-container').addEventListener('submit', (e) => {
         if(e.target.classList.contains('assign-fund-form')) {
             handleAssignFund(e);
@@ -728,7 +860,6 @@
     document.getElementById('open-fund-modal-btn').addEventListener('click', openFundModal);
     document.getElementById('close-fund-modal').addEventListener('click', closeFundModal);
 
-    // Transaction form submission (new/edit)
     document.getElementById('transaction-form').addEventListener('submit', (e) => {
         e.preventDefault();
         if (!activeMember) return;
@@ -743,20 +874,48 @@
             showMessage('অনুগ্রহ করে সব ঘর সঠিকভাবে পূরণ করুন।', 'error'); return;
         }
 
-        if (id) { // Update existing
+        if (id) { // Update existing transaction
             const transaction = activeMember.transactions.find(t => t.id === id);
             if (transaction) {
                 transaction.date = date;
-                transaction.type = type;
+                // Type is disabled during edit, so no need to update transaction.type
                 transaction.amount = amount;
                 transaction.description = description;
+                 showMessage('লেনদেন সফলভাবে আপডেট করা হয়েছে!', 'success');
             }
-        } else { // Add new
-             activeMember.transactions.push({ id: 'T' + Date.now(), date, type, amount, description });
+        } else { // Add new transaction
+            if (type === 'deposit') {
+                // 1. Add the full amount as a deposit transaction
+                activeMember.transactions.push({ id: 'T' + Date.now(), date, type: 'deposit', amount: amount, description });
+
+                // 2. Calculate the member's current loan after this transaction's deposit
+                // Since total calculations are done dynamically, we calculate the totals of current transactions array.
+                const { currentLoan: currentLoanBeforeDeposit } = calculateMemberTotals(activeMember);
+                
+                if (currentLoanBeforeDeposit > 0) {
+                    // 3. Determine how much of the deposit can be used for repayment
+                    const repaymentAmount = Math.min(amount, currentLoanBeforeDeposit);
+                    
+                    if (repaymentAmount > 0) {
+                        // 4. Add an additional, separate loanRepayment transaction
+                        // Use a slightly different timestamp/ID to avoid collision
+                        activeMember.transactions.push({ id: 'T' + (Date.now() + 1), date, type: 'loanRepayment', amount: repaymentAmount, description: 'কিস্তি থেকে স্বয়ংক্রিয় পরিশোধ' });
+                        showMessage(`৳ ${getBengaliNumber(amount)} জমা এবং ৳ ${getBengaliNumber(repaymentAmount)} ঋণ পরিশোধ হয়েছে।`, 'success');
+                    } else {
+                         showMessage('জমা সফলভাবে যোগ করা হয়েছে!', 'success');
+                    }
+                } else {
+                    // No outstanding loan, so just a simple deposit
+                    showMessage('জমা সফলভাবে যোগ করা হয়েছে!', 'success');
+                }
+            } else {
+                // For other transaction types ('loanTaken', 'loanRepayment'), just add the single transaction
+                activeMember.transactions.push({ id: 'T' + Date.now(), date, type, amount, description });
+                showMessage('লেনদেন সফলভাবে যোগ করা হয়েছে!', 'success');
+            }
         }
 
         saveDB();
-        showMessage(id ? 'লেনদেন সফলভাবে আপডেট করা হয়েছে!' : 'লেনদেন সফলভাবে যোগ করা হয়েছে!', 'success');
         closeTransactionModal();
     });
     
