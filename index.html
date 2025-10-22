@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>সমিতি ম্যানেজমেন্ট ড্যাশবোর্ড</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Added typography plugin for better notice rendering (from index.html) -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Hind Siliguri', sans-serif; }
@@ -66,10 +67,11 @@
           </div>
         </div>
 
-        <!-- নোটিশ বোর্ড -->
+        <!-- নোটিশ বোর্ড (Updated HTML structure) -->
         <div class="bg-white shadow-xl rounded-lg p-6 mt-8 border-t-4 border-cyan-500">
             <h2 class="text-2xl font-semibold mb-4 text-cyan-600">📢 নোটিশ বোর্ড</h2>
-            <div id="notice-board-content" class="space-y-3 text-gray-800">
+            <!-- Added 'prose' class from index.html for better styling -->
+            <div id="notice-board-content" class="prose max-w-none text-gray-800">
                 <p class="text-gray-500">লোড হচ্ছে...</p>
             </div>
         </div>
@@ -79,8 +81,11 @@
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
+                <!-- Updated table headers to match index.html -->
                 <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ক্রমিক</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">নাম</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">কার্ড নম্বর</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ফোন</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">মোট জমা (৳)</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">বর্তমান ঋণ (৳)</th>
@@ -94,18 +99,50 @@
         </div>
       </div>
 
-      <!-- প্রোফাইল মডাল (Profile Modal) -->
+      <!-- প্রোফাইল মডাল (Profile Modal) (Updated HTML structure) -->
       <div id="profile-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-center p-4">
         <div id="profile-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-4xl p-6 relative modal-exit">
           <button id="close-profile" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
           
           <div id="profile-modal-content">
+            
+            <!-- New Profile Image Element -->
+            <div class="flex justify-center mb-4">
+                <img id="profile-photo-img" class="w-32 h-32 rounded-full object-cover border-4 border-indigo-300 shadow-lg" src="" alt="সদস্যের ছবি">
+            </div>
+
             <h2 id="profile-name" class="text-3xl font-bold mb-4 text-indigo-700 text-center"></h2>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-sm">
-              <p class="text-gray-600"><span class="font-semibold text-gray-800">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-400 select-all"></span></p>
-              <p class="text-gray-600"><span class="font-semibold text-gray-800">ইমেইল:</span> <span id="profile-email"></span></p>
-              <p class="text-gray-600"><span class="font-semibold text-gray-800">ফোন:</span> <span id="profile-phone"></span></p>
+            <!-- Updated grid layout from index.html (read-only) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-6 text-sm">
+                
+                <!-- User ID -->
+                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-500 bg-gray-100 p-2 rounded select-all"></span></p>
+                
+                <!-- Photo URL -->
+                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span>
+                    <span id="profile-photo-url-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
+                </p>
+
+                <!-- Employee ID -->
+                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">এমপ্লয়ি আইডি:</span>
+                    <span id="profile-employee-id-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
+                </p>
+                
+                <!-- Card Number -->
+                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">কার্ড নম্বর:</span>
+                    <span id="profile-card-number-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
+                </p>
+                
+                <!-- Email -->
+                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইমেইল:</span>
+                    <span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
+                </p>
+
+                <!-- Phone -->
+                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ফোন:</span>
+                    <span id="profile-phone-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
+                </p>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center border-t border-b py-4 mb-6">
@@ -149,7 +186,7 @@
         </div>
       </div>
 
-      <!-- মাসিক তহবিল মডাল -->
+      <!-- মাসিক তহবিল মডাল (Read-only, no changes needed) -->
       <div id="fund-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-start p-4 pt-16">
           <div id="fund-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 relative modal-exit">
               <button id="close-fund-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
@@ -187,7 +224,7 @@
     let app, db, auth;
     let members = [];
     let fundDistribution = {};
-    let notice = '';
+    let notice = { text: '', imageUrl: '' }; // Updated to handle notice object
     let activeMember = null;
     let isInitialLoad = true;
     
@@ -252,18 +289,34 @@
         document.getElementById('total-paid').textContent = `৳ ${getBengaliNumber(totalDeposit)}`;
         document.getElementById('total-loan-given').textContent = `৳ ${getBengaliNumber(totalLoanTaken)}`;
 
-        // Render member list
+        // Render member list (Updated)
         memberListContainer.innerHTML = ''; 
         if (members.length === 0) {
-            memberListContainer.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-500">এখনও কোনো সদস্য যোগ করা হয়নি।</td></tr>`;
+            memberListContainer.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-gray-500">এখনও কোনো সদস্য যোগ করা হয়নি।</td></tr>`;
         } else {
-            [...members].sort((a, b) => a.name.localeCompare(b.name, 'bn')).forEach(member => {
+            // Kept original sorting by name
+            [...members].sort((a, b) => a.name.localeCompare(b.name, 'bn')).forEach((member, index) => {
                 const totals = calculateMemberTotals(member);
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-indigo-50 transition duration-150 cursor-pointer';
-                row.dataset.id = member.id;
+                row.className = 'hover:bg-indigo-50 transition duration-150 cursor-pointer'; // Added cursor-pointer
+                row.dataset.id = member.id; // Added dataset.id to row
+                
+                const placeholderUrl = `https://placehold.co/40x40/EFEFEF/AAAAAA?text=${encodeURIComponent(member.name.charAt(0))}`;
+
+                // Updated row.innerHTML to match new columns
                 row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${member.name}</td>
+                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-600">${getBengaliNumber(index + 1)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                <img class="h-10 w-10 rounded-full object-cover" src="${member.photoUrl || placeholderUrl}" onerror="this.onerror=null;this.src='${placeholderUrl}';" alt="${member.name}">
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${member.name}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${member.cardNumber || 'N/A'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${member.phone}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">৳ ${getBengaliNumber(totals.totalDeposit)}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">৳ ${getBengaliNumber(totals.currentLoan)}</td>
@@ -283,26 +336,63 @@
         }
     };
     
+    // Updated renderNoticeBoard function (from index.html)
     const renderNoticeBoard = () => {
         const noticeContainer = document.getElementById('notice-board-content');
-        if (notice && notice.trim() !== '') {
-            const formattedNotice = notice.split('\n').filter(line => line.trim() !== '').map(line => `<p>${line}</p>`).join('');
-            noticeContainer.innerHTML = formattedNotice;
-        } else {
+        noticeContainer.innerHTML = ''; // Clear previous content
+
+        const hasImage = notice && notice.imageUrl && notice.imageUrl.trim() !== '';
+        const hasText = notice && notice.text && notice.text.trim() !== '';
+
+        if (!hasImage && !hasText) {
             noticeContainer.innerHTML = '<p class="text-gray-500">আপাতত কোনো নতুন নোটিশ নেই।</p>';
+            return;
+        }
+
+        if (hasImage) {
+            const imgElement = document.createElement('img');
+            imgElement.src = notice.imageUrl;
+            imgElement.alt = 'নোটিশ চিত্র';
+            imgElement.className = 'max-w-full h-auto rounded-lg mb-4 mx-auto';
+            imgElement.onerror = () => { 
+                imgElement.style.display = 'none'; 
+                console.error('নোটিশের ছবিটি লোড করা যায়নি।'); // No showMessage in this file
+            };
+            noticeContainer.appendChild(imgElement);
+        }
+
+        if (hasText) {
+            const textContainer = document.createElement('div');
+            const formattedNotice = notice.text.split('\n').filter(line => line.trim() !== '').map(line => `<p>${line}</p>`).join('');
+            textContainer.innerHTML = formattedNotice;
+            noticeContainer.appendChild(textContainer);
         }
     };
 
+    // Updated showProfile function
     const showProfile = (id, animate = true) => {
         const member = members.find(m => m.id === id);
         activeMember = member;
         if (!member) return;
 
+        // --- New code for profile image ---
+        const placeholderUrl = `https://placehold.co/128x128/EFEFEF/AAAAAA?text=${encodeURIComponent(member.name.charAt(0))}`;
+        const profileImg = document.getElementById('profile-photo-img');
+        profileImg.src = member.photoUrl || placeholderUrl;
+        profileImg.onerror = () => { profileImg.src = placeholderUrl; };
+        // --- End of new code ---
+
         const totals = calculateMemberTotals(member);
         document.getElementById('profile-name').textContent = member.name;
+        
+        // Populate new fields
         document.getElementById('profile-id').textContent = member.id;
-        document.getElementById('profile-email').textContent = member.email || 'N/A';
-        document.getElementById('profile-phone').textContent = member.phone;
+        document.getElementById('profile-photo-url-view').textContent = member.photoUrl || 'N/A';
+        document.getElementById('profile-employee-id-view').textContent = member.employeeId || 'N/A';
+        document.getElementById('profile-card-number-view').textContent = member.cardNumber || 'N/A';
+        document.getElementById('profile-email-view').textContent = member.email || 'N/A';
+        document.getElementById('profile-phone-view').textContent = member.phone || 'N/A';
+
         document.getElementById('paid-total').textContent = `৳ ${getBengaliNumber(totals.totalDeposit)}`;
         document.getElementById('loan-taken').textContent = `৳ ${getBengaliNumber(totals.totalLoanTaken)}`;
         document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(totals.totalLoanRepaid)}`;
@@ -349,6 +439,7 @@
         setTimeout(() => fundModal.classList.add('hidden'), 300);
     };
 
+    // This function remains read-only, which is correct
     const renderFundModal = () => {
         const container = document.getElementById('fund-list-container');
         const monthlyDeposits = members.reduce((acc, member) => {
@@ -391,7 +482,7 @@
             db = getFirestore(app);
             auth = getAuth(app);
             if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
-            else await signInAnonymously(auth);
+            else await signInAnonymously(auth); // Kept anonymous sign-in
             if (auth.currentUser) startDataListener();
             else {
                 loadingOverlay.innerHTML = '<p class="text-red-500 font-semibold">ব্যবহারকারী প্রমাণীকরণ ব্যর্থ হয়েছে।</p>';
@@ -411,7 +502,14 @@
             const data = doc.data();
             members = data?.members || [];
             fundDistribution = data?.fundDistribution || {};
-            notice = data?.notice || '';
+            
+            // Updated notice parsing logic (from index.html)
+            const dbNotice = data?.notice;
+            if (typeof dbNotice === 'string') {
+                notice = { text: dbNotice, imageUrl: '' }; // Convert old format
+            } else {
+                notice = dbNotice || { text: '', imageUrl: '' }; // Use new format or default
+            }
             
             renderUI();
             renderNoticeBoard();
@@ -443,12 +541,14 @@
     
     // --- EVENT HANDLERS ---
     document.addEventListener('click', async (e) => {
+        // Updated logic to allow clicking on the whole row
         const viewButton = e.target.closest('.view-profile-btn');
         const profileRow = e.target.closest('tr[data-id]');
 
         if (viewButton) {
             showProfile(viewButton.dataset.id);
         } else if (profileRow) {
+            // Clicked on the row itself
             showProfile(profileRow.dataset.id);
         } else if (e.target.matches('#close-profile')) {
             closeProfileModal();
@@ -461,4 +561,3 @@
   </script>
 </body>
 </html>
-
