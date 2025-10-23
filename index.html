@@ -180,17 +180,23 @@
                         </p>
                         <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-500 bg-gray-100 p-2 rounded select-all"></span></p>
                         
+                        <!-- UPDATED: Commented out Photo URL -->
+                        <!-- 
                         <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span>
                             <span id="profile-photo-url-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
-                        </p>
+                        </p> 
+                        -->
 
                         <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">এমপ্লয়ি আইডি:</span>
                             <span id="profile-employee-id-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
                         </p>
                         
+                        <!-- UPDATED: Commented out Card Number -->
+                        <!-- 
                         <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">কার্ড নম্বর:</span>
                             <span id="profile-card-number-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
-                        </p>
+                        </p> 
+                        -->
                         
                         <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইমেইল:</span>
                             <span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
@@ -491,9 +497,9 @@
         // Populate view elements (Details Tab)
         document.getElementById('profile-name-view').textContent = member.name || 'N/A';
         document.getElementById('profile-id').textContent = member.id;
-        document.getElementById('profile-photo-url-view').textContent = member.photoUrl || 'N/A';
+        // document.getElementById('profile-photo-url-view').textContent = member.photoUrl || 'N/A'; // Hidden
         document.getElementById('profile-employee-id-view').textContent = member.employeeId || 'N/A';
-        document.getElementById('profile-card-number-view').textContent = member.cardNumber || 'N/A';
+        // document.getElementById('profile-card-number-view').textContent = member.cardNumber || 'N/A'; // Hidden
         document.getElementById('profile-email-view').textContent = member.email || 'N/A';
         document.getElementById('profile-phone-view').textContent = member.phone || 'N/A';
         
@@ -610,60 +616,68 @@
             }).join('');
     };
 
-    // PDF Download Function (Unchanged)
+    // UPDATED PDF Download Function
     const handlePDFDownload = () => {
         if (!activeMember) return;
         
-        if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined' || typeof window.jspdf.jsPDF.autoTable === 'undefined') {
-            console.error('jsPDF or jsPDF-autoTable is not loaded.');
-            showMessage('PDF জেনারেটরে ত্রুটি হয়েছে।', 'error');
-            return;
-        }
+        try {
+            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined' || typeof window.jspdf.jsPDF.autoTable === 'undefined') {
+                console.error('jsPDF or jsPDF-autoTable is not loaded.');
+                showMessage('PDF জেনারেটরে ত্রুটি হয়েছে।', 'error');
+                return;
+            }
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const member = activeMember;
-        const totals = calculateMemberTotals(member);
-        const transactions = [...(member.transactions || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const member = activeMember;
+            const totals = calculateMemberTotals(member);
+            const transactions = [...(member.transactions || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        const head = [['Date', 'Description', 'Amount (TK) ']];
-        const body = transactions.map(t => {
-            let typeText = '';
-            if (t.type === 'deposit') typeText = 'Deposit';
-            else if (t.type === 'loanTaken') typeText = 'Loan Taken';
-            else if (t.type === 'loanRepayment') typeText = 'Loan Repayment';
-            const description = t.description ? `${typeText} (${t.description})` : typeText;
+            // UPDATED: Bengali text for PDF
+            const head = [['তারিখ', 'বিবরণ', 'পরিমাণ (৳) ']];
+            const body = transactions.map(t => {
+                let typeText = '';
+                if (t.type === 'deposit') typeText = 'কিস্তি/জমা';
+                else if (t.type === 'loanTaken') typeText = 'ঋণ গ্রহণ';
+                else if (t.type === 'loanRepayment') typeText = 'ঋণ পরিশোধ';
+                const description = t.description ? `${typeText} (${t.description})` : typeText;
+                
+                return [
+                    formatDate(t.date), 
+                    description,
+                    getBengaliNumber(t.amount)
+                ];
+            });
+
+            // UPDATED: Removed explicit font setting
+            doc.setFontSize(20);
+            doc.text('লেনদেনের তালিকা', 14, 15);
+            doc.setFontSize(12);
+            doc.text(`সদস্য: ${member.name}`, 14, 22); 
+
+            doc.autoTable({
+                head: head,
+                body: body,
+                headStyles: { fillColor: [79, 70, 229] }, // Indigo
+                startY: 30,
+                // UPDATED: Removed explicit font style
+            });
             
-            return [
-                formatDate(t.date), 
-                description,
-                getBengaliNumber(t.amount)
-            ];
-        });
+            const finalY = doc.lastAutoTable.finalY || 50; 
 
-        doc.setFont('Arial', 'normal');
-        doc.setFontSize(20);
-        doc.text('Transaction List', 14, 15);
-        doc.setFontSize(12);
-        doc.text(`Member: ${member.name}`, 14, 22); 
+            // UPDATED: Bengali text for summary
+            doc.setFontSize(10);
+            doc.text(`মোট জমা: ${getBengaliNumber(totals.totalDeposit)} ৳`, 14, finalY + 10);
+            doc.text(`মোট ঋণ গ্রহণ: ${getBengaliNumber(totals.totalLoanTaken)} ৳`, 14, finalY + 15);
+            doc.text(`মোট ঋণ পরিশোধ: ${getBengaliNumber(totals.totalLoanRepaid)} ৳`, 14, finalY + 20);
+            doc.text(`বর্তমান ঋণ: ${getBengaliNumber(totals.currentLoan)} ৳`, 14, finalY + 25);
 
-        doc.autoTable({
-            head: head,
-            body: body,
-            headStyles: { fillColor: [79, 70, 229] }, // Indigo
-            startY: 30, 
-            styles: { font: 'Arial' }
-        });
-        
-        const finalY = doc.lastAutoTable.finalY || 50; 
+            doc.save(`${member.id}_transactions.pdf`);
 
-        doc.setFontSize(10);
-        doc.text(`Total Deposit: ${getBengaliNumber(totals.totalDeposit)} TK`, 14, finalY + 10);
-        doc.text(`Total Loan Taken: ${getBengaliNumber(totals.totalLoanTaken)} TK`, 14, finalY + 15);
-        doc.text(`Total Loan Repaid: ${getBengaliNumber(totals.totalLoanRepaid)} TK`, 14, finalY + 20);
-        doc.text(`Current Loan: ${getBengaliNumber(totals.currentLoan)} TK`, 14, finalY + 25);
-
-        doc.save(`${member.id}_transactions.pdf`);
+        } catch (e) {
+            console.error("PDF generation failed:", e);
+            showMessage('PDF জেনারেট করতে একটি ত্রুটি হয়েছে। বাংলা ফন্টের সমস্যা হতে পারে।', 'error');
+        }
     };
 
     // --- FIREBASE & DATA PERSISTENCE ---
@@ -780,3 +794,4 @@
   </script>
 </body>
 </html>
+
