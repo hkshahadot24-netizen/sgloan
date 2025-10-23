@@ -4,195 +4,267 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>সমিতি ম্যানেজমেন্ট ড্যাশবোর্ড</title>
-  <!-- Added typography plugin for better notice rendering (from index.html) -->
+  <!-- Added typography plugin for notice rendering -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <!-- Updated Font Imports -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Hind Siliguri', sans-serif; }
+    /* Updated Font Family */
+    body { font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; }
+    
+    /* Spinners from index.html (merged) */
+    .spinner { border: 3px solid rgba(255,255,255,0.3); border-left-color: #ffffff; border-radius:50%; width:20px; height:20px; animation:spin 1s linear infinite;}
     .spinner-gray { border: 2px solid rgba(0,0,0,0.2); border-left-color: #4a5568; border-radius:50%; width:16px; height:16px; animation:spin 1s linear infinite;}
+    
+    /* Spinner from original public-dashboard.html (for loading screen) */
     .spinner-loader { border: 5px solid #f0f0f0; border-top: 5px solid #4f46e5; border-radius: 50%; width: 50px; height: 50px; animation: spin 1.2s linear infinite; }
+    
     @keyframes spin { 100% { transform: rotate(360deg);} }
+    
+    /* Modal Animations from index.html */
     .modal-enter { opacity: 0; transform: scale(0.95); }
     .modal-enter-active { opacity: 1; transform: scale(1); transition: all 300ms ease-out; }
     .modal-exit { opacity: 1; transform: scale(1); }
     .modal-exit-active { opacity: 0; transform: scale(0.95); transition: all 300ms ease-in; }
+    
     #loading-overlay { transition: opacity 300ms ease-out; }
     #main-app-content { transition: opacity 400ms ease-in; }
+
+    /* Tab styles from index.html */
+    .tab-active {
+        border-color: #4f46e5;
+        color: #4f46e5;
+        background-color: #eef2ff;
+    }
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-  <!-- Loading Overlay -->
+  <!-- Loading Overlay (Unchanged) -->
   <div id="loading-overlay" class="fixed inset-0 bg-gray-100 z-[200] flex flex-col justify-center items-center">
     <div class="spinner-loader"></div>
     <p class="mt-4 text-lg text-gray-600">লোড হচ্ছে...</p>
   </div>
 
+  <!-- Main Application Content -->
   <div id="main-app-content" class="hidden opacity-0">
-      <div id="message-box" class="fixed top-5 right-5 z-[100] transition-opacity duration-300 opacity-0">
+  
+      <!-- START: Modern Header (from index.html) -->
+      <header class="w-full bg-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between items-center h-20">
+            <!-- Modern, Bold, Centered Title -->
+            <div class="flex-1 flex justify-center items-center relative">
+               <!-- Updated Title Styling -->
+               <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 py-2">
+                 গার্ডিয়ান সমবায় সমিতি
+               </h1>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- END: Modern Header -->
+
+      <!-- Centered Message Box (from index.html) -->
+      <div id="message-box" class="fixed top-5 left-1/2 -translate-x-1/2 z-[300] transition-opacity duration-300 opacity-0">
         <div id="message-content" class="shadow-xl rounded-lg p-4 font-semibold max-w-sm text-white flex items-center space-x-2"></div>
       </div>
 
-      <div class="container mx-auto p-4 sm:p-6 max-w-7xl"> 
-        <div class="flex justify-center items-center mb-8 relative">
-          <h1 class="text-3xl font-bold text-center text-indigo-700">🏠 সমিতি ম্যানেজমেন্ট ড্যাশবোর্ড</h1>
-           <!-- অটো-সিঙ্ক স্ট্যাটাস -->
-          <div id="sync-status" class="absolute right-0 text-sm text-gray-500 transition-opacity duration-500 opacity-0 flex items-center gap-2">
-            <div id="sync-spinner" class="spinner-gray hidden"></div>
-            <span id="sync-text"></span>
+      <!-- Main Content Area -->
+      <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- Notice Board (Moved to Top, styled like index.html) -->
+        <div class="bg-white p-6 rounded-xl shadow-lg mb-6 prose max-w-none">
+          <div id="notice-display" class="text-gray-700">
+              <p class="text-gray-500">লোড হচ্ছে...</p>
           </div>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          <div class="bg-white shadow-xl rounded-lg p-6 md:col-span-3 border-t-4 border-emerald-500">
-            <h2 class="text-2xl font-semibold mb-4 text-emerald-600">📊 মোট অবস্থা</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-              <div class="bg-emerald-50 p-4 rounded-lg shadow-inner">
-                <p class="text-sm text-gray-500">মোট সদস্য</p>
-                <p id="total-members" class="text-3xl font-bold text-emerald-700">০</p>
-              </div>
-              <div class="bg-emerald-50 p-4 rounded-lg shadow-inner">
-                <p class="text-sm text-gray-500">মোট জমা</p>
-                <p id="total-paid" class="text-3xl font-bold text-emerald-700">৳ ০</p>
-              </div>
-              <div class="bg-emerald-50 p-4 rounded-lg shadow-inner">
-                <p class="text-sm text-gray-500">মোট ঋণ প্রদান</p>
-                <p id="total-loan-given" class="text-3xl font-bold text-emerald-700">৳ ০</p>
-              </div>
-            </div>
-             <button id="open-fund-modal-btn" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600 transition duration-200 shadow-md">
-                💰 মাসিক তহবিল দেখুন
-            </button>
+        <!-- Stats (Styled like index.html) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div class="bg-white p-6 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
+            <h3 class="text-lg font-semibold text-gray-500 mb-2">মোট সদস্য</h3>
+            <p id="total-members" class="text-4xl font-bold text-indigo-600">০</p>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
+            <h3 class="text-lg font-semibold text-gray-500 mb-2">মোট জমা</h3>
+            <p id="total-paid" class="text-4xl font-bold text-green-600">৳ ০</p>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
+            <h3 class="text-lg font-semibold text-gray-500 mb-2">মোট ঋণ প্রদান</h3>
+            <p id="total-loan-given" class="text-4xl font-bold text-red-600">৳ ০</p>
           </div>
         </div>
 
-        <!-- নোটিশ বোর্ড (Updated HTML structure) -->
-        <div class="bg-white shadow-xl rounded-lg p-6 mt-8 border-t-4 border-cyan-500">
-            <h2 class="text-2xl font-semibold mb-4 text-cyan-600">📢 নোটিশ বোর্ড</h2>
-            <!-- Added 'prose' class from index.html for better styling -->
-            <div id="notice-board-content" class="prose max-w-none text-gray-800">
-                <p class="text-gray-500">লোড হচ্ছে...</p>
-            </div>
-        </div>
-        
-        <div class="bg-white shadow-xl rounded-lg p-6 mt-8 border-t-4 border-yellow-500">
-          <h2 class="text-2xl font-semibold mb-4 text-yellow-600">👥 সদস্য তালিকা</h2>
+        <!-- Member List (Styled like index.html) -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+          <div class="p-4 sm:p-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b">
+             <h3 class="text-2xl font-bold text-gray-800">সদস্য তালিকা</h3>
+             <div class="space-x-2">
+                <!-- Monthly Fund Button moved here -->
+                <button id="open-fund-modal-btn" class="bg-blue-600 text-white py-2 px-4 rounded-lg font-bold hover:bg-blue-700 transition duration-200 shadow-sm">
+                  💰 মাসিক তহবিল
+                </button>
+             </div>
+          </div>
           <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
+            <table class="min-w-full">
               <thead class="bg-gray-50">
-                <!-- Updated table headers to match index.html -->
                 <tr>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ক্রমিক</th>
+                  <!-- Headers updated to match index.html -->
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">নাম</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">কার্ড নম্বর</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">কার্ড</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ফোন</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">মোট জমা (৳)</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">বর্তমান ঋণ (৳)</th>
-                  <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">বিস্তারিত</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">মোট জমা</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">বর্তমান ঋণ</th>
+                  <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody id="member-list" class="bg-white divide-y divide-gray-200">
+                <!-- JS will populate -->
               </tbody>
             </table>
           </div>
         </div>
-      </div>
+      </main>
 
-      <!-- প্রোফাইল মডাল (Profile Modal) (Updated HTML structure) -->
+      <!-- Sync Status (Moved to bottom-right like index.html) -->
+      <div id="sync-status" class="fixed bottom-4 right-4 bg-gray-800 text-white py-2 px-4 rounded-lg shadow-xl transition-opacity duration-300 opacity-0 z-50">
+        <div class="flex items-center gap-2">
+            <div id="sync-spinner" class="spinner-gray hidden"></div>
+            <span id="sync-text">সিঙ্ক হচ্ছে...</span>
+        </div>
+      </div>
+    </div>
+
+      <!-- START: Updated Profile Modal (Layout from index.html, Read-only) -->
       <div id="profile-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-center p-4">
-        <div id="profile-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-4xl p-6 relative modal-exit">
+        <div id="profile-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-7xl p-6 relative h-[90vh] flex flex-col modal-exit">
           <button id="close-profile" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
           
-          <div id="profile-modal-content">
+          <div id="profile-modal-content" class="flex flex-col h-full">
             
-            <!-- New Profile Image Element -->
-            <div class="flex justify-center mb-4">
-                <img id="profile-photo-img" class="w-32 h-32 rounded-full object-cover border-4 border-indigo-300 shadow-lg" src="" alt="সদস্যের ছবি">
+            <!-- Profile Header -->
+            <div class="flex flex-col items-center justify-center pt-2 pb-6 border-b">
+                <img id="profile-header-img" src="https://placehold.co/96x96/EFEFEF/AAAAAA?text=?" alt="সদস্যের ছবি" class="w-24 h-24 rounded-full object-cover border-4 border-indigo-200 shadow-lg mb-3">
+                <h2 id="profile-header-name" class="text-3xl font-bold text-indigo-700 truncate">সদস্যের নাম</h2>
             </div>
 
-            <h2 id="profile-name" class="text-3xl font-bold mb-4 text-indigo-700 text-center"></h2>
-            
-            <!-- Updated grid layout from index.html (read-only) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-6 text-sm">
-                
-                <!-- User ID -->
-                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-500 bg-gray-100 p-2 rounded select-all"></span></p>
-                
-                <!-- Photo URL -->
-                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span>
-                    <span id="profile-photo-url-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
-                </p>
-
-                <!-- Employee ID -->
-                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">এমপ্লয়ি আইডি:</span>
-                    <span id="profile-employee-id-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
-                </p>
-                
-                <!-- Card Number -->
-                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">কার্ড নম্বর:</span>
-                    <span id="profile-card-number-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
-                </p>
-                
-                <!-- Email -->
-                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইমেইল:</span>
-                    <span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
-                </p>
-
-                <!-- Phone -->
-                <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ফোন:</span>
-                    <span id="profile-phone-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
-                </p>
+            <!-- Tab Headers (No edit icons) -->
+            <div class="flex border-b border-gray-200 mb-6 flex-shrink-0">
+                <button id="profile-tab-details" class="profile-tab tab-active flex items-center justify-center gap-2 py-3 px-6 font-semibold">
+                    <span class="hidden sm:inline">👤</span>
+                    <span>সদস্য বিস্তারিত</span>
+                </button>
+                <button id="profile-tab-transactions" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold">
+                    <span class="hidden sm:inline">🧾</span>
+                    <span>লেনদেন</span>
+                </button>
+                <button id="profile-tab-summary" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold">
+                    <span class="hidden sm:inline">📈</span>
+                    <span>সার-সংক্ষেপ</span>
+                </button>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center border-t border-b py-4 mb-6">
-              <div>
-                <p class="text-sm text-gray-500">মোট জমা</p>
-                <p id="paid-total" class="text-2xl font-bold text-green-600">৳ ০</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500">মোট ঋণ গ্রহণ</p>
-                <p id="loan-taken" class="text-2xl font-bold text-blue-600">৳ ০</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500">মোট ঋণ পরিশোধ</p>
-                <p id="loan-repaid" class="text-2xl font-bold text-yellow-600">৳ ০</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500">বর্তমান ঋণ</p>
-                <p id="current-loan" class="text-2xl font-bold text-red-600">৳ ০</p>
-              </div>
-            </div>
+            <!-- Tab Content Panels -->
+            <div id="profile-content-container" class="overflow-y-auto flex-grow">
+                
+                <!-- Panel 1: Member Details (View-only) -->
+                <div id="profile-content-details">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+                        <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">নাম:</span>
+                            <span id="profile-name-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
+                        </p>
+                        <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-500 bg-gray-100 p-2 rounded select-all"></span></p>
+                        
+                        <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span>
+                            <span id="profile-photo-url-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
+                        </p>
 
-            <div class="mt-6">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-xl font-semibold text-indigo-600">লেনদেনের তালিকা 🧾</h3>
+                        <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">এমপ্লয়ি আইডি:</span>
+                            <span id="profile-employee-id-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
+                        </p>
+                        
+                        <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">কার্ড নম্বর:</span>
+                            <span id="profile-card-number-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
+                        </p>
+                        
+                        <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইমেইল:</span>
+                            <span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
+                        </p>
+
+                        <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ফোন:</span>
+                            <span id="profile-phone-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
+                        </p>
+                    </div>
                 </div>
-                <div class="overflow-x-auto max-h-64 border rounded-lg shadow-inner">
-                    <table class="min-w-full bg-gray-50">
-                        <thead class="bg-indigo-100 sticky top-0">
-                            <tr>
-                                <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">তারিখ</th>
-                                <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">বিবরণ</th>
-                                <th class="py-2 px-4 text-right text-xs font-medium text-gray-600 uppercase">পরিমাণ (৳)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactions-table-body" class="divide-y divide-gray-200">
-                        </tbody>
-                    </table>
+
+                <!-- Panel 2: Transactions (View-only + PDF Download) -->
+                <div id="profile-content-transactions" class="hidden h-full">
+                    <div class="flex justify-end mb-4">
+                        <button id="download-pdf-btn" class="bg-green-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-green-600 transition text-sm flex items-center gap-1" title="পিডিএফ ডাউনলোড করুন">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            <span>PDF ডাউনলোড</span>
+                        </button>
+                    </div>
+                    <div class="overflow-y-auto border rounded-lg shadow-inner h-full">
+                        <table class="min-w-full bg-gray-50">
+                            <thead class="bg-indigo-100 sticky top-0">
+                                <tr>
+                                    <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">তারিখ</th>
+                                    <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">বিবরণ</th>
+                                    <th class="py-2 px-4 text-right text-xs font-medium text-gray-600 uppercase">পরিমাণ (৳)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-table-body" class="divide-y divide-gray-200">
+                                <!-- JS will populate -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Panel 3: Summary (View-only) -->
+                <div id="profile-content-summary" class="hidden">
+                     <h3 class="text-2xl font-semibold text-green-600 border-b pb-2 pt-4 mb-6">📈 সারসংক্ষেপ</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center py-4">
+                        <div>
+                            <p class="text-sm text-gray-500">মোট জমা</p>
+                            <p id="paid-total" class="text-2xl font-bold text-green-600">৳ ০</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">মোট ঋণ গ্রহণ</p>
+                            <p id="loan-taken" class="text-2xl font-bold text-blue-600">৳ ০</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">মোট ঋণ পরিশোধ</p>
+                            <p id="loan-repaid" class="text-2xl font-bold text-yellow-600">৳ ০</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">বর্তমান ঋণ</p>
+                            <p id="current-loan" class="text-2xl font-bold text-red-600">৳ ০</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- End of tab content container -->
           </div>
         </div>
       </div>
+      <!-- END: Updated Profile Modal -->
 
-      <!-- মাসিক তহবিল মডাল (Read-only, no changes needed) -->
+
+      <!-- Fund Modal (Styled like index.html, Read-only forms) -->
       <div id="fund-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-start p-4 pt-16">
           <div id="fund-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 relative modal-exit">
               <button id="close-fund-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
               <h3 class="text-2xl font-bold mb-6 text-center text-blue-600">মাসিক তহবিল ব্যবস্থাপনা</h3>
               <div id="fund-list-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
-                  <!-- Monthly fund cards will be here -->
+                  <!-- JS will populate -->
               </div>
           </div>
       </div>
@@ -202,14 +274,14 @@
   <script type="module">
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     
     // Enable Firestore debugging
     setLogLevel('Debug');
 
-    // App Configuration
-    const appId = 'default-samiti-app-id'; // This should be unique for your app instance if you have multiple
+    // App Configuration (Same as original public-dashboard)
+    const appId = 'default-samiti-app-id'; 
     const firebaseConfig = {
       apiKey: "AIzaSyBdfxO5LL9KfzJe-PhvaRbhDhz9G-QH1aE",
       authDomain: "sg-loan-online.firebaseapp.com",
@@ -218,13 +290,12 @@
       messagingSenderId: "933667418231",
       appId: "1:933667418231:web:11c24150426bf869381672"
     };
-    const initialAuthToken = null; // Set this if you have a custom token
 
     // Global state variables
     let app, db, auth;
     let members = [];
     let fundDistribution = {};
-    let notice = { text: '', imageUrl: '' }; // Updated to handle notice object
+    let notice = { text: '', imageUrl: '' };
     let activeMember = null;
     let isInitialLoad = true;
     
@@ -234,6 +305,7 @@
     const fundModal = document.getElementById('fund-modal');
     const syncStatusEl = document.getElementById('sync-status');
     const syncTextEl = document.getElementById('sync-text');
+    const syncSpinnerEl = document.getElementById('sync-spinner'); // Added spinner ref
 
     // --- UTILITY FUNCTIONS ---
 
@@ -256,6 +328,31 @@
         }
         return '';
     };
+
+    // ShowMessage function (from index.html)
+    const showMessage = (message, type = 'success') => {
+      const messageBox = document.getElementById('message-box');
+      const messageContent = document.getElementById('message-content');
+      let bgColor = 'bg-green-500';
+      if (type === 'error') bgColor = 'bg-red-500';
+      else if (type === 'info') bgColor = 'bg-blue-500';
+      // Added class from index.html
+      messageContent.className = `shadow-xl rounded-lg p-4 font-semibold text-white ${bgColor} flex items-center space-x-2`;
+      messageContent.innerHTML = `<span>${message}</span>`;
+      messageBox.classList.remove('opacity-0');
+      setTimeout(() => { messageBox.classList.add('opacity-0'); }, 4000);
+    };
+    
+    // Sync status functions (from index.html)
+    const showSyncStatus = (text, showSpinner = false) => {
+        syncTextEl.textContent = text;
+        syncStatusEl.classList.remove('opacity-0');
+        syncSpinnerEl.classList.toggle('hidden', !showSpinner);
+    };
+    
+    const hideSyncStatus = (delay = 1500) => {
+        setTimeout(() => syncStatusEl.classList.add('opacity-0'), delay);
+    };
     
     // --- CORE LOGIC & CALCULATIONS ---
 
@@ -276,7 +373,7 @@
     // --- UI RENDERING FUNCTIONS ---
     
     const renderUI = () => {
-        // Update dashboard stats
+        // Update dashboard stats (now in separate cards)
         let totalDeposit = 0;
         let totalLoanTaken = 0;
         members.forEach(member => {
@@ -289,21 +386,21 @@
         document.getElementById('total-paid').textContent = `৳ ${getBengaliNumber(totalDeposit)}`;
         document.getElementById('total-loan-given').textContent = `৳ ${getBengaliNumber(totalLoanTaken)}`;
 
-        // Render member list (Updated)
+        // Render member list (styling from index.html)
         memberListContainer.innerHTML = ''; 
         if (members.length === 0) {
             memberListContainer.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-gray-500">এখনও কোনো সদস্য যোগ করা হয়নি।</td></tr>`;
         } else {
-            // Kept original sorting by name
-            [...members].sort((a, b) => a.name.localeCompare(b.name, 'bn')).forEach((member, index) => {
+            // Sort by name (like index.html)
+            [...members].sort((a, b) => (a.name || '').localeCompare(b.name || '', 'bn')).forEach((member, index) => {
                 const totals = calculateMemberTotals(member);
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-indigo-50 transition duration-150 cursor-pointer'; // Added cursor-pointer
-                row.dataset.id = member.id; // Added dataset.id to row
+                row.className = 'hover:bg-indigo-50 transition duration-150 cursor-pointer'; 
+                row.dataset.id = member.id;
                 
                 const placeholderUrl = `https://placehold.co/40x40/EFEFEF/AAAAAA?text=${encodeURIComponent(member.name.charAt(0))}`;
 
-                // Updated row.innerHTML to match new columns
+                // Updated row.innerHTML to match new columns/style
                 row.innerHTML = `
                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-600">${getBengaliNumber(index + 1)}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -321,7 +418,8 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">৳ ${getBengaliNumber(totals.totalDeposit)}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">৳ ${getBengaliNumber(totals.currentLoan)}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                        <button class="view-profile-btn" data-id="${member.id}">দেখুন</button>
+                        <!-- Button styled like index.html -->
+                        <button class="view-profile-btn" data-id="${member.id}">বিস্তারিত</button>
                     </td>
                 `;
                 row.querySelector('.view-profile-btn').className = 'view-profile-btn bg-indigo-500 text-white px-3 py-1 rounded-full text-xs font-bold hover:bg-indigo-600 transition shadow';
@@ -329,6 +427,7 @@
             });
         }
         
+        // Refresh active profile modal if it's open
         if (activeMember) {
             const latestData = members.find(m => m.id === activeMember.id);
             if (latestData) showProfile(latestData.id, false);
@@ -336,9 +435,9 @@
         }
     };
     
-    // Updated renderNoticeBoard function (from index.html)
+    // Updated renderNoticeBoard function (targets new ID)
     const renderNoticeBoard = () => {
-        const noticeContainer = document.getElementById('notice-board-content');
+        const noticeContainer = document.getElementById('notice-display'); // Changed ID
         noticeContainer.innerHTML = ''; // Clear previous content
 
         const hasImage = notice && notice.imageUrl && notice.imageUrl.trim() !== '';
@@ -356,48 +455,55 @@
             imgElement.className = 'max-w-full h-auto rounded-lg mb-4 mx-auto';
             imgElement.onerror = () => { 
                 imgElement.style.display = 'none'; 
-                console.error('নোটিশের ছবিটি লোড করা যায়নি।'); // No showMessage in this file
+                showMessage('নোটিশের ছবিটি লোড করা যায়নি।', 'error');
             };
             noticeContainer.appendChild(imgElement);
         }
 
         if (hasText) {
             const textContainer = document.createElement('div');
-            const formattedNotice = notice.text.split('\n').filter(line => line.trim() !== '').map(line => `<p>${line}</p>`).join('');
+            // Logic from index.html to format text
+            const formattedNotice = notice.text
+                .split('\n')
+                .filter(line => line.trim() !== '')
+                .map(line => `<p>${line.replace(/ /g, ' &nbsp;')}</p>`) 
+                .join('');
             textContainer.innerHTML = formattedNotice;
             noticeContainer.appendChild(textContainer);
         }
     };
 
-    // Updated showProfile function
+    // Updated showProfile function for new tabbed layout
     const showProfile = (id, animate = true) => {
         const member = members.find(m => m.id === id);
         activeMember = member;
         if (!member) return;
 
-        // --- New code for profile image ---
-        const placeholderUrl = `https://placehold.co/128x128/EFEFEF/AAAAAA?text=${encodeURIComponent(member.name.charAt(0))}`;
-        const profileImg = document.getElementById('profile-photo-img');
+        const totals = calculateMemberTotals(member);
+
+        // Populate new profile header
+        const placeholderUrl = `https://placehold.co/96x96/EFEFEF/AAAAAA?text=${encodeURIComponent(member.name ? member.name.charAt(0) : '?')}`;
+        const profileImg = document.getElementById('profile-header-img');
         profileImg.src = member.photoUrl || placeholderUrl;
         profileImg.onerror = () => { profileImg.src = placeholderUrl; };
-        // --- End of new code ---
+        document.getElementById('profile-header-name').textContent = member.name || 'N/A';
 
-        const totals = calculateMemberTotals(member);
-        document.getElementById('profile-name').textContent = member.name;
-        
-        // Populate new fields
+        // Populate view elements (Details Tab)
+        document.getElementById('profile-name-view').textContent = member.name || 'N/A';
         document.getElementById('profile-id').textContent = member.id;
         document.getElementById('profile-photo-url-view').textContent = member.photoUrl || 'N/A';
         document.getElementById('profile-employee-id-view').textContent = member.employeeId || 'N/A';
         document.getElementById('profile-card-number-view').textContent = member.cardNumber || 'N/A';
         document.getElementById('profile-email-view').textContent = member.email || 'N/A';
         document.getElementById('profile-phone-view').textContent = member.phone || 'N/A';
-
+        
+        // Populate summary elements (Summary Tab)
         document.getElementById('paid-total').textContent = `৳ ${getBengaliNumber(totals.totalDeposit)}`;
         document.getElementById('loan-taken').textContent = `৳ ${getBengaliNumber(totals.totalLoanTaken)}`;
         document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(totals.totalLoanRepaid)}`;
         document.getElementById('current-loan').textContent = `৳ ${getBengaliNumber(totals.currentLoan)}`;
 
+        // Populate transactions table (Transactions Tab)
         const transactionsTableBody = document.getElementById('transactions-table-body');
         transactionsTableBody.innerHTML = !member.transactions || member.transactions.length === 0 
             ? '<tr><td colspan="3" class="py-4 text-center text-gray-500">কোনো লেনদেন নেই।</td></tr>'
@@ -413,33 +519,68 @@
                 </tr>`;
             }).join('');
         
+        // Reset to default tab
+        document.querySelectorAll('.profile-tab').forEach(tab => {
+            tab.classList.remove('tab-active');
+            tab.classList.add('text-gray-500');
+        });
+        document.getElementById('profile-tab-details').classList.add('tab-active');
+        document.getElementById('profile-tab-details').classList.remove('text-gray-500');
+
+        document.querySelectorAll('#profile-content-container > div').forEach(content => {
+            content.classList.add('hidden');
+        });
+        document.getElementById('profile-content-details').classList.remove('hidden');
+
+        // Animation logic from index.html
+        const profileModalBox = document.getElementById('profile-modal-box');
         if (animate) {
             profileModal.classList.remove('hidden');
-            profileModal.classList.add('flex', 'modal-enter', 'modal-enter-active');
+            profileModal.classList.add('flex');
+            profileModalBox.classList.remove('modal-exit', 'modal-exit-active');
+            profileModalBox.classList.add('modal-enter', 'modal-enter-active');
+        } else {
+             profileModal.classList.remove('hidden');
+             profileModal.classList.add('flex');
         }
     };
     
+    // Updated closeProfileModal with new animation
     const closeProfileModal = () => {
         const profileModalBox = document.getElementById('profile-modal-box');
         profileModalBox.classList.remove('modal-enter-active');
         profileModalBox.classList.add('modal-exit-active');
-        setTimeout(() => { profileModal.classList.add('hidden'); activeMember = null; }, 300);
+        setTimeout(() => { 
+            profileModal.classList.add('hidden'); 
+            profileModal.classList.remove('flex');
+            profileModalBox.classList.remove('modal-exit-active'); // Clean up
+            activeMember = null; 
+        }, 300);
     };
 
+    // Updated openFundModal with new animation
     const openFundModal = () => {
         renderFundModal();
+        const fundModalBox = document.getElementById('fund-modal-box');
         fundModal.classList.remove('hidden');
-        fundModal.classList.add('flex', 'modal-enter', 'modal-enter-active');
+        fundModal.classList.add('flex');
+        fundModalBox.classList.remove('modal-exit', 'modal-exit-active');
+        fundModalBox.classList.add('modal-enter', 'modal-enter-active');
     };
 
+    // Updated closeFundModal with new animation
     const closeFundModal = () => {
         const fundModalBox = document.getElementById('fund-modal-box');
         fundModalBox.classList.remove('modal-enter-active');
         fundModalBox.classList.add('modal-exit-active');
-        setTimeout(() => fundModal.classList.add('hidden'), 300);
+        setTimeout(() => {
+            fundModal.classList.add('hidden');
+            fundModal.classList.remove('flex');
+            fundModalBox.classList.remove('modal-exit-active'); // Clean up
+        }, 300);
     };
 
-    // This function remains read-only, which is correct
+    // renderFundModal (Read-only, no forms)
     const renderFundModal = () => {
         const container = document.getElementById('fund-list-container');
         const monthlyDeposits = members.reduce((acc, member) => {
@@ -469,6 +610,62 @@
             }).join('');
     };
 
+    // PDF Download Function (Unchanged)
+    const handlePDFDownload = () => {
+        if (!activeMember) return;
+        
+        if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined' || typeof window.jspdf.jsPDF.autoTable === 'undefined') {
+            console.error('jsPDF or jsPDF-autoTable is not loaded.');
+            showMessage('PDF জেনারেটরে ত্রুটি হয়েছে।', 'error');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const member = activeMember;
+        const totals = calculateMemberTotals(member);
+        const transactions = [...(member.transactions || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        const head = [['Date', 'Description', 'Amount (TK) ']];
+        const body = transactions.map(t => {
+            let typeText = '';
+            if (t.type === 'deposit') typeText = 'Deposit';
+            else if (t.type === 'loanTaken') typeText = 'Loan Taken';
+            else if (t.type === 'loanRepayment') typeText = 'Loan Repayment';
+            const description = t.description ? `${typeText} (${t.description})` : typeText;
+            
+            return [
+                formatDate(t.date), 
+                description,
+                getBengaliNumber(t.amount)
+            ];
+        });
+
+        doc.setFont('Arial', 'normal');
+        doc.setFontSize(20);
+        doc.text('Transaction List', 14, 15);
+        doc.setFontSize(12);
+        doc.text(`Member: ${member.name}`, 14, 22); 
+
+        doc.autoTable({
+            head: head,
+            body: body,
+            headStyles: { fillColor: [79, 70, 229] }, // Indigo
+            startY: 30, 
+            styles: { font: 'Arial' }
+        });
+        
+        const finalY = doc.lastAutoTable.finalY || 50; 
+
+        doc.setFontSize(10);
+        doc.text(`Total Deposit: ${getBengaliNumber(totals.totalDeposit)} TK`, 14, finalY + 10);
+        doc.text(`Total Loan Taken: ${getBengaliNumber(totals.totalLoanTaken)} TK`, 14, finalY + 15);
+        doc.text(`Total Loan Repaid: ${getBengaliNumber(totals.totalLoanRepaid)} TK`, 14, finalY + 20);
+        doc.text(`Current Loan: ${getBengaliNumber(totals.currentLoan)} TK`, 14, finalY + 25);
+
+        doc.save(`${member.id}_transactions.pdf`);
+    };
+
     // --- FIREBASE & DATA PERSISTENCE ---
 
     const initializeFirebase = async () => {
@@ -481,10 +678,10 @@
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
-            if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
-            else await signInAnonymously(auth); // Kept anonymous sign-in
-            if (auth.currentUser) startDataListener();
-            else {
+            await signInAnonymously(auth); 
+            if (auth.currentUser) {
+                startDataListener();
+            } else {
                 loadingOverlay.innerHTML = '<p class="text-red-500 font-semibold">ব্যবহারকারী প্রমাণীকরণ ব্যর্থ হয়েছে।</p>';
             }
         } catch (error) {
@@ -503,12 +700,11 @@
             members = data?.members || [];
             fundDistribution = data?.fundDistribution || {};
             
-            // Updated notice parsing logic (from index.html)
             const dbNotice = data?.notice;
             if (typeof dbNotice === 'string') {
-                notice = { text: dbNotice, imageUrl: '' }; // Convert old format
+                notice = { text: dbNotice, imageUrl: '' };
             } else {
-                notice = dbNotice || { text: '', imageUrl: '' }; // Use new format or default
+                notice = dbNotice || { text: '', imageUrl: '' };
             }
             
             renderUI();
@@ -525,9 +721,8 @@
             }
             
             if(!isInitialLoad){
-                syncTextEl.textContent = 'তথ্য আপডেট হয়েছে';
-                syncStatusEl.classList.remove('opacity-0');
-                setTimeout(() => syncStatusEl.classList.add('opacity-0'), 2000);
+                showSyncStatus('তথ্য আপডেট হয়েছে'); // Use new sync function
+                hideSyncStatus(); // Use new sync function
             }
 
         }, (error) => {
@@ -539,22 +734,46 @@
     // --- APP INITIALIZATION ---
     document.addEventListener('DOMContentLoaded', initializeFirebase);
     
-    // --- EVENT HANDLERS ---
+    // --- EVENT HANDLERS (Updated) ---
     document.addEventListener('click', async (e) => {
-        // Updated logic to allow clicking on the whole row
         const viewButton = e.target.closest('.view-profile-btn');
         const profileRow = e.target.closest('tr[data-id]');
 
         if (viewButton) {
-            showProfile(viewButton.dataset.id);
+            showProfile(viewButton.dataset.id, true);
         } else if (profileRow) {
-            // Clicked on the row itself
-            showProfile(profileRow.dataset.id);
-        } else if (e.target.matches('#close-profile')) {
+            showProfile(profileRow.dataset.id, true);
+        
+        // --- Profile Tab Switching ---
+        } else if (e.target.closest('.profile-tab')) {
+            const target = e.target.closest('.profile-tab');
+            document.querySelectorAll('.profile-tab').forEach(tab => {
+                tab.classList.remove('tab-active');
+                tab.classList.add('text-gray-500');
+            });
+            target.classList.add('tab-active');
+            target.classList.remove('text-gray-500');
+
+            document.querySelectorAll('#profile-content-container > div').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            if (target.id === 'profile-tab-details') {
+                document.getElementById('profile-content-details').classList.remove('hidden');
+            } else if (target.id === 'profile-tab-transactions') {
+                document.getElementById('profile-content-transactions').classList.remove('hidden');
+            } else if (target.id === 'profile-tab-summary') {
+                document.getElementById('profile-content-summary').classList.remove('hidden');
+            }
+        
+        // --- Other Buttons ---
+        } else if (e.target.closest('#download-pdf-btn')) {
+            handlePDFDownload();
+        } else if (e.target.closest('#close-profile')) {
             closeProfileModal();
-        } else if (e.target.matches('#open-fund-modal-btn')) {
+        } else if (e.target.closest('#open-fund-modal-btn')) {
             openFundModal();
-        } else if (e.target.matches('#close-fund-modal')) {
+        } else if (e.target.closest('#close-fund-modal')) {
             closeFundModal();
         }
     });
