@@ -42,15 +42,22 @@
   <!-- Main Application Content (Hidden by default) -->
   <div id="main-app-content" class="hidden">
     
+    <!-- স্টিকি হেডার প্যানেল -->
+    <header class="sticky top-0 z-40 bg-gray-100/95 backdrop-blur-sm shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- শিরোনাম (আপডেট করা হয়েছে) -->
+        <div class="flex justify-center items-center py-4"> <!-- mb-8 সরানো হয়েছে এবং py-4 যোগ করা হয়েছে -->
+           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 tracking-tight"> <!-- py-2 সরানো হয়েছে -->
+            গার্ডিয়ান সমবায় সমিতি
+          </h1>
+        </div>
+      </div>
+    </header>
+    
     <!-- The rest of the dashboard -->
     <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
       
-      <!-- শিরোনাম (index.html-এর হেডার থেকে এখানে সরানো হয়েছে) -->
-      <div class="flex justify-center items-center mb-8">
-         <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 py-2">
-          গার্ডিয়ান সমবায় সমিতি
-        </h1>
-      </div>
+      <!-- শিরোনাম (এখান থেকে হেডারে সরানো হয়েছে) -->
       
       <!-- Notice Board (Read-Only) -->
       <div class="bg-white p-6 rounded-xl shadow-lg mb-6 prose max-w-none">
@@ -167,8 +174,8 @@
                     <!-- User ID (Read-Only) -->
                     <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-500 bg-gray-100 p-2 rounded select-all"></span></p>
                     
-                    <!-- Photo URL (Read-Only) -->
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span>
+                    <!-- Photo URL (Read-Only) - অনুরোধ অনুযায়ী হাইড করা হয়েছে -->
+                    <p class="text-gray-600 flex flex-col hidden"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span>
                         <span id="profile-photo-url-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
                     </p>
 
@@ -187,8 +194,8 @@
                         <span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
                     </p>
 
-                    <!-- Phone (Read-Only) -->
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ফোন:</span>
+                    <!-- Phone (Read-Only) - লেআউট ঠিক করার জন্য sm:col-span-2 যোগ করা হয়েছে -->
+                    <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">ফোন:</span>
                         <span id="profile-phone-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
                     </p>
 
@@ -749,6 +756,5 @@
   </script>
 </body>
 </html>
-
 
 
