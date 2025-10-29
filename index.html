@@ -34,18 +34,15 @@
   <!-- Main Application Content (Hidden by default) -->
   <div id="main-app-content" class="hidden">
     
-    <!-- START: UPDATED Header Request (More Compact for Mobile) -->
+    <!-- START: UPDATED Header Request -->
     <header class="w-full bg-gradient-to-r from-pink-600 to-red-600 text-white p-3 shadow-lg sticky top-0 z-40">
       <div class="max-w-2xl mx-auto px-4">
-        <!-- Changed to flex-row and justify-between -->
         <div class="flex flex-row justify-between items-center gap-4">
           
           <!-- Logo and Title Section -->
           <div class="flex items-center gap-3 flex-shrink-0 overflow-hidden">
-            <!-- Made logo smaller -->
             <img id="header-logo-img" src="https://placehold.co/40x40/FFFFFF/F87171?text=লোগো" alt="লোগো" class="w-10 h-10 rounded-full border-2 border-white object-cover bg-white">
             <div class="flex-grow">
-              <!-- Made text smaller -->
               <h1 class="text-xl sm:text-2xl font-bold text-white py-0 truncate">
                 মেইন গেইট সমবায় সমিতি
               </h1>
@@ -85,8 +82,8 @@
           <!-- Notice Edit Section (REMOVED) -->
         </div>
 
-        <!-- Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Stats (Updated grid) -->
+        <div class="grid grid-cols-2 gap-4">
           <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
             <h3 class="text-md font-semibold text-gray-500 mb-1">মোট সদস্য</h3>
             <p id="total-members" class="text-3xl font-bold text-indigo-600">০</p>
@@ -95,9 +92,17 @@
             <h3 class="text-md font-semibold text-gray-500 mb-1">মোট জমা</h3>
             <p id="total-paid" class="text-3xl font-bold text-green-600">৳ ০</p>
           </div>
-          <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105 col-span-2 md:col-span-1">
+          <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
             <h3 class="text-md font-semibold text-gray-500 mb-1">মোট ঋণ প্রদান</h3>
             <p id="total-loan-given" class="text-3xl font-bold text-red-600">৳ ০</p>
+          </div>
+          
+          <!-- Monthly Fund Card -->
+          <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105 flex flex-col justify-between">
+            <h3 class="text-md font-semibold text-gray-500 mb-1">মাসিক তহবিল</h3>
+            <button id="view-monthly-fund-btn" class="mt-2 w-full bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition shadow">
+                ব্যবস্থাপনা দেখুন
+            </button>
           </div>
         </div>
 
@@ -123,8 +128,6 @@
         </div>
 
       </div> <!-- End Main Content -->
-
-      <!-- Sidebar Column (REMOVED) -->
       
     </main>
     <!-- END: New Mobile-First Layout -->
@@ -138,72 +141,13 @@
   
   <!-- Verify Email Modal (Permanently Hidden) -->
   <div id="verify-email-modal" class="hidden fixed inset-0 bg-gray-100 z-[150] justify-center items-center p-4" style="display: none;">
-    <div class="bg-white w-full max-w-md p-8 rounded-xl shadow-2xl text-center">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">আপনার ইমেইল ভেরিফাই করুন</h2>
-      <p class="text-gray-600 mb-6">
-        আমরা আপনার <strong id="user-email-info" class="text-indigo-600">...</strong> ঠিকানায় একটি ভেরিফিকেশন লিঙ্ক পাঠিয়েছি। অনুগ্রহ করে আপনার ইনবক্স চেক করুন এবং লিঙ্কটিতে ক্লিক করুন।
-      </p>
-      <p class="text-gray-500 text-sm mb-6">
-        ইমেইল পাননি? স্প্যাম ফোল্ডার চেক করুন অথবা আবার পাঠান।
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4">
-        <button id="resend-verification-btn" class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition duration-200">লিঙ্কটি আবার পাঠান</button>
-        <button id="logout-btn" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-400 transition duration-200">লগ আউট</button>
-      </div>
-    </div>
+    <!-- ... (modal content hidden) ... -->
   </div>
 
 
   <!-- Auth Modal (Permanently Hidden) -->
   <div id="auth-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 z-[200] justify-center items-center p-4 transition-opacity duration-300" style="display: none;">
-      <div class="bg-white w-full max-w-sm p-6 sm:p-8 rounded-xl shadow-2xl transition-transform duration-300 transform scale-95">
-          <div class="flex border-b mb-6">
-              <button id="login-tab" class="flex-1 py-2 text-center font-semibold border-b-2 tab-active">প্রবেশ করুন</button>
-              <button id="register-tab" class="flex-1 py-2 text-center font-semibold border-b-2 border-transparent text-gray-500">নিবন্ধন করুন</button>
-          </div>
-          
-          <!-- Login View -->
-          <div id="login-view">
-            <form id="login-form" class="space-y-4">
-              <div>
-                <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">ইমেইল</label>
-                <input type="email" id="login-email" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-              </div>
-              <div>
-                <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড</label>
-                <input type="password" id="login-password" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-              </div>
-              <p id="login-error" class="text-red-500 text-sm h-4"></p>
-              <button id="login-button" type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition duration-200 shadow-md disabled:opacity-50 flex justify-center items-center gap-2">
-                <span>প্রবেশ করুন</span>
-                <div class="spinner hidden"></div>
-              </button>
-            </form>
-          </div>
-
-          <!-- Register View (Hidden by default) -->
-          <div id="register-view" class="hidden">
-            <form id="register-form" class="space-y-4">
-              <div>
-                <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">ইমেইল</label>
-                <input type="email" id="register-email" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-              </div>
-              <div>
-                <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label>
-                <input type="password" id="register-password" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-              </div>
-              <div>
-                <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড নিশ্চিত করুন</label>
-                <input type="password" id="confirm-password" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-              </div>
-              <p id="register-error" class="text-red-500 text-sm h-4"></p>
-              <button id="register-button" type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition duration-200 shadow-md disabled:opacity-50 flex justify-center items-center gap-2">
-                <span>নিবন্ধন করুন</span>
-                <div class="spinner hidden"></div>
-              </button>
-            </form>
-          </div>
-      </div>
+      <!-- ... (modal content hidden) ... -->
   </div>
 
   <!-- প্রোফাইল মডাল (Profile Modal) -->
@@ -223,12 +167,10 @@
             <button id="profile-tab-details" class="profile-tab tab-active flex items-center justify-center gap-2 py-3 px-6 font-semibold">
                 <span class="hidden sm:inline">👤</span>
                 <span>সদস্য বিস্তারিত</span>
-                <!-- Edit Icon (REMOVED) -->
             </button>
             <button id="profile-tab-transactions" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold">
                 <span class="hidden sm:inline">🧾</span>
                 <span>লেনদেন</span>
-                 <!-- Add Icon (REMOVED) -->
             </button>
             <button id="profile-tab-summary" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold">
                 <span class="hidden sm:inline">📈</span>
@@ -241,52 +183,34 @@
             
             <!-- Panel 1: Member Details -->
             <div id="profile-content-details">
-                <!-- Edit/Save/Cancel Buttons (REMOVED) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
-                    <!-- Name (Read-only) -->
                     <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">নাম:</span>
                         <span id="profile-name-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
                     </p>
-                    <!-- User ID (Not editable) -->
                     <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-500 bg-gray-100 p-2 rounded select-all"></span></p>
-                    
-                    <!-- Photo URL (Hidden) -->
                     <p class="text-gray-600 flex flex-col hidden"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span>
                         <span id="profile-photo-url-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
                     </p>
-
-                    <!-- Employee ID -->
                     <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">এমপ্লয়ি আইডি:</span>
                         <span id="profile-employee-id-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
                     </p>
-                    
-                    <!-- Card Number -->
                     <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">কার্ড নম্বর:</span>
                         <span id="profile-card-number-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
                     </p>
-                    
-                    <!-- Email -->
                     <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইমেইল:</span>
                         <span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
                     </p>
-
-                    <!-- Phone -->
                     <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ফোন:</span>
                         <span id="profile-phone-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
                     </p>
-
-                    <!-- Notes Textbox -->
                     <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">সদস্য সম্পর্কে নোট:</span>
                         <span id="profile-notes-view" class="text-gray-900 bg-gray-100 p-2 rounded min-h-[50px] whitespace-pre-wrap"></span>
                     </p>
                 </div>
-
-                <!-- Delete Member Button (REMOVED) -->
             </div>
 
             <!-- Panel 2: Transactions -->
             <div id="profile-content-transactions" class="hidden h-full">
-                <!-- Add Transaction Button (REMOVED) -->
                 <div class="overflow-y-auto border rounded-lg shadow-inner h-full">
                     <table class="min-w-full bg-gray-50">
                         <thead class="bg-indigo-100 sticky top-0">
@@ -294,11 +218,9 @@
                                 <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">তারিখ</th>
                                 <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">বিবরণ</th>
                                 <th class="py-2 px-4 text-right text-xs font-medium text-gray-600 uppercase">পরিমাণ (৳)</th>
-                                <!-- Action Column (REMOVED) -->
                             </tr>
                         </thead>
                         <tbody id="transactions-table-body" class="divide-y divide-gray-200">
-                            <!-- JS will populate this -->
                         </tbody>
                     </table>
                 </div>
@@ -332,9 +254,16 @@
     </div>
   </div>
 
-  <!-- Transaction Modal (REMOVED) -->
-  <!-- Fund Modal (REMOVED) -->
-  <!-- Confirmation Modal (REMOVED) -->
+  <!-- মাসিক তহবিল মডাল (Updated from index.html) -->
+  <div id="monthly-fund-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-start p-4 pt-16">
+    <div id="monthly-fund-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 relative modal-exit">
+      <button id="close-fund-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
+      <h3 class="text-2xl font-bold mb-6 text-center text-blue-600">মাসিক তহবিল ব্যবস্থাপনা</h3>
+      <div id="fund-list-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+          <!-- JS will populate this -->
+      </div>
+    </div>
+  </div>
 
 
   <script type="module">
@@ -364,13 +293,11 @@
     // Global state variables
     let app, db, auth;
     let members = [];
-    // START: Updated notice and new logoUrl/importantLinks state
-    let notice = { text: '', imageUrl: '', linkText: '', linkUrl: '' }; // নোটিশের জন্য ভেরিয়েবল
-    let logoUrl = ''; // লোগোর জন্য ভেরিয়েবল
-    let importantLinks = []; // গুরুত্বপূর্ণ লিংকের জন্য ভেরিয়েবল
-    // END: Updated state
+    let fundDistribution = {}; // Added from index.html
+    let notice = { text: '', imageUrl: '', linkText: '', linkUrl: '' }; 
+    let logoUrl = ''; 
+    let importantLinks = [];
     let activeMember = null;
-    // verificationCheckInterval (REMOVED)
     let searchQuery = '';
     
     // UI Elements
@@ -380,6 +307,7 @@
     const memberListCardContainer = document.getElementById('member-list-cards');
     const memberListPlaceholder = document.getElementById('member-list-placeholder');
     const profileModal = document.getElementById('profile-modal');
+    const monthlyFundModal = document.getElementById('monthly-fund-modal'); 
 
     // --- UTILITY FUNCTIONS ---
 
@@ -431,11 +359,18 @@
         return totals;
     };
     
+    // calculateAvailableFund (from index.html, needed for renderFundModal logic)
+    const calculateAvailableFund = () => {
+        let totalDeposit = members.reduce((sum, member) => sum + calculateMemberTotals(member).totalDeposit, 0);
+        let totalDistributed = Object.values(fundDistribution).reduce((sum, dist) => sum + (dist.amount || 0), 0);
+        return totalDeposit - totalDistributed;
+    };
+
     // --- UI RENDERING FUNCTIONS ---
     
     const renderHeaderLogo = () => {
       const logoImg = document.getElementById('header-logo-img');
-      const placeholder = 'https://placehold.co/40x40/FFFFFF/F87171?text=লোগো'; // Updated placeholder size
+      const placeholder = 'https://placehold.co/40x40/FFFFFF/F87171?text=লোগো'; 
 
       const currentLogoUrl = logoUrl || '';
       logoImg.src = currentLogoUrl || placeholder;
@@ -527,14 +462,12 @@
         }
     };
     
-    // START: New Function to render important links (now just clears)
     const renderImportantLinks = () => {
         const container = document.getElementById('important-links-display');
         if (container) {
             container.innerHTML = ''; // Clear and ensure it's hidden (via HTML class)
         }
     };
-    // END: New function
 
     const renderNoticeBoard = () => {
         const noticeDisplay = document.getElementById('notice-display');
@@ -660,6 +593,82 @@
         }, 300);
     };
 
+    // --- NEW/UPDATED Fund Modal Functions ---
+
+    // renderFundModal (from index.html, modified for read-only)
+    const renderFundModal = () => {
+        const container = document.getElementById('fund-list-container');
+        if (!container) return; // Safety check
+
+        const monthlyDeposits = members.reduce((acc, member) => {
+            (member.transactions || []).forEach(t => {
+                if (t.type === 'deposit' && t.date) {
+                    const monthKey = t.date.substring(0, 7); // e.g., "2025-10"
+                    acc[monthKey] = (acc[monthKey] || 0) + Number(t.amount);
+                }
+            });
+            return acc;
+        }, {});
+
+        const sortedMonths = Object.keys(monthlyDeposits).sort().reverse();
+        
+        container.innerHTML = sortedMonths.length === 0
+            ? '<div class="text-center text-gray-500">কোনো মাসের জমার হিসাব নেই।</div>'
+            : sortedMonths.map(monthKey => {
+                const distribution = fundDistribution[monthKey];
+                const receiver = distribution ? members.find(m => m.id === distribution.receiverId) : null;
+                
+                const placeholderUrl = receiver ? `https://placehold.co/40x40/EFEFEF/AAAAAA?text=${encodeURIComponent(receiver.name ? receiver.name.charAt(0) : '?')}` : '';
+                
+                return `<div class="p-4 border rounded-lg shadow-sm">
+                    <h4 class="text-lg font-semibold text-blue-700">${formatDate(monthKey + '-01', 'monthYear')}</h4>
+                    <p>এই মাসে মোট জমা: <span class="font-bold">৳ ${getBengaliNumber(monthlyDeposits[monthKey])}</span></p>
+                    ${receiver
+                        ? `<div class="mt-3 p-3 bg-green-50 rounded-lg flex items-center gap-4">
+                               <img 
+                                 src="${receiver.photoUrl || placeholderUrl}" 
+                                 onerror="this.onerror=null;this.src='${placeholderUrl}';"
+                                 alt="${receiver.name}" 
+                                 class="w-12 h-12 rounded-full object-cover border-2 border-green-200 flex-shrink-0">
+                               <div>
+                                 <p class="text-sm font-semibold text-green-700">✅ তহবিল প্রাপ্ত:</p>
+                                 <p class="text-lg font-bold text-gray-800">${receiver.name}</p>
+                                 <p class="text-md font-semibold text-green-600 mt-1">৳ ${getBengaliNumber(distribution.amount)}</p>
+                               </div>
+                           </div>`
+                        // FORM IS REMOVED FOR PUBLIC PAGE
+                        : `<div class="mt-3 p-3 bg-gray-50 rounded-lg">
+                               <p class="text-sm font-semibold text-gray-600">
+                                   এই মাসের তহবিল এখনও কাউকে প্রদান করা হয়নি।
+                               </p>
+                           </div>`
+                    }
+                </div>`;
+            }).join('');
+    };
+
+    const showFundModal = (animate = true) => {
+        renderFundModal(); // Render content just before showing
+        const modalBox = document.getElementById('monthly-fund-modal-box');
+        if (animate) {
+            monthlyFundModal.classList.remove('hidden');
+            monthlyFundModal.classList.add('flex');
+            modalBox.classList.remove('modal-exit-active');
+            modalBox.classList.add('modal-enter-active');
+        }
+    };
+
+    const closeFundModal = () => {
+        const modalBox = document.getElementById('monthly-fund-modal-box');
+        modalBox.classList.remove('modal-enter-active');
+        modalBox.classList.add('modal-exit-active');
+        setTimeout(() => { 
+            monthlyFundModal.classList.add('hidden'); 
+            monthlyFundModal.classList.remove('flex');
+            modalBox.classList.remove('modal-exit-active');
+        }, 300);
+    };
+
     // --- FIREBASE & DATA PERSISTENCE ---
 
     const initializeFirebase = () => {
@@ -675,19 +684,18 @@
         }
     };
 
-    // updateFirebaseData function (REMOVED)
-
-    // START: Updated to read logoUrl, new notice structure, and importantLinks
+    // Data listener (Updated)
     const startDataListener = () => {
         const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
         onSnapshot(docRef, (doc) => {
             const data = doc.data();
             members = data?.members || [];
-            logoUrl = data?.logoUrl || ''; // Read logoUrl
-            importantLinks = data?.importantLinks || []; // Read importantLinks
+            fundDistribution = data?.fundDistribution || {}; // Added
+            logoUrl = data?.logoUrl || ''; 
+            importantLinks = data?.importantLinks || [];
             
             const dbNotice = data?.notice;
-            if (typeof dbNotice === 'string') { // Backward compatibility
+            if (typeof dbNotice === 'string') { 
                 notice = { text: dbNotice, imageUrl: '', linkText: '', linkUrl: '' };
             } else {
                 notice = dbNotice || { text: '', imageUrl: '', linkText: '', linkUrl: '' };
@@ -695,54 +703,43 @@
 
             renderUI();
             renderNoticeBoard();
-            renderHeaderLogo(); // Render the logo
-            renderImportantLinks(); // Render important links
+            renderHeaderLogo(); 
+            renderImportantLinks(); 
+            
+            // Re-render fund modal if it's open
+            if (!monthlyFundModal.classList.contains('hidden')) {
+                renderFundModal();
+            }
 
         }, (error) => {
             console.error("Firestore listener error:", error);
             showMessage("রিয়েল-টাইম ডেটা লোড করতে সমস্যা হয়েছে।", 'error');
         });
     };
-    // END: Updated listener
     
     // --- APP INITIALIZATION ---
     
     initializeFirebase();
 
-    // START: UPDATED Auth State Change Handler (No Login)
+    // Auth State Change Handler (No Login)
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            // User is signed in (either anonymously or previously logged in)
             authModal.classList.add('hidden');
             verifyEmailModal.classList.add('hidden');
             mainAppContent.classList.remove('hidden');
             startDataListener();
         } else {
-            // No user, try to sign in anonymously
             try {
                 await signInAnonymously(auth);
-                // onAuthStateChanged will be called again with the new anonymous user
-                // and the 'if (user)' block will execute.
             } catch (error) {
                 console.error("Anonymous sign-in failed:", error);
                 showMessage("অ্যাপ্লিকেশন লোড করতে সমস্যা হচ্ছে।", 'error');
-                // Show a simple error on the page if auth fails
                 document.body.innerHTML = '<div class="h-screen w-full flex items-center justify-center text-red-600 font-bold p-8 text-center">সার্ভারের সাথে সংযোগ করতে ব্যর্থ। অনুগ্রহ করে পৃষ্ঠাটি রিফ্রেশ করুন।</div>';
             }
         }
     });
-    // END: UPDATED Auth State Change Handler
-
     
     // --- EVENT HANDLERS ---
-    
-    // Auth Tab Switching (REMOVED)
-    // Login Form (REMOVED)
-    // Register Form (REMOVED)
-    // Verify Email Modal Buttons (REMOVED)
-    // Add Member Form Submission (REMOVED)
-    // Transaction Form Submission (REMOVED)
-    // Assign Fund Form Submission (REMOVED)
 
     // Search Input
     document.getElementById('search-member-input').addEventListener('input', (e) => {
@@ -750,12 +747,8 @@
         renderUI();
     });
 
-    // Save Logo Button (REMOVED)
-    // Save New Important Link Button (REMOVED)
-
     // General Click Handler
     document.addEventListener('click', async (e) => {
-        // Use e.target.closest to handle clicks on nested elements
         const target = e.target.closest('button'); 
         if (!target) return;
         
@@ -785,11 +778,14 @@
             showProfile(target.dataset.id);
         } else if (target.matches('#close-profile')) {
             closeProfileModal();
-        } 
-        // Logout button handler (REMOVED)
-        // All other edit/delete/save handlers REMOVED
+        } else if (target.matches('#view-monthly-fund-btn')) { // Listener for the card button
+            showFundModal();
+        } else if (target.matches('#close-fund-modal')) { // Listener for modal close button
+            closeFundModal();
+        }
     });
   </script>
 </body>
 </html>
+
 
