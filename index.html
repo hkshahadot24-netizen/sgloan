@@ -27,6 +27,14 @@
         color: #4f46e5;
         background-color: #eef2ff;
     }
+
+    /* --- LOTTERY STYLES (Read Only) --- */
+    #lottery-modal { font-family: 'Hind Siliguri', sans-serif; background-color: #0f172a; color: #f1f5f9; }
+    #lottery-modal ::-webkit-scrollbar { width: 8px; }
+    #lottery-modal ::-webkit-scrollbar-track { background: #1e293b; }
+    #lottery-modal ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+    .lottery-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -34,7 +42,7 @@
   <!-- Main Application Content (Hidden by default) -->
   <div id="main-app-content" class="hidden">
     
-    <!-- START: UPDATED Header Request -->
+    <!-- Header -->
     <header class="w-full bg-gradient-to-r from-pink-600 to-red-600 text-white p-3 shadow-lg sticky top-0 z-40">
       <div class="max-w-2xl mx-auto px-4">
         <div class="flex flex-row justify-between items-center gap-4">
@@ -50,39 +58,22 @@
               <p class="text-xs font-semibold text-pink-100 mt-1">★ বিশ্বাস ★ মানবিকতা ★ উন্নয়ন ★</p>
             </div>
           </div>
-
-          <!-- Logout Button (REMOVED) -->
-          <button id="logout-main-btn" class="flex-shrink-0 bg-red-700 text-white py-1 px-3 rounded-lg font-bold hover:bg-red-800 transition duration-200 text-sm" style="display: none;">
-            লগ আউট
-          </button>
-
         </div>
       </div>
     </header>
-    <!-- END: UPDATED Header Request -->
 
-    <!-- START: New Mobile-First Layout (Main Content) -->
+    <!-- Main Content -->
     <main class="max-w-2xl mx-auto p-4 space-y-4">
       
-      <!-- Main Content -->
       <div class="space-y-4">
         
         <!-- Notice Board -->
         <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg prose max-w-none">
-          <!-- START: Important Links Display (Hidden) -->
-          <div id="important-links-display" class="mb-4 hidden">
-              <!-- JS will populate this, but it remains hidden -->
-          </div>
-          <!-- END: New Important Links Display -->
-
-          <!-- Notice Board Display -->
-          <div id="notice-display" class="text-gray-700">
-              <!-- JS will populate -->
-          </div>
-          <!-- Notice Edit Section (REMOVED) -->
+          <div id="important-links-display" class="mb-4 hidden"></div>
+          <div id="notice-display" class="text-gray-700"></div>
         </div>
 
-        <!-- Stats (Updated grid) -->
+        <!-- Stats Grid (Updated with Lottery Card) -->
         <div class="grid grid-cols-2 gap-4">
           <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
             <h3 class="text-md font-semibold text-gray-500 mb-1">মোট সদস্য</h3>
@@ -104,33 +95,36 @@
                 ব্যবস্থাপনা দেখুন
             </button>
           </div>
-        </div>
 
-        <!-- Add Member Form (REMOVED) -->
+          <!-- Lottery Card (NEW) -->
+          <div class="col-span-2 bg-gradient-to-r from-slate-800 to-slate-900 p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-[1.02] flex flex-row items-center justify-between border border-slate-700">
+            <div class="text-left">
+                <h3 class="text-lg font-bold text-cyan-400 mb-0">🎲 লাকি লটারি</h3>
+                <p class="text-xs text-slate-400">ভাগ্য পরীক্ষা ও ফলাফল</p>
+            </div>
+            <button id="view-lottery-btn" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg text-sm font-bold hover:shadow-lg hover:shadow-cyan-500/30 transition shadow">
+                ফলাফল দেখুন
+            </button>
+          </div>
+        </div>
 
         <!-- Member List -->
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
           <div class="p-4 sm:p-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b">
             <h3 class="text-2xl font-bold text-gray-800">সদস্য তালিকা</h3>
-            <!-- Fund Modal Button (REMOVED) -->
           </div>
           
           <div class="p-4 border-b">
               <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন (নাম, আইডি, কার্ড...)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" autocomplete="off">
           </div>
 
-          <div id="member-list-cards" class="p-4 grid grid-cols-1 gap-4">
-              <!-- JS will populate this with cards -->
-          </div>
-          <div id="member-list-placeholder" class="hidden p-6 text-center text-gray-500">
-              <!-- JS will set text content -->
-          </div>
+          <div id="member-list-cards" class="p-4 grid grid-cols-1 gap-4"></div>
+          <div id="member-list-placeholder" class="hidden p-6 text-center text-gray-500"></div>
         </div>
 
       </div> <!-- End Main Content -->
       
     </main>
-    <!-- END: New Mobile-First Layout -->
 
     <!-- Message Box -->
     <div id="message-box" class="fixed top-5 left-1/2 -translate-x-1/2 z-[300] transition-opacity duration-300 opacity-0">
@@ -140,23 +134,17 @@
   </div>
   
   <!-- Verify Email Modal (Permanently Hidden) -->
-  <div id="verify-email-modal" class="hidden fixed inset-0 bg-gray-100 z-[150] justify-center items-center p-4" style="display: none;">
-    <!-- ... (modal content hidden) ... -->
-  </div>
-
+  <div id="verify-email-modal" class="hidden fixed inset-0 bg-gray-100 z-[150] justify-center items-center p-4" style="display: none;"></div>
 
   <!-- Auth Modal (Permanently Hidden) -->
-  <div id="auth-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 z-[200] justify-center items-center p-4 transition-opacity duration-300" style="display: none;">
-      <!-- ... (modal content hidden) ... -->
-  </div>
+  <div id="auth-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 z-[200] justify-center items-center p-4 transition-opacity duration-300" style="display: none;"></div>
 
-  <!-- প্রোফাইল মডাল (Profile Modal) -->
+  <!-- প্রোফাইল মডাল -->
   <div id="profile-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-center p-4">
     <div id="profile-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-7xl p-6 relative h-[90vh] flex flex-col">
       <button id="close-profile" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
       
       <div id="profile-modal-content" class="flex flex-col h-full">
-        
         <div class="flex flex-col items-center justify-center pt-2 pb-6 border-b">
             <img id="profile-header-img" src="https://placehold.co/96x96/EFEFEF/AAAAAA?text=?" alt="সদস্যের ছবি" class="w-24 h-24 rounded-full object-cover border-4 border-indigo-200 shadow-lg mb-3">
             <h2 id="profile-header-name" class="text-3xl font-bold text-indigo-700 truncate">সদস্যের নাম</h2>
@@ -164,122 +152,123 @@
 
         <!-- 2. Tab Headers -->
         <div class="flex border-b border-gray-200 mb-6 flex-shrink-0">
-            <button id="profile-tab-details" class="profile-tab tab-active flex items-center justify-center gap-2 py-3 px-6 font-semibold">
-                <span class="hidden sm:inline">👤</span>
-                <span>সদস্য বিস্তারিত</span>
-            </button>
-            <button id="profile-tab-transactions" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold">
-                <span class="hidden sm:inline">🧾</span>
-                <span>লেনদেন</span>
-            </button>
-            <button id="profile-tab-summary" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold">
-                <span class="hidden sm:inline">📈</span>
-                <span>সার-সংক্ষেপ</span>
-            </button>
+            <button id="profile-tab-details" class="profile-tab tab-active flex items-center justify-center gap-2 py-3 px-6 font-semibold"><span class="hidden sm:inline">👤</span><span>সদস্য বিস্তারিত</span></button>
+            <button id="profile-tab-transactions" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold"><span class="hidden sm:inline">🧾</span><span>লেনদেন</span></button>
+            <button id="profile-tab-summary" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold"><span class="hidden sm:inline">📈</span><span>সার-সংক্ষেপ</span></button>
         </div>
 
-        <!-- 3. Tab Content Panels (Takes remaining height) -->
+        <!-- 3. Tab Content Panels -->
         <div id="profile-content-container" class="overflow-y-auto flex-grow">
-            
             <!-- Panel 1: Member Details -->
             <div id="profile-content-details">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
-                    <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">নাম:</span>
-                        <span id="profile-name-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
-                    </p>
+                    <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">নাম:</span><span id="profile-name-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
                     <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-500 bg-gray-100 p-2 rounded select-all"></span></p>
-                    <p class="text-gray-600 flex flex-col hidden"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span>
-                        <span id="profile-photo-url-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
-                    </p>
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">এমপ্লয়ি আইডি:</span>
-                        <span id="profile-employee-id-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
-                    </p>
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">কার্ড নম্বর:</span>
-                        <span id="profile-card-number-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
-                    </p>
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইমেইল:</span>
-                        <span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span>
-                    </p>
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ফোন:</span>
-                        <span id="profile-phone-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span>
-                    </p>
-                    <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">সদস্য সম্পর্কে নোট:</span>
-                        <span id="profile-notes-view" class="text-gray-900 bg-gray-100 p-2 rounded min-h-[50px] whitespace-pre-wrap"></span>
-                    </p>
+                    <p class="text-gray-600 flex flex-col hidden"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span><span id="profile-photo-url-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span></p>
+                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">এমপ্লয়ি আইডি:</span><span id="profile-employee-id-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
+                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">কার্ড নম্বর:</span><span id="profile-card-number-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
+                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইমেইল:</span><span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span></p>
+                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ফোন:</span><span id="profile-phone-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
+                    <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">সদস্য সম্পর্কে নোট:</span><span id="profile-notes-view" class="text-gray-900 bg-gray-100 p-2 rounded min-h-[50px] whitespace-pre-wrap"></span></p>
                 </div>
             </div>
-
             <!-- Panel 2: Transactions -->
             <div id="profile-content-transactions" class="hidden h-full">
                 <div class="overflow-y-auto border rounded-lg shadow-inner h-full">
                     <table class="min-w-full bg-gray-50">
-                        <thead class="bg-indigo-100 sticky top-0">
-                            <tr>
-                                <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">তারিখ</th>
-                                <th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">বিবরণ</th>
-                                <th class="py-2 px-4 text-right text-xs font-medium text-gray-600 uppercase">পরিমাণ (৳)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactions-table-body" class="divide-y divide-gray-200">
-                        </tbody>
+                        <thead class="bg-indigo-100 sticky top-0"><tr><th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">তারিখ</th><th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">বিবরণ</th><th class="py-2 px-4 text-right text-xs font-medium text-gray-600 uppercase">পরিমাণ (৳)</th></tr></thead>
+                        <tbody id="transactions-table-body" class="divide-y divide-gray-200"></tbody>
                     </table>
                 </div>
             </div>
-
             <!-- Panel 3: Summary -->
             <div id="profile-content-summary" class="hidden">
                  <h3 class="text-2xl font-semibold text-green-600 border-b pb-2 pt-4 mb-6">📈 সারসংক্ষেপ</h3>
                 <div class="grid grid-cols-2 gap-4 text-center py-4">
-                    <div>
-                        <p class="text-sm text-gray-500">মোট জমা</p>
-                        <p id="paid-total" class="text-2xl font-bold text-green-600">৳ ০</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">মোট ঋণ গ্রহণ</p>
-                        <p id="loan-taken" class="text-2xl font-bold text-blue-600">৳ ০</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">মোট ঋণ পরিশোধ</p>
-                        <p id="loan-repaid" class="text-2xl font-bold text-yellow-600">৳ ০</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">বর্তমান ঋণ</p>
-                        <p id="current-loan" class="text-2xl font-bold text-red-600">৳ ০</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">মোট জমা</p><p id="paid-total" class="text-2xl font-bold text-green-600">৳ ০</p></div>
+                    <div><p class="text-sm text-gray-500">মোট ঋণ গ্রহণ</p><p id="loan-taken" class="text-2xl font-bold text-blue-600">৳ ০</p></div>
+                    <div><p class="text-sm text-gray-500">মোট ঋণ পরিশোধ</p><p id="loan-repaid" class="text-2xl font-bold text-yellow-600">৳ ০</p></div>
+                    <div><p class="text-sm text-gray-500">বর্তমান ঋণ</p><p id="current-loan" class="text-2xl font-bold text-red-600">৳ ০</p></div>
                 </div>
             </div>
-
-        </div> <!-- End of tab content container -->
+        </div> 
       </div>
     </div>
   </div>
 
-  <!-- মাসিক তহবিল মডাল (Updated from index.html) -->
+  <!-- মাসিক তহবিল মডাল -->
   <div id="monthly-fund-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-start p-4 pt-16">
     <div id="monthly-fund-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 relative modal-exit">
       <button id="close-fund-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
       <h3 class="text-2xl font-bold mb-6 text-center text-blue-600">মাসিক তহবিল ব্যবস্থাপনা</h3>
-      <div id="fund-list-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
-          <!-- JS will populate this -->
-      </div>
+      <div id="fund-list-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2"></div>
     </div>
+  </div>
+
+  <!-- Lottery Modal (Read Only) -->
+  <div id="lottery-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-[#0f172a]">
+    <canvas id="confetti"></canvas>
+    <div class="absolute top-4 left-4 z-50">
+        <button id="close-lottery-btn" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg border border-slate-500"><span>⬅ ফিরে যান</span></button>
+    </div>
+    
+    <div class="w-full max-w-[1800px] mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 grow mt-12 overflow-y-auto">
+        
+        <!-- Left Sidebar (History & Info) -->
+        <div class="lg:col-span-4 flex flex-col gap-6 order-2 lg:order-1">
+            <div class="text-center lg:text-left">
+                <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-2">মাসিক লটারি ফলাফল</h1>
+                <p class="text-slate-400 text-sm">সমিতির সকল সদস্যদের নিয়ে মাসিক লটারি</p>
+            </div>
+            
+            <!-- History Panel -->
+            <div class="lottery-card p-4 rounded-xl flex-1 min-h-[300px]">
+                <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
+                    <h2 class="text-lg font-semibold text-slate-300">📜 পূর্ববর্তী বিজয়ী তালিকা</h2>
+                </div>
+                <ul id="lotteryHistory" class="space-y-2 max-h-[400px] overflow-y-auto pr-2 text-sm">
+                    <!-- History Items will go here -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right/Main Display (Winner & Participants) -->
+        <div class="lg:col-span-8 flex flex-col gap-6 h-full order-1 lg:order-2">
+            <!-- Winner Display (Hidden by default, shown if history exists) -->
+            <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-500">
+                <div class="lottery-card p-8 rounded-3xl border-4 border-yellow-500/50 shadow-[0_0_80px_rgba(234,179,8,0.5)] text-center bg-gradient-to-b from-slate-800/90 to-slate-900/95 backdrop-blur-xl">
+                    <h3 class="text-2xl text-yellow-400 mb-4 font-bold">🎉 সর্বশেষ বিজয়ী 🎉</h3>
+                    <div id="lotteryWinnerText" class="text-5xl md:text-7xl font-extrabold text-white break-words drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] tracking-wide"></div>
+                    <div id="lotteryWinnerDate" class="text-slate-400 mt-4 font-mono"></div>
+                </div>
+            </div>
+
+            <!-- Participants List -->
+            <div class="lottery-card p-6 rounded-xl flex-1 flex flex-col shadow-xl h-full min-h-[400px]">
+                <div class="flex justify-between items-center mb-4 px-2">
+                    <h2 class="text-xl font-semibold text-slate-200">অংশগ্রহণকারী সদস্যবৃন্দ <span class="text-sm font-normal text-slate-400 ml-2">(মোট: <span id="lotteryCountBadge" class="text-cyan-400 font-bold">0</span>)</span></h2>
+                </div>
+                <ul id="lotteryParticipants" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 overflow-y-auto pr-2 flex-1 content-start">
+                    <!-- Participants will go here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="w-full py-6 text-center border-t border-slate-800/50 mt-auto bg-[#0f172a]/50 backdrop-blur-sm">
+        <p class="text-slate-500 text-sm font-mono">All rights reserved © Sahadot 2025</p>
+    </footer>
   </div>
 
 
   <script type="module">
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { 
-        getAuth, 
-        onAuthStateChanged,
-        signInAnonymously // Updated import
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     
-    // Enable Firestore debugging
     setLogLevel('Debug');
 
-    // App Configuration
     const appId = 'default-samiti-app-id'; 
     const firebaseConfig = {
       apiKey: "AIzaSyBdfxO5LL9KfzJe-PhvaRbhDhz9G-QH1aE",
@@ -290,13 +279,13 @@
       appId: "1:933667418231:web:11c24150426bf869381672"
     };
 
-    // Global state variables
     let app, db, auth;
     let members = [];
-    let fundDistribution = {}; // Added from index.html
+    let fundDistribution = {};
     let notice = { text: '', imageUrl: '', linkText: '', linkUrl: '' }; 
     let logoUrl = ''; 
     let importantLinks = [];
+    let lottery = { participants: [], history: [] }; // Added Lottery State
     let activeMember = null;
     let searchQuery = '';
     
@@ -310,7 +299,6 @@
     const monthlyFundModal = document.getElementById('monthly-fund-modal'); 
 
     // --- UTILITY FUNCTIONS ---
-
     const getBengaliNumber = (n) => {
         if (n === null || n === undefined || isNaN(n)) return "০";
         return new Intl.NumberFormat('bn-BD', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n);
@@ -343,8 +331,6 @@
       setTimeout(() => { messageBox.classList.add('opacity-0'); }, 4000);
     };
 
-    // --- CORE LOGIC & CALCULATIONS ---
-
     const calculateMemberTotals = (member) => {
         const totals = { totalDeposit: 0, totalLoanTaken: 0, totalLoanRepaid: 0, currentLoan: 0 };
         if(member?.transactions) {
@@ -358,28 +344,17 @@
         totals.currentLoan = totals.totalLoanTaken - totals.totalLoanRepaid;
         return totals;
     };
-    
-    // calculateAvailableFund (from index.html, needed for renderFundModal logic)
-    const calculateAvailableFund = () => {
-        let totalDeposit = members.reduce((sum, member) => sum + calculateMemberTotals(member).totalDeposit, 0);
-        let totalDistributed = Object.values(fundDistribution).reduce((sum, dist) => sum + (dist.amount || 0), 0);
-        return totalDeposit - totalDistributed;
-    };
 
     // --- UI RENDERING FUNCTIONS ---
-    
     const renderHeaderLogo = () => {
       const logoImg = document.getElementById('header-logo-img');
       const placeholder = 'https://placehold.co/40x40/FFFFFF/F87171?text=লোগো'; 
-
-      const currentLogoUrl = logoUrl || '';
-      logoImg.src = currentLogoUrl || placeholder;
+      logoImg.src = logoUrl || placeholder;
       logoImg.onerror = () => { logoImg.src = placeholder; };
     };
 
     const renderUI = () => {
-        let totalDeposit = 0;
-        let totalLoanTaken = 0;
+        let totalDeposit = 0, totalLoanTaken = 0;
         members.forEach(member => {
             const totals = calculateMemberTotals(member);
             totalDeposit += totals.totalDeposit;
@@ -396,30 +371,21 @@
         const filteredMembers = members.filter(member => {
             const query = searchQuery.toLowerCase().trim();
             if (!query) return true;
-            const name = (member.name || '').toLowerCase();
-            const id = (member.id || '').toLowerCase();
-            const employeeId = (member.employeeId || '').toLowerCase();
-            const cardNumber = (member.cardNumber || '').toLowerCase();
-            return name.includes(query) || id.includes(query) || employeeId.includes(query) || cardNumber.includes(query);
+            return (member.name || '').toLowerCase().includes(query) || 
+                   (member.id || '').toLowerCase().includes(query) || 
+                   (member.cardNumber || '').toLowerCase().includes(query);
         });
 
         if (filteredMembers.length === 0) {
             memberListPlaceholder.classList.remove('hidden');
-            if (searchQuery) {
-                 memberListPlaceholder.textContent = `"${searchQuery}" এর সাথে মিলে এমন কোনো সদস্য পাওয়া যায়নি।`;
-            } else {
-                 memberListPlaceholder.textContent = `এখনও কোনো সদস্য যোগ করা হয়নি।`;
-            }
+            memberListPlaceholder.textContent = searchQuery ? `"${searchQuery}" এর সাথে মিলে এমন কোনো সদস্য পাওয়া যায়নি।` : `এখনও কোনো সদস্য যোগ করা হয়নি।`;
         } else {
             const sortedMembers = [...filteredMembers].sort((a, b) => (a.name || '').localeCompare(b.name || '', 'bn'));
-            
             sortedMembers.forEach((member) => {
                 const totals = calculateMemberTotals(member);
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-lg shadow-md border border-gray-200 p-4 flex flex-col transition-transform hover:scale-[1.02] duration-200';
-                
                 const placeholderUrl = `https://placehold.co/64x64/EFEFEF/AAAAAA?text=${encodeURIComponent(member.name.charAt(0))}`;
-
                 card.innerHTML = `
                     <div class="flex items-center gap-4 mb-4">
                         <img class="h-16 w-16 rounded-full object-cover border-2 border-indigo-200 flex-shrink-0" src="${member.photoUrl || placeholderUrl}" onerror="this.onerror=null;this.src='${placeholderUrl}';" alt="${member.name}">
@@ -430,105 +396,47 @@
                         </div>
                     </div>
                     <div class="space-y-2 flex-grow">
-                        <div class="flex justify-between items-center bg-green-50 p-2 rounded-md">
-                            <span class="text-sm font-medium text-green-700">মোট জমা:</span>
-                            <span class="text-lg font-bold text-green-600">৳ ${getBengaliNumber(totals.totalDeposit)}</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-red-50 p-2 rounded-md">
-                            <span class="text-sm font-medium text-red-700">বর্তমান ঋণ:</span>
-                            <span class="text-lg font-bold text-red-600">৳ ${getBengaliNumber(totals.currentLoan)}</span>
-                        </div>
+                        <div class="flex justify-between items-center bg-green-50 p-2 rounded-md"><span class="text-sm font-medium text-green-700">মোট জমা:</span><span class="text-lg font-bold text-green-600">৳ ${getBengaliNumber(totals.totalDeposit)}</span></div>
+                        <div class="flex justify-between items-center bg-red-50 p-2 rounded-md"><span class="text-sm font-medium text-red-700">বর্তমান ঋণ:</span><span class="text-lg font-bold text-red-600">৳ ${getBengaliNumber(totals.currentLoan)}</span></div>
                     </div>
-                    <button class="view-profile-btn mt-4 w-full bg-indigo-500 text-white px-3 py-2 rounded-lg text-sm font-bold hover:bg-indigo-600 transition shadow" data-id="${member.id}">
-                        বিস্তারিত দেখুন
-                    </button>
+                    <button class="view-profile-btn mt-4 w-full bg-indigo-500 text-white px-3 py-2 rounded-lg text-sm font-bold hover:bg-indigo-600 transition shadow" data-id="${member.id}">বিস্তারিত দেখুন</button>
                 `;
                 memberListCardContainer.appendChild(card);
             });
         }
-        
         if (activeMember) {
             const latestData = members.find(m => m.id === activeMember.id);
-            if (latestData) {
-                const stillInFilteredList = filteredMembers.some(m => m.id === activeMember.id);
-                if (stillInFilteredList) {
-                    showProfile(latestData.id, false);
-                } else {
-                    closeProfileModal();
-                }
-            } else {
-                 closeProfileModal();
-            }
+            if (latestData && filteredMembers.some(m => m.id === activeMember.id)) showProfile(latestData.id, false);
+            else closeProfileModal();
         }
     };
     
-    const renderImportantLinks = () => {
-        const container = document.getElementById('important-links-display');
-        if (container) {
-            container.innerHTML = ''; // Clear and ensure it's hidden (via HTML class)
-        }
-    };
-
     const renderNoticeBoard = () => {
         const noticeDisplay = document.getElementById('notice-display');
-        noticeDisplay.innerHTML = ''; // Clear previous content
-
-        const hasImage = notice && notice.imageUrl && notice.imageUrl.trim() !== '';
-        const hasText = notice && notice.text && notice.text.trim() !== '';
-        const hasLink = notice && notice.linkText && notice.linkUrl && notice.linkText.trim() !== '' && notice.linkUrl.trim() !== '';
-
-        if (!hasImage && !hasText && !hasLink) {
-            noticeDisplay.innerHTML = '<p class="text-gray-500">আপাতত কোনো নতুন নোটিশ নেই।</p>';
-            return;
+        noticeDisplay.innerHTML = ''; 
+        if (!notice.text && !notice.imageUrl && !notice.linkUrl) {
+            noticeDisplay.innerHTML = '<p class="text-gray-500">আপাতত কোনো নতুন নোটিশ নেই।</p>'; return;
         }
-
-        if (hasImage) {
-            const imgElement = document.createElement('img');
-            imgElement.src = notice.imageUrl;
-            imgElement.alt = 'নোটিশ চিত্র';
-            imgElement.className = 'max-w-full h-auto rounded-lg mb-4 mx-auto';
-            imgElement.onerror = () => { 
-                imgElement.style.display = 'none'; 
-                showMessage('নোটিশের ছবিটি লোড করা যায়নি।', 'error');
-            };
-            noticeDisplay.appendChild(imgElement);
+        if (notice.imageUrl) {
+            const imgElement = document.createElement('img'); imgElement.src = notice.imageUrl; imgElement.className = 'max-w-full h-auto rounded-lg mb-4 mx-auto'; imgElement.onerror = () => { imgElement.style.display = 'none'; }; noticeDisplay.appendChild(imgElement);
         }
-
-        if (hasText) {
+        if (notice.text) {
             const textContainer = document.createElement('div');
-            const formattedNotice = notice.text
-                .split('\n')
-                .filter(line => line.trim() !== '')
-                .map(line => `<p>${line.replace(/ /g, ' &nbsp;')}</p>`)
-                .join('');
-            textContainer.innerHTML = formattedNotice;
+            textContainer.innerHTML = notice.text.split('\n').filter(line => line.trim() !== '').map(line => `<p>${line.replace(/ /g, ' &nbsp;')}</p>`).join('');
             noticeDisplay.appendChild(textContainer);
         }
-
-        if (hasLink) {
-            const linkElement = document.createElement('a');
-            linkElement.href = notice.linkUrl;
-            linkElement.textContent = notice.linkText;
-            linkElement.target = '_blank';
-            linkElement.rel = 'noopener noreferrer';
-            linkElement.className = 'inline-block bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-indigo-700 transition duration-200 mt-4 no-underline';
-            noticeDisplay.appendChild(linkElement);
+        if (notice.linkText && notice.linkUrl) {
+            const linkElement = document.createElement('a'); linkElement.href = notice.linkUrl; linkElement.textContent = notice.linkText; linkElement.target = '_blank'; linkElement.className = 'inline-block bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg mt-4 no-underline'; noticeDisplay.appendChild(linkElement);
         }
     };
 
     const showProfile = (id, animate = true) => {
-        const member = members.find(m => m.id === id);
-        activeMember = member;
-        if (!member) return;
-        
+        const member = members.find(m => m.id === id); activeMember = member; if (!member) return;
         const totals = calculateMemberTotals(member);
-
         const placeholderUrl = `https://placehold.co/96x96/EFEFEF/AAAAAA?text=${encodeURIComponent(member.name ? member.name.charAt(0) : '?')}`;
-        const profileImg = document.getElementById('profile-header-img');
-        profileImg.src = member.photoUrl || placeholderUrl;
-        profileImg.onerror = () => { profileImg.src = placeholderUrl; };
+        
+        document.getElementById('profile-header-img').src = member.photoUrl || placeholderUrl;
         document.getElementById('profile-header-name').textContent = member.name || 'N/A';
-
         document.getElementById('profile-name-view').textContent = member.name || 'N/A';
         document.getElementById('profile-id').textContent = member.id;
         document.getElementById('profile-photo-url-view').textContent = member.photoUrl || 'N/A';
@@ -543,67 +451,37 @@
         document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(totals.totalLoanRepaid)}`;
         document.getElementById('current-loan').textContent = `৳ ${getBengaliNumber(totals.currentLoan)}`;
 
-        const transactionsTableBody = document.getElementById('transactions-table-body');
-                transactionsTableBody.innerHTML = !member.transactions || member.transactions.length === 0 
+        document.getElementById('transactions-table-body').innerHTML = !member.transactions || member.transactions.length === 0 
             ? '<tr><td colspan="3" class="py-4 text-center text-gray-500">কোনো লেনদেন নেই।</td></tr>'
             : [...member.transactions].sort((a, b) => new Date(b.date) - new Date(a.date)).map(t => {
-                let typeText = '', amountColor = '';
-                if (t.type === 'deposit') { typeText = 'কিস্তি/জমা'; amountColor = 'text-green-600'; }
-                else if (t.type === 'loanTaken') { typeText = 'ঋণ গ্রহণ'; amountColor = 'text-blue-600'; }
-                else if (t.type === 'loanRepayment') { typeText = 'ঋণ পরিশোধ'; amountColor = 'text-yellow-700'; }
-                
+                let typeText = t.type === 'deposit' ? 'কিস্তি/জমা' : t.type === 'loanTaken' ? 'ঋণ গ্রহণ' : 'ঋণ পরিশোধ';
+                let amountColor = t.type === 'deposit' ? 'text-green-600' : t.type === 'loanTaken' ? 'text-blue-600' : 'text-yellow-700';
                 const description = t.description ? `<br><span class="text-xs text-gray-500">${t.description}</span>` : '';
-                const linked = t.linkedDepositId ? ' 🔗' : ''; 
-
-                return `<tr class="hover:bg-gray-100">
-                    <td class="py-2 px-4 text-sm text-gray-600">${formatDate(t.date)}</td>
-                    <td class="py-2 px-4 text-sm">${typeText}${linked}${description}</td>
-                    <td class="py-2 px-4 text-right font-mono font-semibold ${amountColor}">${getBengaliNumber(t.amount)}</td>
-                </tr>`; // Action <td> REMOVED
+                return `<tr class="hover:bg-gray-100"><td class="py-2 px-4 text-sm text-gray-600">${formatDate(t.date)}</td><td class="py-2 px-4 text-sm">${typeText}${t.linkedDepositId ? ' 🔗' : ''}${description}</td><td class="py-2 px-4 text-right font-mono font-semibold ${amountColor}">${getBengaliNumber(t.amount)}</td></tr>`;
             }).join('');
         
-        const tabs = document.querySelectorAll('.profile-tab');
-        const contents = document.querySelectorAll('#profile-content-container > div');
-        tabs.forEach(t => t.classList.remove('tab-active', 'text-gray-500'));
-        tabs[0].classList.add('tab-active');
-        tabs[1].classList.add('text-gray-500');
-        tabs[2].classList.add('text-gray-500');
-        
-        contents.forEach(c => c.classList.add('hidden'));
+        document.querySelectorAll('.profile-tab').forEach(t => { t.classList.remove('tab-active', 'text-gray-500'); });
+        document.getElementById('profile-tab-details').classList.add('tab-active');
+        document.querySelectorAll('#profile-content-container > div').forEach(c => c.classList.add('hidden'));
         document.getElementById('profile-content-details').classList.remove('hidden');
 
         const profileModalBox = document.getElementById('profile-modal-box');
-        if (animate) {
-            profileModal.classList.remove('hidden');
-            profileModal.classList.add('flex');
-            profileModalBox.classList.remove('modal-exit-active');
-            profileModalBox.classList.add('modal-enter-active');
-        }
+        if (animate) { profileModal.classList.remove('hidden'); profileModal.classList.add('flex'); profileModalBox.classList.remove('modal-exit-active'); profileModalBox.classList.add('modal-enter-active'); }
     };
     
     const closeProfileModal = () => {
         const profileModalBox = document.getElementById('profile-modal-box');
-        profileModalBox.classList.remove('modal-enter-active');
-        profileModalBox.classList.add('modal-exit-active');
-        setTimeout(() => { 
-            profileModal.classList.add('hidden'); 
-            profileModal.classList.remove('flex');
-            profileModalBox.classList.remove('modal-exit-active');
-            activeMember = null; 
-        }, 300);
+        profileModalBox.classList.remove('modal-enter-active'); profileModalBox.classList.add('modal-exit-active');
+        setTimeout(() => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); profileModalBox.classList.remove('modal-exit-active'); activeMember = null; }, 300);
     };
 
-    // --- NEW/UPDATED Fund Modal Functions ---
-
-    // renderFundModal (from index.html, modified for read-only)
+    // --- FUND MODAL ---
     const renderFundModal = () => {
         const container = document.getElementById('fund-list-container');
-        if (!container) return; // Safety check
-
         const monthlyDeposits = members.reduce((acc, member) => {
             (member.transactions || []).forEach(t => {
                 if (t.type === 'deposit' && t.date) {
-                    const monthKey = t.date.substring(0, 7); // e.g., "2025-10"
+                    const monthKey = t.date.substring(0, 7);
                     acc[monthKey] = (acc[monthKey] || 0) + Number(t.amount);
                 }
             });
@@ -611,181 +489,161 @@
         }, {});
 
         const sortedMonths = Object.keys(monthlyDeposits).sort().reverse();
-        
-        container.innerHTML = sortedMonths.length === 0
-            ? '<div class="text-center text-gray-500">কোনো মাসের জমার হিসাব নেই।</div>'
-            : sortedMonths.map(monthKey => {
+        container.innerHTML = sortedMonths.length === 0 ? '<div class="text-center text-gray-500">কোনো ডেটা নেই।</div>' : sortedMonths.map(monthKey => {
                 const distribution = fundDistribution[monthKey];
                 const receiver = distribution ? members.find(m => m.id === distribution.receiverId) : null;
-                
                 const placeholderUrl = receiver ? `https://placehold.co/40x40/EFEFEF/AAAAAA?text=${encodeURIComponent(receiver.name ? receiver.name.charAt(0) : '?')}` : '';
-                
-                return `<div class="p-4 border rounded-lg shadow-sm">
-                    <h4 class="text-lg font-semibold text-blue-700">${formatDate(monthKey + '-01', 'monthYear')}</h4>
-                    <p>এই মাসে মোট জমা: <span class="font-bold">৳ ${getBengaliNumber(monthlyDeposits[monthKey])}</span></p>
-                    ${receiver
-                        ? `<div class="mt-3 p-3 bg-green-50 rounded-lg flex items-center gap-4">
-                               <img 
-                                 src="${receiver.photoUrl || placeholderUrl}" 
-                                 onerror="this.onerror=null;this.src='${placeholderUrl}';"
-                                 alt="${receiver.name}" 
-                                 class="w-12 h-12 rounded-full object-cover border-2 border-green-200 flex-shrink-0">
-                               <div>
-                                 <p class="text-sm font-semibold text-green-700">✅ তহবিল প্রাপ্ত:</p>
-                                 <p class="text-lg font-bold text-gray-800">${receiver.name}</p>
-                                 <p class="text-md font-semibold text-green-600 mt-1">৳ ${getBengaliNumber(distribution.amount)}</p>
-                               </div>
-                           </div>`
-                        // FORM IS REMOVED FOR PUBLIC PAGE
-                        : `<div class="mt-3 p-3 bg-gray-50 rounded-lg">
-                               <p class="text-sm font-semibold text-gray-600">
-                                   এই মাসের তহবিল এখনও কাউকে প্রদান করা হয়নি।
-                               </p>
-                           </div>`
-                    }
-                </div>`;
+                return `<div class="p-4 border rounded-lg shadow-sm"><h4 class="text-lg font-semibold text-blue-700">${formatDate(monthKey + '-01', 'monthYear')}</h4><p>মোট জমা: <span class="font-bold">৳ ${getBengaliNumber(monthlyDeposits[monthKey])}</span></p>
+                    ${receiver ? `<div class="mt-3 p-3 bg-green-50 rounded-lg flex items-center gap-4"><img src="${receiver.photoUrl || placeholderUrl}" onerror="this.onerror=null;this.src='${placeholderUrl}';" class="w-12 h-12 rounded-full object-cover border-2 border-green-200 flex-shrink-0"><div><p class="text-sm font-semibold text-green-700">✅ তহবিল প্রাপ্ত:</p><p class="text-lg font-bold text-gray-800">${receiver.name}</p><p class="text-md font-semibold text-green-600 mt-1">৳ ${getBengaliNumber(distribution.amount)}</p></div></div>` : `<div class="mt-3 p-3 bg-gray-50 rounded-lg"><p class="text-sm font-semibold text-gray-600">এই মাসের তহবিল এখনও কাউকে প্রদান করা হয়নি।</p></div>`}</div>`;
             }).join('');
     };
 
-    const showFundModal = (animate = true) => {
-        renderFundModal(); // Render content just before showing
-        const modalBox = document.getElementById('monthly-fund-modal-box');
-        if (animate) {
-            monthlyFundModal.classList.remove('hidden');
-            monthlyFundModal.classList.add('flex');
-            modalBox.classList.remove('modal-exit-active');
-            modalBox.classList.add('modal-enter-active');
+    const showFundModal = () => { renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); };
+    const closeFundModal = () => { document.getElementById('monthly-fund-modal').classList.add('hidden'); document.getElementById('monthly-fund-modal').classList.remove('flex'); };
+
+
+    // --- LOTTERY LOGIC (READ ONLY) ---
+    const renderLotteryModal = () => {
+        const listEl = document.getElementById("lotteryParticipants");
+        const countBadge = document.getElementById("lotteryCountBadge");
+        const historyEl = document.getElementById("lotteryHistory");
+        const winnerSection = document.getElementById("lotteryWinnerSection");
+        
+        const lp = lottery.participants || [];
+        const lh = lottery.history || [];
+
+        // 1. Participants
+        countBadge.textContent = lp.length;
+        listEl.innerHTML = "";
+        if (lp.length === 0) {
+            listEl.innerHTML = `<li class="col-span-full text-center text-slate-500 italic py-10 text-lg">কোনো অংশগ্রহণকারী নেই</li>`;
+        } else {
+            lp.forEach((n, i) => {
+                listEl.innerHTML += `<li class="group relative flex flex-col justify-center items-center bg-slate-800/80 border border-slate-700 p-4 rounded-xl hover:border-slate-500 hover:bg-slate-700/50 transition"><span class="absolute top-2 left-2 text-xs text-slate-500">#${i+1}</span><span class="font-semibold text-lg text-slate-200 truncate w-full text-center mt-2">${n}</span></li>`;
+            });
+        }
+
+        // 2. History
+        historyEl.innerHTML = "";
+        if (lh.length === 0) {
+            historyEl.innerHTML = `<li class="text-center text-slate-600 text-xs py-4">কোনো ইতিহাস নেই</li>`;
+            winnerSection.classList.add('hidden'); // No history means no winner to show
+        } else {
+            // Show history list
+            [...lh].reverse().forEach(h => {
+                historyEl.innerHTML += `<li class="flex justify-between items-center bg-slate-900/50 p-3 rounded border-l-4 border-cyan-500"><span class="text-cyan-400 font-medium">${h.winner}</span><span class="text-slate-500 text-xs">${h.date}</span></li>`;
+            });
+
+            // 3. Show Latest Winner in Big Box
+            const latest = lh[lh.length - 1];
+            if (latest) {
+                document.getElementById("lotteryWinnerText").textContent = latest.winner;
+                document.getElementById("lotteryWinnerDate").textContent = `তারিখ: ${latest.date}`;
+                winnerSection.classList.remove('hidden');
+            }
         }
     };
 
-    const closeFundModal = () => {
-        const modalBox = document.getElementById('monthly-fund-modal-box');
-        modalBox.classList.remove('modal-enter-active');
-        modalBox.classList.add('modal-exit-active');
-        setTimeout(() => { 
-            monthlyFundModal.classList.add('hidden'); 
-            monthlyFundModal.classList.remove('flex');
-            modalBox.classList.remove('modal-exit-active');
-        }, 300);
-    };
+    // Confetti Logic (Copied from Index, triggers only on modal open if there is a winner)
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let parts = []; 
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    
+    function startConfetti() {
+        parts = []; 
+        for(let i=0; i<150; i++) parts.push({x:window.innerWidth/2, y:window.innerHeight/2, vx:(Math.random()-.5)*25, vy:(Math.random()-.5)*25, c:`hsl(${Math.random()*360},70%,50%)`});
+        updateConfetti();
+    }
+    function updateConfetti() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        let act = false; 
+        parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.2; p.vx*=0.95; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,8,8); if(p.y<canvas.height) act=true; });
+        if(act) requestAnimationFrame(updateConfetti); else ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
 
-    // --- FIREBASE & DATA PERSISTENCE ---
 
+    // --- FIREBASE & INIT ---
     const initializeFirebase = () => {
-        if (!firebaseConfig.apiKey) return showMessage("Firebase কনফিগারেশন অনুপস্থিত।", 'error');
-        try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-        } catch (error)
-        {
-            console.error("Firebase init failed:", error);
-            showMessage("ডাটাবেস সংযোগে সমস্যা হয়েছে।", 'error');
-        }
+        try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); } 
+        catch (error) { console.error("Firebase init failed:", error); showMessage("ডাটাবেস সংযোগে সমস্যা হয়েছে।", 'error'); }
     };
 
-    // Data listener (Updated)
     const startDataListener = () => {
         const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
         onSnapshot(docRef, (doc) => {
             const data = doc.data();
             members = data?.members || [];
-            fundDistribution = data?.fundDistribution || {}; // Added
+            fundDistribution = data?.fundDistribution || {}; 
             logoUrl = data?.logoUrl || ''; 
             importantLinks = data?.importantLinks || [];
             
+            // Lottery Sync
+            const dbLottery = data?.lottery || { participants: [], history: [] };
+            lottery.participants = dbLottery.participants || [];
+            lottery.history = dbLottery.history || [];
+
             const dbNotice = data?.notice;
-            if (typeof dbNotice === 'string') { 
-                notice = { text: dbNotice, imageUrl: '', linkText: '', linkUrl: '' };
-            } else {
-                notice = dbNotice || { text: '', imageUrl: '', linkText: '', linkUrl: '' };
-            }
+            notice = (typeof dbNotice === 'string') ? { text: dbNotice, imageUrl: '', linkText: '', linkUrl: '' } : (dbNotice || { text: '', imageUrl: '', linkText: '', linkUrl: '' });
 
-            renderUI();
-            renderNoticeBoard();
-            renderHeaderLogo(); 
-            renderImportantLinks(); 
+            renderUI(); renderNoticeBoard(); renderHeaderLogo(); 
             
-            // Re-render fund modal if it's open
-            if (!monthlyFundModal.classList.contains('hidden')) {
-                renderFundModal();
-            }
+            // Realtime updates for modals if open
+            if (!monthlyFundModal.classList.contains('hidden')) renderFundModal();
+            if (!document.getElementById('lottery-modal').classList.contains('hidden')) renderLotteryModal();
 
-        }, (error) => {
-            console.error("Firestore listener error:", error);
-            showMessage("রিয়েল-টাইম ডেটা লোড করতে সমস্যা হয়েছে।", 'error');
-        });
+        }, (error) => { console.error("Firestore listener error:", error); showMessage("রিয়েল-টাইম ডেটা লোড করতে সমস্যা হয়েছে।", 'error'); });
     };
     
-    // --- APP INITIALIZATION ---
-    
     initializeFirebase();
-
-    // Auth State Change Handler (No Login)
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            authModal.classList.add('hidden');
-            verifyEmailModal.classList.add('hidden');
-            mainAppContent.classList.remove('hidden');
+            authModal.classList.add('hidden'); verifyEmailModal.classList.add('hidden'); mainAppContent.classList.remove('hidden');
             startDataListener();
         } else {
-            try {
-                await signInAnonymously(auth);
-            } catch (error) {
-                console.error("Anonymous sign-in failed:", error);
-                showMessage("অ্যাপ্লিকেশন লোড করতে সমস্যা হচ্ছে।", 'error');
-                document.body.innerHTML = '<div class="h-screen w-full flex items-center justify-center text-red-600 font-bold p-8 text-center">সার্ভারের সাথে সংযোগ করতে ব্যর্থ। অনুগ্রহ করে পৃষ্ঠাটি রিফ্রেশ করুন।</div>';
-            }
+            try { await signInAnonymously(auth); } 
+            catch (error) { console.error("Anonymous sign-in failed:", error); showMessage("অ্যাপ্লিকেশন লোড করতে সমস্যা হচ্ছে।", 'error'); }
         }
     });
     
     // --- EVENT HANDLERS ---
+    document.getElementById('search-member-input').addEventListener('input', (e) => { searchQuery = e.target.value; renderUI(); });
 
-    // Search Input
-    document.getElementById('search-member-input').addEventListener('input', (e) => {
-        searchQuery = e.target.value;
-        renderUI();
-    });
-
-    // General Click Handler
     document.addEventListener('click', async (e) => {
         const target = e.target.closest('button'); 
         if (!target) return;
         
-        // --- Profile Tab Switching ---
+        // Profile Logic
         if (target.matches('.profile-tab')) {
-            document.querySelectorAll('.profile-tab').forEach(tab => {
-                tab.classList.remove('tab-active');
-                tab.classList.add('text-gray-500');
-            });
-            target.classList.add('tab-active');
-            target.classList.remove('text-gray-500');
+            document.querySelectorAll('.profile-tab').forEach(tab => { tab.classList.remove('tab-active', 'text-gray-500'); tab.classList.add('text-gray-500'); });
+            target.classList.add('tab-active'); target.classList.remove('text-gray-500');
+            document.querySelectorAll('#profile-content-container > div').forEach(content => content.classList.add('hidden'));
+            if (target.id === 'profile-tab-details') document.getElementById('profile-content-details').classList.remove('hidden');
+            else if (target.id === 'profile-tab-transactions') document.getElementById('profile-content-transactions').classList.remove('hidden');
+            else if (target.id === 'profile-tab-summary') document.getElementById('profile-content-summary').classList.remove('hidden');
+        }
+        if (target.matches('.view-profile-btn')) showProfile(target.dataset.id);
+        else if (target.matches('#close-profile')) closeProfileModal();
+        
+        // Fund Modal Logic
+        else if (target.matches('#view-monthly-fund-btn')) showFundModal();
+        else if (target.matches('#close-fund-modal')) closeFundModal();
 
-            document.querySelectorAll('#profile-content-container > div').forEach(content => {
-                content.classList.add('hidden');
-            });
-
-            if (target.id === 'profile-tab-details') {
-                document.getElementById('profile-content-details').classList.remove('hidden');
-            } else if (target.id === 'profile-tab-transactions') {
-                document.getElementById('profile-content-transactions').classList.remove('hidden');
-            } else if (target.id === 'profile-tab-summary') {
-                document.getElementById('profile-content-summary').classList.remove('hidden');
+        // Lottery Modal Logic (NEW)
+        else if (target.matches('#view-lottery-btn') || target.closest('#view-lottery-btn')) {
+            renderLotteryModal();
+            resizeCanvas();
+            document.getElementById('lottery-modal').classList.remove('hidden');
+            // Only trigger confetti if there is a winner in history
+            if(lottery.history.length > 0) {
+                 startConfetti();
             }
         }
-        
-        if (target.matches('.view-profile-btn')) {
-            showProfile(target.dataset.id);
-        } else if (target.matches('#close-profile')) {
-            closeProfileModal();
-        } else if (target.matches('#view-monthly-fund-btn')) { // Listener for the card button
-            showFundModal();
-        } else if (target.matches('#close-fund-modal')) { // Listener for modal close button
-            closeFundModal();
+        else if (target.matches('#close-lottery-btn') || target.closest('#close-lottery-btn')) {
+            document.getElementById('lottery-modal').classList.add('hidden');
         }
     });
   </script>
 </body>
 </html>
-
-
