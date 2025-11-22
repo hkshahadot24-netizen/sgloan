@@ -7,6 +7,8 @@
   <!-- Added typography plugin for better notice rendering -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN (Added for Charts) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
     /* ফন্ট আপডেট: 'Noto Sans Bengali' প্রধান ফন্ট */
@@ -35,8 +37,6 @@
     #lottery-modal ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
     .lottery-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
     #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
-    /* Active Highlight for Live Draw */
-    .active-highlight { background-color: #06b6d4 !important; color: black !important; font-weight: bold; transform: scale(1.05); box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); border-color: #06b6d4 !important; }
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -98,7 +98,7 @@
             </button>
           </div>
 
-          <!-- Lottery Card (NEW) -->
+          <!-- Lottery Card -->
           <div class="col-span-2 bg-gradient-to-r from-slate-800 to-slate-900 p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-[1.02] flex flex-row items-center justify-between border border-slate-700">
             <div class="text-left">
                 <h3 class="text-lg font-bold text-cyan-400 mb-0">🎲 লাকি লটারি</h3>
@@ -108,6 +108,25 @@
                 ফলাফল দেখুন
             </button>
           </div>
+        </div>
+
+        <!-- CHARTS SECTION (ADDED) -->
+        <div class="grid grid-cols-1 gap-6">
+            <!-- Financial Overview Chart -->
+            <div class="bg-white p-4 rounded-xl shadow-lg flex flex-col">
+                <h3 class="text-lg font-bold text-gray-700 mb-4 text-center border-b pb-2">আর্থিক সারসংক্ষেপ</h3>
+                <div class="flex-grow relative h-64 w-full">
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Monthly Trend Chart -->
+            <div class="bg-white p-4 rounded-xl shadow-lg flex flex-col">
+                <h3 class="text-lg font-bold text-gray-700 mb-4 text-center border-b pb-2">মাসিক জমার হার</h3>
+                <div class="flex-grow relative h-64 w-full">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
         </div>
 
         <!-- Member List -->
@@ -287,15 +306,14 @@
     let notice = { text: '', imageUrl: '', linkText: '', linkUrl: '' }; 
     let logoUrl = ''; 
     let importantLinks = [];
-    let lottery = { participants: [], history: [], liveDraw: null }; // Added liveDraw
+    let lottery = { participants: [], history: [] }; // Added Lottery State
     let activeMember = null;
     let searchQuery = '';
     
-    // Live Lottery Variables
-    let l_isAnimating = false;
-    let lastDrawTime = 0;
-    let isFirstSnapshot = true;
-
+    // --- CHART VARIABLES (Added) ---
+    let financeChartInstance = null;
+    let trendChartInstance = null;
+    
     // UI Elements
     const mainAppContent = document.getElementById('main-app-content');
     const authModal = document.getElementById('auth-modal');
@@ -352,6 +370,104 @@
         return totals;
     };
 
+    // --- CHART RENDERING FUNCTION (Added) ---
+    const renderCharts = (td, tlt, tlr) => {
+        // 1. Finance Overview Bar Chart
+        const ctxFinance = document.getElementById('financeChart').getContext('2d');
+        if (financeChartInstance) financeChartInstance.destroy();
+        
+        financeChartInstance = new Chart(ctxFinance, {
+            type: 'bar',
+            data: {
+                labels: ['মোট জমা', 'ঋণ প্রদান', 'ঋণ ফেরত'],
+                datasets: [{
+                    label: 'পরিমাণ (টাকা)',
+                    data: [td, tlt, tlr],
+                    backgroundColor: [
+                        'rgba(22, 163, 74, 0.7)', // Green for Deposit
+                        'rgba(220, 38, 38, 0.7)', // Red for Loan Given
+                        'rgba(202, 138, 4, 0.7)'  // Yellow/Gold for Loan Repaid
+                    ],
+                    borderColor: [
+                        'rgb(22, 163, 74)',
+                        'rgb(220, 38, 38)',
+                        'rgb(202, 138, 4)'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: { label: (c) => `৳ ${getBengaliNumber(c.raw)}` }
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 2. Monthly Trend Line Chart
+        const monthlyData = {};
+        members.forEach(m => {
+            (m.transactions || []).forEach(t => {
+                if (t.type === 'deposit') {
+                    const month = t.date.substring(0, 7); // YYYY-MM
+                    monthlyData[month] = (monthlyData[month] || 0) + Number(t.amount);
+                }
+            });
+        });
+        
+        const sortedMonths = Object.keys(monthlyData).sort();
+        const displayMonths = sortedMonths; 
+
+        const labels = displayMonths.map(m => {
+            const d = new Date(m + '-01');
+            return d.toLocaleString('bn-BD', { month: 'short', year: 'numeric' });
+        });
+        const data = displayMonths.map(m => monthlyData[m]);
+
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        if (trendChartInstance) trendChartInstance.destroy();
+
+        trendChartInstance = new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'মাসিক জমা',
+                    data: data,
+                    borderColor: 'rgb(79, 70, 229)', // Indigo
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgb(79, 70, 229)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: { label: (c) => `৳ ${getBengaliNumber(c.raw)}` }
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    };
+
     // --- UI RENDERING FUNCTIONS ---
     const renderHeaderLogo = () => {
       const logoImg = document.getElementById('header-logo-img');
@@ -361,16 +477,20 @@
     };
 
     const renderUI = () => {
-        let totalDeposit = 0, totalLoanTaken = 0;
+        let totalDeposit = 0, totalLoanTaken = 0, totalLoanRepaid = 0; // Updated initialization
         members.forEach(member => {
             const totals = calculateMemberTotals(member);
             totalDeposit += totals.totalDeposit;
             totalLoanTaken += totals.totalLoanTaken;
+            totalLoanRepaid += totals.totalLoanRepaid; // Added accumulation
         });
         
         document.getElementById('total-members').textContent = getBengaliNumber(members.length);
         document.getElementById('total-paid').textContent = `৳ ${getBengaliNumber(totalDeposit)}`;
         document.getElementById('total-loan-given').textContent = `৳ ${getBengaliNumber(totalLoanTaken)}`;
+
+        // CALL RENDER CHARTS (Added)
+        renderCharts(totalDeposit, totalLoanTaken, totalLoanRepaid);
 
         memberListCardContainer.innerHTML = ''; 
         memberListPlaceholder.classList.add('hidden');
@@ -509,7 +629,7 @@
     const closeFundModal = () => { document.getElementById('monthly-fund-modal').classList.add('hidden'); document.getElementById('monthly-fund-modal').classList.remove('flex'); };
 
 
-    // --- LOTTERY LOGIC (UPDATED FOR LIVE VIEW) ---
+    // --- LOTTERY LOGIC (READ ONLY) ---
     const renderLotteryModal = () => {
         const listEl = document.getElementById("lotteryParticipants");
         const countBadge = document.getElementById("lotteryCountBadge");
@@ -534,15 +654,16 @@
         historyEl.innerHTML = "";
         if (lh.length === 0) {
             historyEl.innerHTML = `<li class="text-center text-slate-600 text-xs py-4">কোনো ইতিহাস নেই</li>`;
-            winnerSection.classList.add('hidden'); 
+            winnerSection.classList.add('hidden'); // No history means no winner to show
         } else {
+            // Show history list
             [...lh].reverse().forEach(h => {
                 historyEl.innerHTML += `<li class="flex justify-between items-center bg-slate-900/50 p-3 rounded border-l-4 border-cyan-500"><span class="text-cyan-400 font-medium">${h.winner}</span><span class="text-slate-500 text-xs">${h.date}</span></li>`;
             });
 
-            // 3. Show Latest Winner (Only if NOT animating currently)
+            // 3. Show Latest Winner in Big Box
             const latest = lh[lh.length - 1];
-            if (latest && !l_isAnimating) {
+            if (latest) {
                 document.getElementById("lotteryWinnerText").textContent = latest.winner;
                 document.getElementById("lotteryWinnerDate").textContent = `তারিখ: ${latest.date}`;
                 winnerSection.classList.remove('hidden');
@@ -550,59 +671,7 @@
         }
     };
 
-    // LIVE ANIMATION LOGIC
-    function startLiveLottery(winnerIndex) {
-        l_isAnimating = true;
-        document.getElementById("lotteryWinnerSection").classList.add('hidden');
-        
-        const listEl = document.getElementById("lotteryParticipants");
-        // Ensure list is rendered
-        renderLotteryModal(); 
-        
-        const items = listEl.querySelectorAll("li");
-        let cur = 0, cyc = 0;
-        
-        function anim() {
-            // Clear previous highlights
-            items.forEach(i => {
-                i.classList.remove('active-highlight');
-            });
-            
-            if(items[cur]) {
-                items[cur].classList.add('active-highlight');
-                items[cur].scrollIntoView({block:'center', behavior:'smooth'});
-            }
-            
-            cur = (cur+1) % lottery.participants.length; 
-            cyc++;
-            
-            if (cyc < 30 + Math.random()*10) { 
-                setTimeout(anim, Math.min(100+cyc*2, 350));
-            } else {
-                finishLiveLottery(winnerIndex); 
-            }
-        } 
-        anim();
-    }
-
-    function finishLiveLottery(i) {
-        const w = lottery.participants[i];
-        const ws = document.getElementById("lotteryWinnerSection");
-        
-        document.getElementById("lotteryWinnerText").textContent = w;
-        document.getElementById("lotteryWinnerDate").textContent = `তারিখ: ${new Date().toLocaleDateString('bn-BD')}`;
-        
-        ws.classList.remove('hidden', 'animate-bounce'); 
-        void ws.offsetWidth; 
-        ws.classList.add('animate-bounce');
-        
-        startConfetti();
-        l_isAnimating = false;
-        // History will update automatically via onSnapshot from the Admin's save
-    }
-
-
-    // Confetti Logic
+    // Confetti Logic (Copied from Index, triggers only on modal open if there is a winner)
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
     let parts = []; 
@@ -638,36 +707,18 @@
             importantLinks = data?.importantLinks || [];
             
             // Lottery Sync
-            const dbLottery = data?.lottery || { participants: [], history: [], liveDraw: null };
+            const dbLottery = data?.lottery || { participants: [], history: [] };
             lottery.participants = dbLottery.participants || [];
             lottery.history = dbLottery.history || [];
 
             const dbNotice = data?.notice;
             notice = (typeof dbNotice === 'string') ? { text: dbNotice, imageUrl: '', linkText: '', linkUrl: '' } : (dbNotice || { text: '', imageUrl: '', linkText: '', linkUrl: '' });
 
-            // LIVE DRAW CHECK
-            if (dbLottery.liveDraw) {
-                if (isFirstSnapshot) {
-                    lastDrawTime = dbLottery.liveDraw.ts;
-                } else if (dbLottery.liveDraw.ts > lastDrawTime) {
-                    lastDrawTime = dbLottery.liveDraw.ts;
-                    if (!l_isAnimating) {
-                       // Auto-open modal if closed
-                       renderLotteryModal(); 
-                       resizeCanvas();
-                       document.getElementById('lottery-modal').classList.remove('hidden');
-                       // Trigger animation
-                       startLiveLottery(dbLottery.liveDraw.winnerIndex);
-                    }
-                }
-            }
-            isFirstSnapshot = false;
-
             renderUI(); renderNoticeBoard(); renderHeaderLogo(); 
             
-            // Realtime updates for modals if open (and not animating)
+            // Realtime updates for modals if open
             if (!monthlyFundModal.classList.contains('hidden')) renderFundModal();
-            if (!document.getElementById('lottery-modal').classList.contains('hidden') && !l_isAnimating) renderLotteryModal();
+            if (!document.getElementById('lottery-modal').classList.contains('hidden')) renderLotteryModal();
 
         }, (error) => { console.error("Firestore listener error:", error); showMessage("রিয়েল-টাইম ডেটা লোড করতে সমস্যা হয়েছে।", 'error'); });
     };
@@ -723,5 +774,3 @@
   </script>
 </body>
 </html>
-
-
