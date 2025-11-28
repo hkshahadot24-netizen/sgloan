@@ -69,7 +69,7 @@
       
       <div class="space-y-4">
         
-        <!-- Notice Board -->
+        <!-- Notice Board (UPDATED: Supports Slideshow) -->
         <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg prose max-w-none">
           <div id="important-links-display" class="mb-4 hidden"></div>
           <div id="notice-display" class="text-gray-700"></div>
@@ -136,7 +136,8 @@
           </div>
           
           <div class="p-4 border-b">
-              <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন (নাম, আইডি, কার্ড...)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" autocomplete="off">
+              <!-- UPDATED: Placeholder text updated to match index.html logic -->
+              <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন (নাম, মোবাইল, আইডি, কার্ড...)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" autocomplete="off">
           </div>
 
           <div id="member-list-cards" class="p-4 grid grid-cols-1 gap-4"></div>
@@ -303,13 +304,17 @@
     let app, db, auth;
     let members = [];
     let fundDistribution = {};
-    let notice = { text: '', imageUrl: '', linkText: '', linkUrl: '' }; 
+    // UPDATED: Notice object structure to support multiple images
+    let notice = { text: '', imageUrls: [], linkText: '', linkUrl: '' }; 
     let logoUrl = ''; 
     let importantLinks = [];
     let lottery = { participants: [], history: [] }; // Added Lottery State
     let activeMember = null;
     let searchQuery = '';
     
+    // UPDATED: Variable for slideshow
+    let noticeSlideInterval = null;
+
     // --- CHART VARIABLES (Added) ---
     let financeChartInstance = null;
     let trendChartInstance = null;
@@ -495,12 +500,15 @@
         memberListCardContainer.innerHTML = ''; 
         memberListPlaceholder.classList.add('hidden');
         
+        // UPDATED: Search Filter Logic (Added phone and employeeId)
         const filteredMembers = members.filter(member => {
             const query = searchQuery.toLowerCase().trim();
             if (!query) return true;
             return (member.name || '').toLowerCase().includes(query) || 
                    (member.id || '').toLowerCase().includes(query) || 
-                   (member.cardNumber || '').toLowerCase().includes(query);
+                   (member.cardNumber || '').toLowerCase().includes(query) ||
+                   (member.phone || '').includes(query) || // Added Phone Check
+                   (member.employeeId || '').toLowerCase().includes(query); // Added Employee ID Check
         });
 
         if (filteredMembers.length === 0) {
@@ -538,23 +546,71 @@
         }
     };
     
+    // UPDATED: Render Notice Board with Slideshow Support
     const renderNoticeBoard = () => {
-        const noticeDisplay = document.getElementById('notice-display');
-        noticeDisplay.innerHTML = ''; 
-        if (!notice.text && !notice.imageUrl && !notice.linkUrl) {
-            noticeDisplay.innerHTML = '<p class="text-gray-500">আপাতত কোনো নতুন নোটিশ নেই।</p>'; return;
+        const d = document.getElementById('notice-display'); 
+        d.innerHTML = '';
+        if (noticeSlideInterval) clearInterval(noticeSlideInterval);
+
+        // Normalize images: legacy `imageUrl` or new `imageUrls`
+        let images = [];
+        if (Array.isArray(notice.imageUrls)) {
+            images = notice.imageUrls.filter(u => u.trim() !== '');
+        } else if (notice.imageUrl) {
+            images = [notice.imageUrl];
         }
-        if (notice.imageUrl) {
-            const imgElement = document.createElement('img'); imgElement.src = notice.imageUrl; imgElement.className = 'max-w-full h-auto rounded-lg mb-4 mx-auto'; imgElement.onerror = () => { imgElement.style.display = 'none'; }; noticeDisplay.appendChild(imgElement);
+
+        if (images.length === 0 && !notice.text && !notice.linkUrl) {
+            d.innerHTML = '<p class="text-gray-500">আপাতত কোনো নতুন নোটিশ নেই।</p>'; return;
         }
-        if (notice.text) {
-            const textContainer = document.createElement('div');
-            textContainer.innerHTML = notice.text.split('\n').filter(line => line.trim() !== '').map(line => `<p>${line.replace(/ /g, ' &nbsp;')}</p>`).join('');
-            noticeDisplay.appendChild(textContainer);
+
+        // Render Images (Single or Slideshow)
+        if (images.length > 0) {
+            if (images.length === 1) {
+                // Single Image
+                d.innerHTML += `<img src="${images[0]}" class="w-full h-auto rounded-lg mb-4 mx-auto shadow-sm" onerror="this.style.display='none'">`;
+            } else {
+                // Slideshow
+                let slidesHtml = images.map((url, i) =>
+                    `<img src="${url}" class="notice-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${i === 0 ? 'opacity-100' : 'opacity-0'}" onerror="this.style.display='none'">`
+                ).join('');
+
+                // Render Container
+                d.innerHTML += `
+                    <div class="relative w-full h-64 sm:h-80 md:h-96 bg-gray-100 rounded-lg overflow-hidden mb-4 shadow-sm border border-gray-200">
+                        ${slidesHtml}
+                        <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-2 z-10 pointer-events-none">
+                            ${images.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white/60 ${i===0?'bg-white scale-125':''} shadow transition-all dot-indicator" data-index="${i}"></div>`).join('')}
+                        </div>
+                    </div>
+                `;
+
+                // Logic
+                let currentSlide = 0;
+                noticeSlideInterval = setInterval(() => {
+                    const slides = document.querySelectorAll('.notice-slide');
+                    const dots = document.querySelectorAll('.dot-indicator');
+                    if (slides.length === 0) return;
+
+                    // Hide current
+                    slides[currentSlide].classList.remove('opacity-100');
+                    slides[currentSlide].classList.add('opacity-0');
+                    if(dots[currentSlide]) dots[currentSlide].classList.remove('bg-white', 'scale-125');
+
+                    // Next
+                    currentSlide = (currentSlide + 1) % slides.length;
+
+                    // Show next
+                    slides[currentSlide].classList.remove('opacity-0');
+                    slides[currentSlide].classList.add('opacity-100');
+                    if(dots[currentSlide]) dots[currentSlide].classList.add('bg-white', 'scale-125');
+
+                }, 4000); // 4 seconds
+            }
         }
-        if (notice.linkText && notice.linkUrl) {
-            const linkElement = document.createElement('a'); linkElement.href = notice.linkUrl; linkElement.textContent = notice.linkText; linkElement.target = '_blank'; linkElement.className = 'inline-block bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg mt-4 no-underline'; noticeDisplay.appendChild(linkElement);
-        }
+
+        if (notice.text) d.innerHTML += `<div>${notice.text.split('\n').map(l => `<p>${l}</p>`).join('')}</div>`;
+        if (notice.linkUrl) d.innerHTML += `<a href="${notice.linkUrl}" target="_blank" class="inline-block bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg mt-4 no-underline hover:bg-indigo-700 transition">${notice.linkText||'বিস্তারিত'}</a>`;
     };
 
     const showProfile = (id, animate = true) => {
@@ -711,8 +767,22 @@
             lottery.participants = dbLottery.participants || [];
             lottery.history = dbLottery.history || [];
 
-            const dbNotice = data?.notice;
-            notice = (typeof dbNotice === 'string') ? { text: dbNotice, imageUrl: '', linkText: '', linkUrl: '' } : (dbNotice || { text: '', imageUrl: '', linkText: '', linkUrl: '' });
+            // UPDATED: Logic to handle both old (imageUrl) and new (imageUrls) structure
+            if (data?.notice) {
+                 if (typeof data.notice === 'string') {
+                     notice = { text: data.notice, imageUrls: [], linkText: '', linkUrl: '' };
+                 } else {
+                     notice = data.notice;
+                     // Ensure imageUrls exists if only imageUrl was present
+                     if (!notice.imageUrls && notice.imageUrl) {
+                         notice.imageUrls = [notice.imageUrl];
+                     } else if (!notice.imageUrls) {
+                         notice.imageUrls = [];
+                     }
+                 }
+            } else {
+                notice = { text: '', imageUrls: [], linkText: '', linkUrl: '' };
+            }
 
             renderUI(); renderNoticeBoard(); renderHeaderLogo(); 
             
