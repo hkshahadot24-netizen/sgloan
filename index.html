@@ -7,30 +7,43 @@
   <!-- Added typography plugin for better notice rendering -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Chart.js CDN (Added for Charts) -->
+  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
-    /* ফন্ট আপডেট: 'Noto Sans Bengali' প্রধান ফন্ট */
+    /* ফন্ট আপডেট */
     body { font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; }
+    
+    /* স্পিনার */
     .spinner { border: 3px solid rgba(255,255,255,0.3); border-left-color: #ffffff; border-radius:50%; width:20px; height:20px; animation:spin 1s linear infinite;}
-    .spinner-gray { border: 2px solid rgba(0,0,0,0.2); border-left-color: #4a5568; border-radius:50%; width:16px; height:16px; animation:spin 1s linear infinite;}
     @keyframes spin { 100% { transform: rotate(360deg);} }
+    
+    /* মডাল এনিমেশন */
     .modal-enter { opacity: 0; transform: scale(0.95); }
     .modal-enter-active { opacity: 1; transform: scale(1); transition: all 300ms ease-out; }
     .modal-exit { opacity: 1; transform: scale(1); }
     .modal-exit-active { opacity: 0; transform: scale(0.95); transition: all 300ms ease-in; }
-    [type='date']::-webkit-calendar-picker-indicator {
-        cursor: pointer;
-        filter: invert(0.5) sepia(0.6) saturate(5) hue-rotate(200deg);
-    }
+    
     .tab-active {
         border-color: #4f46e5;
         color: #4f46e5;
         background-color: #eef2ff;
     }
 
-    /* --- LOTTERY STYLES (Read Only) --- */
+    /* --- PREMIUM SLIDER STYLES (KEN BURNS EFFECT) --- */
+    @keyframes kenburns {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.15); }
+    }
+    .animate-kenburns {
+        animation: kenburns 12s ease-in-out infinite alternate;
+        transform-origin: center center;
+    }
+    .slide-wrapper {
+        position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 1.5s ease-in-out;
+    }
+
+    /* --- LOTTERY STYLES (Read Only - Dark Theme) --- */
     #lottery-modal { font-family: 'Hind Siliguri', sans-serif; background-color: #0f172a; color: #f1f5f9; }
     #lottery-modal ::-webkit-scrollbar { width: 8px; }
     #lottery-modal ::-webkit-scrollbar-track { background: #1e293b; }
@@ -41,7 +54,17 @@
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-  <!-- Main Application Content (Hidden by default) -->
+  <!-- APP LOADER -->
+  <div id="app-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-500">
+      <div class="relative w-24 h-24">
+          <div class="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center font-bold text-indigo-700 text-xl">S</div>
+      </div>
+      <h2 class="mt-4 text-xl font-bold text-gray-700 animate-pulse">লোড হচ্ছে...</h2>
+  </div>
+
+  <!-- Main Application Content -->
   <div id="main-app-content" class="hidden">
     
     <!-- Header -->
@@ -49,7 +72,7 @@
       <div class="max-w-2xl mx-auto px-4">
         <div class="flex flex-row justify-between items-center gap-4">
           
-          <!-- Logo and Title Section -->
+          <!-- Logo & Title -->
           <div class="flex items-center gap-3 flex-shrink-0 overflow-hidden">
             <img id="header-logo-img" src="https://placehold.co/40x40/FFFFFF/F87171?text=লোগো" alt="লোগো" class="w-10 h-10 rounded-full border-2 border-white object-cover bg-white">
             <div class="flex-grow">
@@ -60,6 +83,14 @@
               <p class="text-xs font-semibold text-pink-100 mt-1">★ বিশ্বাস ★ মানবিকতা ★ উন্নয়ন ★</p>
             </div>
           </div>
+
+          <!-- Actions: App Button -->
+          <div class="flex items-center gap-2">
+            <a id="header-app-btn" href="#" class="bg-white/10 hover:bg-white/20 text-white font-semibold py-2 px-3 rounded-lg backdrop-blur-sm transition flex items-center gap-2 border border-white/30 shadow-sm hover:shadow-md group">
+                <span class="text-xl group-hover:scale-110 transition-transform">📱</span> 
+                <span class="hidden sm:inline">অ্যাপ</span>
+            </a>
+          </div>
         </div>
       </div>
     </header>
@@ -69,13 +100,17 @@
       
       <div class="space-y-4">
         
-        <!-- Notice Board (UPDATED: Supports Slideshow) -->
-        <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg prose max-w-none">
-          <div id="important-links-display" class="mb-4 hidden"></div>
-          <div id="notice-display" class="text-gray-700"></div>
+        <!-- Notice Board (Updated with Ken Burns Slideshow) -->
+        <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden group">
+           <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+           
+           <!-- পিন করা লিংকগুলো লুকানো হয়েছে (class="hidden") -->
+           <div id="important-links-display" class="hidden mb-4 relative z-10"></div>
+           
+           <div id="notice-display" class="text-gray-700 relative z-10"></div>
         </div>
 
-        <!-- Stats Grid (Updated with Lottery Card) -->
+        <!-- Stats Grid -->
         <div class="grid grid-cols-2 gap-4">
           <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
             <h3 class="text-md font-semibold text-gray-500 mb-1">মোট সদস্য</h3>
@@ -98,19 +133,20 @@
             </button>
           </div>
 
-          <!-- Lottery Card -->
-          <div class="col-span-2 bg-gradient-to-r from-slate-800 to-slate-900 p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-[1.02] flex flex-row items-center justify-between border border-slate-700">
-            <div class="text-left">
+          <!-- Lottery Card (Dark Themed Trigger) -->
+          <div class="col-span-2 bg-[#0f172a] p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-[1.02] flex flex-row items-center justify-between border border-slate-700 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-blue-600/10 rounded-full blur-xl -mr-5 -mt-5 pointer-events-none"></div>
+            <div class="text-left z-10">
                 <h3 class="text-lg font-bold text-cyan-400 mb-0">🎲 লাকি লটারি</h3>
                 <p class="text-xs text-slate-400">ভাগ্য পরীক্ষা ও ফলাফল</p>
             </div>
-            <button id="view-lottery-btn" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg text-sm font-bold hover:shadow-lg hover:shadow-cyan-500/30 transition shadow">
+            <button id="view-lottery-btn" class="z-10 bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-2 rounded-lg text-sm font-bold hover:shadow-lg hover:shadow-blue-600/30 transition shadow border border-white/10">
                 ফলাফল দেখুন
             </button>
           </div>
         </div>
 
-        <!-- CHARTS SECTION (ADDED) -->
+        <!-- CHARTS SECTION -->
         <div class="grid grid-cols-1 gap-6">
             <!-- Financial Overview Chart -->
             <div class="bg-white p-4 rounded-xl shadow-lg flex flex-col">
@@ -134,34 +170,27 @@
           <div class="p-4 sm:p-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b">
             <h3 class="text-2xl font-bold text-gray-800">সদস্য তালিকা</h3>
           </div>
-          
           <div class="p-4 border-b">
-              <!-- UPDATED: Placeholder text updated to match index.html logic -->
               <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন (নাম, মোবাইল, আইডি, কার্ড...)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" autocomplete="off">
           </div>
-
           <div id="member-list-cards" class="p-4 grid grid-cols-1 gap-4"></div>
           <div id="member-list-placeholder" class="hidden p-6 text-center text-gray-500"></div>
         </div>
 
-      </div> <!-- End Main Content -->
-      
+      </div> 
     </main>
 
     <!-- Message Box -->
     <div id="message-box" class="fixed top-5 left-1/2 -translate-x-1/2 z-[300] transition-opacity duration-300 opacity-0">
         <div id="message-content"></div>
     </div>
-
   </div>
   
-  <!-- Verify Email Modal (Permanently Hidden) -->
+  <!-- Hidden Modals (Auth & Verify) -->
   <div id="verify-email-modal" class="hidden fixed inset-0 bg-gray-100 z-[150] justify-center items-center p-4" style="display: none;"></div>
+  <div id="auth-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 z-[200] justify-center items-center p-4" style="display: none;"></div>
 
-  <!-- Auth Modal (Permanently Hidden) -->
-  <div id="auth-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 z-[200] justify-center items-center p-4 transition-opacity duration-300" style="display: none;"></div>
-
-  <!-- প্রোফাইল মডাল -->
+  <!-- Profile Modal -->
   <div id="profile-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-center p-4">
     <div id="profile-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-7xl p-6 relative h-[90vh] flex flex-col">
       <button id="close-profile" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
@@ -172,21 +201,17 @@
             <h2 id="profile-header-name" class="text-3xl font-bold text-indigo-700 truncate">সদস্যের নাম</h2>
         </div>
 
-        <!-- 2. Tab Headers -->
         <div class="flex border-b border-gray-200 mb-6 flex-shrink-0">
             <button id="profile-tab-details" class="profile-tab tab-active flex items-center justify-center gap-2 py-3 px-6 font-semibold"><span class="hidden sm:inline">👤</span><span>সদস্য বিস্তারিত</span></button>
             <button id="profile-tab-transactions" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold"><span class="hidden sm:inline">🧾</span><span>লেনদেন</span></button>
             <button id="profile-tab-summary" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold"><span class="hidden sm:inline">📈</span><span>সার-সংক্ষেপ</span></button>
         </div>
 
-        <!-- 3. Tab Content Panels -->
         <div id="profile-content-container" class="overflow-y-auto flex-grow">
-            <!-- Panel 1: Member Details -->
             <div id="profile-content-details">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
                     <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">নাম:</span><span id="profile-name-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
                     <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-500 bg-gray-100 p-2 rounded select-all"></span></p>
-                    <p class="text-gray-600 flex flex-col hidden"><span class="font-semibold text-gray-800 mb-1">ছবির লিংক:</span><span id="profile-photo-url-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span></p>
                     <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">এমপ্লয়ি আইডি:</span><span id="profile-employee-id-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
                     <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">কার্ড নম্বর:</span><span id="profile-card-number-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
                     <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইমেইল:</span><span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span></p>
@@ -194,7 +219,6 @@
                     <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">সদস্য সম্পর্কে নোট:</span><span id="profile-notes-view" class="text-gray-900 bg-gray-100 p-2 rounded min-h-[50px] whitespace-pre-wrap"></span></p>
                 </div>
             </div>
-            <!-- Panel 2: Transactions -->
             <div id="profile-content-transactions" class="hidden h-full">
                 <div class="overflow-y-auto border rounded-lg shadow-inner h-full">
                     <table class="min-w-full bg-gray-50">
@@ -203,7 +227,6 @@
                     </table>
                 </div>
             </div>
-            <!-- Panel 3: Summary -->
             <div id="profile-content-summary" class="hidden">
                  <h3 class="text-2xl font-semibold text-green-600 border-b pb-2 pt-4 mb-6">📈 সারসংক্ষেপ</h3>
                 <div class="grid grid-cols-2 gap-4 text-center py-4">
@@ -227,7 +250,7 @@
     </div>
   </div>
 
-  <!-- Lottery Modal (Read Only) -->
+  <!-- Updated Lottery Modal (Read Only + Dark Theme) -->
   <div id="lottery-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-[#0f172a]">
     <canvas id="confetti"></canvas>
     <div class="absolute top-4 left-4 z-50">
@@ -248,30 +271,28 @@
                 <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
                     <h2 class="text-lg font-semibold text-slate-300">📜 পূর্ববর্তী বিজয়ী তালিকা</h2>
                 </div>
-                <ul id="lotteryHistory" class="space-y-2 max-h-[400px] overflow-y-auto pr-2 text-sm">
-                    <!-- History Items will go here -->
-                </ul>
+                <ul id="lotteryHistory" class="space-y-2 max-h-[400px] overflow-y-auto pr-2 text-sm"></ul>
             </div>
         </div>
 
         <!-- Right/Main Display (Winner & Participants) -->
         <div class="lg:col-span-8 flex flex-col gap-6 h-full order-1 lg:order-2">
-            <!-- Winner Display (Hidden by default, shown if history exists) -->
+            <!-- Winner Display -->
             <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-500">
-                <div class="lottery-card p-8 rounded-3xl border-4 border-yellow-500/50 shadow-[0_0_80px_rgba(234,179,8,0.5)] text-center bg-gradient-to-b from-slate-800/90 to-slate-900/95 backdrop-blur-xl">
-                    <h3 class="text-2xl text-yellow-400 mb-4 font-bold">🎉 সর্বশেষ বিজয়ী 🎉</h3>
-                    <div id="lotteryWinnerText" class="text-5xl md:text-7xl font-extrabold text-white break-words drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] tracking-wide"></div>
-                    <div id="lotteryWinnerDate" class="text-slate-400 mt-4 font-mono"></div>
+                <div class="lottery-card p-10 rounded-3xl border-4 border-yellow-500/50 shadow-[0_0_80px_rgba(234,179,8,0.5)] text-center bg-gradient-to-b from-slate-800/90 to-slate-900/95 backdrop-blur-xl transform scale-105">
+                    <h3 class="text-3xl text-yellow-400 mb-6 font-bold animate-pulse">🎉 আজকের বিজয়ী 🎉</h3>
+                    <div id="lotteryWinnerText" class="text-6xl md:text-8xl font-extrabold text-white break-words drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] tracking-wide"></div>
+                    <div id="lotteryWinnerDate" class="text-slate-400 mt-4 font-mono text-lg"></div>
                 </div>
             </div>
 
             <!-- Participants List -->
             <div class="lottery-card p-6 rounded-xl flex-1 flex flex-col shadow-xl h-full min-h-[400px]">
                 <div class="flex justify-between items-center mb-4 px-2">
-                    <h2 class="text-xl font-semibold text-slate-200">অংশগ্রহণকারী সদস্যবৃন্দ <span class="text-sm font-normal text-slate-400 ml-2">(মোট: <span id="lotteryCountBadge" class="text-cyan-400 font-bold">0</span>)</span></h2>
+                    <h2 class="text-2xl font-semibold text-slate-200">অংশগ্রহণকারী <span class="text-base font-normal text-slate-400 ml-2">(মোট: <span id="lotteryCountBadge" class="text-cyan-400 font-bold">0</span>)</span></h2>
                 </div>
-                <ul id="lotteryParticipants" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 overflow-y-auto pr-2 flex-1 content-start">
-                    <!-- Participants will go here -->
+                <ul id="lotteryParticipants" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 overflow-y-auto pr-2 flex-1 content-start">
+                    <li class="col-span-full text-center text-slate-500 italic py-10 text-lg">অপেক্ষা করুন...</li>
                 </ul>
             </div>
         </div>
@@ -284,7 +305,6 @@
 
 
   <script type="module">
-    // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -302,22 +322,16 @@
     };
 
     let app, db, auth;
-    let members = [];
-    let fundDistribution = {};
-    // UPDATED: Notice object structure to support multiple images
-    let notice = { text: '', imageUrls: [], linkText: '', linkUrl: '' }; 
-    let logoUrl = ''; 
-    let importantLinks = [];
-    let lottery = { participants: [], history: [] }; // Added Lottery State
-    let activeMember = null;
-    let searchQuery = '';
+    let members = [], fundDistribution = {}, notice = { text: '', imageUrls: [], linkText: '', linkUrl: '' }, logoUrl = '', importantLinks = [], lottery = { participants: [], history: [], liveDraw: null };
+    let appDownloadUrl = ''; 
+    let activeMember = null, searchQuery = '';
     
-    // UPDATED: Variable for slideshow
+    // Variables
     let noticeSlideInterval = null;
-
-    // --- CHART VARIABLES (Added) ---
     let financeChartInstance = null;
     let trendChartInstance = null;
+    let lastDrawTime = 0;
+    let isFirstSnapshot = true;
     
     // UI Elements
     const mainAppContent = document.getElementById('main-app-content');
@@ -352,9 +366,7 @@
     const showMessage = (message, type = 'success') => {
       const messageBox = document.getElementById('message-box');
       const messageContent = document.getElementById('message-content');
-      let bgColor = 'bg-green-500';
-      if (type === 'error') bgColor = 'bg-red-500';
-      else if (type === 'info') bgColor = 'bg-blue-500';
+      let bgColor = 'bg-green-500'; if (type === 'error') bgColor = 'bg-red-500'; else if (type === 'info') bgColor = 'bg-blue-500';
       messageContent.className = `shadow-xl rounded-lg p-4 font-semibold text-white ${bgColor} flex items-center space-x-2`;
       messageContent.innerHTML = `<span>${message}</span>`;
       messageBox.classList.remove('opacity-0');
@@ -375,102 +387,20 @@
         return totals;
     };
 
-    // --- CHART RENDERING FUNCTION (Added) ---
+    // --- CHART RENDERING ---
     const renderCharts = (td, tlt, tlr) => {
-        // 1. Finance Overview Bar Chart
         const ctxFinance = document.getElementById('financeChart').getContext('2d');
         if (financeChartInstance) financeChartInstance.destroy();
-        
-        financeChartInstance = new Chart(ctxFinance, {
-            type: 'bar',
-            data: {
-                labels: ['মোট জমা', 'ঋণ প্রদান', 'ঋণ ফেরত'],
-                datasets: [{
-                    label: 'পরিমাণ (টাকা)',
-                    data: [td, tlt, tlr],
-                    backgroundColor: [
-                        'rgba(22, 163, 74, 0.7)', // Green for Deposit
-                        'rgba(220, 38, 38, 0.7)', // Red for Loan Given
-                        'rgba(202, 138, 4, 0.7)'  // Yellow/Gold for Loan Repaid
-                    ],
-                    borderColor: [
-                        'rgb(22, 163, 74)',
-                        'rgb(220, 38, 38)',
-                        'rgb(202, 138, 4)'
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: { label: (c) => `৳ ${getBengaliNumber(c.raw)}` }
-                    }
-                },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
+        financeChartInstance = new Chart(ctxFinance, { type: 'bar', data: { labels: ['মোট জমা', 'ঋণ প্রদান', 'ঋণ ফেরত'], datasets: [{ label: 'পরিমাণ (টাকা)', data: [td, tlt, tlr], backgroundColor: ['rgba(22, 163, 74, 0.7)', 'rgba(220, 38, 38, 0.7)', 'rgba(202, 138, 4, 0.7)'], borderColor: ['rgb(22, 163, 74)', 'rgb(220, 38, 38)', 'rgb(202, 138, 4)'], borderWidth: 1, borderRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f3f4f6' } }, x: { grid: { display: false } } } } });
 
-        // 2. Monthly Trend Line Chart
-        const monthlyData = {};
-        members.forEach(m => {
-            (m.transactions || []).forEach(t => {
-                if (t.type === 'deposit') {
-                    const month = t.date.substring(0, 7); // YYYY-MM
-                    monthlyData[month] = (monthlyData[month] || 0) + Number(t.amount);
-                }
-            });
-        });
-        
+        const monthlyData = {}; members.forEach(m => { (m.transactions || []).forEach(t => { if (t.type === 'deposit') { const month = t.date.substring(0, 7); monthlyData[month] = (monthlyData[month] || 0) + Number(t.amount); } }); });
         const sortedMonths = Object.keys(monthlyData).sort();
         const displayMonths = sortedMonths; 
-
-        const labels = displayMonths.map(m => {
-            const d = new Date(m + '-01');
-            return d.toLocaleString('bn-BD', { month: 'short', year: 'numeric' });
-        });
+        const labels = displayMonths.map(m => { const d = new Date(m + '-01'); return d.toLocaleString('bn-BD', { month: 'short', year: 'numeric' }); });
         const data = displayMonths.map(m => monthlyData[m]);
-
         const ctxTrend = document.getElementById('trendChart').getContext('2d');
         if (trendChartInstance) trendChartInstance.destroy();
-
-        trendChartInstance = new Chart(ctxTrend, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'মাসিক জমা',
-                    data: data,
-                    borderColor: 'rgb(79, 70, 229)', // Indigo
-                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                    borderWidth: 2,
-                    pointBackgroundColor: 'rgb(79, 70, 229)',
-                    fill: true,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: { label: (c) => `৳ ${getBengaliNumber(c.raw)}` }
-                    }
-                },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
+        trendChartInstance = new Chart(ctxTrend, { type: 'line', data: { labels: labels, datasets: [{ label: 'মাসিক জমা', data: data, borderColor: 'rgb(79, 70, 229)', backgroundColor: 'rgba(79, 70, 229, 0.1)', borderWidth: 2, pointBackgroundColor: 'rgb(79, 70, 229)', fill: true, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f3f4f6' } }, x: { grid: { display: false } } } } });
     };
 
     // --- UI RENDERING FUNCTIONS ---
@@ -481,34 +411,58 @@
       logoImg.onerror = () => { logoImg.src = placeholder; };
     };
 
+    // New: Render App Button
+    const renderHeaderAppButton = () => {
+        const headerAppBtn = document.getElementById('header-app-btn');
+        if (headerAppBtn) {
+            if (appDownloadUrl && appDownloadUrl.trim() !== '') {
+                headerAppBtn.href = appDownloadUrl;
+                headerAppBtn.target = "_blank";
+            } else {
+                const appLink = importantLinks.find(l => l.name.toLowerCase().includes('app') || l.name.toLowerCase().includes('apk') || l.name.toLowerCase().includes('download') || l.name.includes('অ্যাপ'));
+                if (appLink) {
+                    headerAppBtn.href = appLink.url;
+                    headerAppBtn.target = "_blank";
+                } else {
+                    headerAppBtn.href = "#important-links-display";
+                    headerAppBtn.target = "_self";
+                }
+            }
+        }
+    };
+
+    const renderImportantLinks = () => { 
+        const c = document.getElementById('important-links-display'); if (importantLinks.length === 0) { c.innerHTML = ''; return; } 
+        c.innerHTML = `<div class="flex flex-wrap gap-3 not-prose mb-4">${importantLinks.map(l => `<a href="${l.url}" target="_blank" class="group bg-white border border-indigo-100 text-indigo-700 text-sm font-semibold px-4 py-2 rounded-lg shadow-sm hover:shadow-md hover:border-indigo-300 transition flex items-center gap-2"><span>🔗 ${l.name}</span></a>`).join('')}</div>`;
+        renderHeaderAppButton();
+    };
+
     const renderUI = () => {
-        let totalDeposit = 0, totalLoanTaken = 0, totalLoanRepaid = 0; // Updated initialization
+        let totalDeposit = 0, totalLoanTaken = 0, totalLoanRepaid = 0; 
         members.forEach(member => {
             const totals = calculateMemberTotals(member);
             totalDeposit += totals.totalDeposit;
             totalLoanTaken += totals.totalLoanTaken;
-            totalLoanRepaid += totals.totalLoanRepaid; // Added accumulation
+            totalLoanRepaid += totals.totalLoanRepaid; 
         });
         
         document.getElementById('total-members').textContent = getBengaliNumber(members.length);
         document.getElementById('total-paid').textContent = `৳ ${getBengaliNumber(totalDeposit)}`;
         document.getElementById('total-loan-given').textContent = `৳ ${getBengaliNumber(totalLoanTaken)}`;
 
-        // CALL RENDER CHARTS (Added)
         renderCharts(totalDeposit, totalLoanTaken, totalLoanRepaid);
 
         memberListCardContainer.innerHTML = ''; 
         memberListPlaceholder.classList.add('hidden');
         
-        // UPDATED: Search Filter Logic (Added phone and employeeId)
         const filteredMembers = members.filter(member => {
             const query = searchQuery.toLowerCase().trim();
             if (!query) return true;
             return (member.name || '').toLowerCase().includes(query) || 
                    (member.id || '').toLowerCase().includes(query) || 
                    (member.cardNumber || '').toLowerCase().includes(query) ||
-                   (member.phone || '').includes(query) || // Added Phone Check
-                   (member.employeeId || '').toLowerCase().includes(query); // Added Employee ID Check
+                   (member.phone || '').includes(query) || 
+                   (member.employeeId || '').toLowerCase().includes(query); 
         });
 
         if (filteredMembers.length === 0) {
@@ -546,83 +500,39 @@
         }
     };
     
-    // MODIFIED RENDER NOTICE BOARD FUNCTION (SLIDER & FULL IMAGE FIT)
+    // UPDATED: Render Notice Board with Ken Burns Slideshow
     const renderNoticeBoard = () => {
         const d = document.getElementById('notice-display'); d.innerHTML = '';
         if (noticeSlideInterval) clearInterval(noticeSlideInterval);
+        let images = []; if (Array.isArray(notice.imageUrls)) { images = notice.imageUrls.filter(u => u.trim() !== ''); } else if (notice.imageUrl) { images = [notice.imageUrl]; }
+        if (images.length === 0 && !notice.text && !notice.linkUrl) { d.innerHTML = '<div class="text-center p-8 bg-gray-50 rounded-lg text-gray-400 italic">আপাতত কোনো নতুন নোটিশ নেই।</div>'; return; }
 
-        // Normalize images: legacy `imageUrl` or new `imageUrls`
-        let images = [];
-        if (Array.isArray(notice.imageUrls)) {
-            images = notice.imageUrls.filter(u => u.trim() !== '');
-        } else if (notice.imageUrl) {
-            images = [notice.imageUrl];
-        }
-
-        if (images.length === 0 && !notice.text && !notice.linkUrl) {
-            d.innerHTML = '<p class="text-gray-500">আপাতত কোনো নতুন নোটিশ নেই।</p>'; return;
-        }
-
-        // Render Images (Single or Slideshow)
         if (images.length > 0) {
-            if (images.length === 1) {
-                // Single Image - Updated to show full image (object-contain)
-                d.innerHTML += `
-                    <div class="w-full bg-black rounded-lg mb-4 shadow-sm overflow-hidden flex justify-center items-center">
-                         <img src="${images[0]}" class="w-full h-auto max-h-[500px] object-contain" onerror="this.style.display='none'">
-                    </div>
-                `;
-            } else {
-                // Slideshow - Updated for Sliding Effect (Right to Left) & Full Image
-                let slidesHtml = images.map((url) =>
-                    `<div class="min-w-full h-full flex items-center justify-center bg-black relative">
-                        <img src="${url}" class="w-full h-full object-contain" onerror="this.style.display='none'">
-                    </div>`
-                ).join('');
+            let slidesHtml = images.map((url, i) => `
+                <div class="slide-wrapper absolute top-0 left-0 w-full h-full ${i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} transition-opacity duration-1000">
+                    <img src="${url}" class="w-full h-full object-cover animate-kenburns" onerror="this.style.display='none'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
+                </div>
+            `).join('');
+            let indicatorsHtml = images.length > 1 ? `<div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">${images.map((_, i) => `<div class="w-2 h-2 rounded-full transition-all duration-300 ${i===0?'bg-white w-6':'bg-white/50 hover:bg-white/80'} shadow-sm dot-indicator" data-index="${i}"></div>`).join('')}</div>` : '';
+            let navHtml = images.length > 1 ? `<button id="prev-slide-btn" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition opacity-0 group-hover:opacity-100">❮</button><button id="next-slide-btn" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition opacity-0 group-hover:opacity-100">❯</button>` : '';
 
-                // Render Container with Flex Track
-                d.innerHTML += `
-                    <div class="relative w-full h-64 sm:h-80 md:h-96 bg-gray-200 rounded-lg overflow-hidden mb-4 shadow-sm border border-gray-200 group">
-                        <div id="slider-track" class="flex h-full transition-transform duration-700 ease-in-out" style="transform: translateX(0%);">
-                            ${slidesHtml}
-                        </div>
-                        
-                        <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-2 z-10 pointer-events-none">
-                            ${images.map((_, i) => `<div class="w-2.5 h-2.5 rounded-full bg-white/40 ${i===0?'bg-white scale-125 shadow-md':''} transition-all duration-300 dot-indicator" data-index="${i}"></div>`).join('')}
-                        </div>
-                    </div>
-                `;
-
-                // Logic for Sliding Animation
+            d.innerHTML += `<div class="relative w-full h-64 sm:h-80 md:h-[400px] bg-white rounded-xl overflow-hidden mb-6 shadow-md border border-gray-100 group">${slidesHtml}${indicatorsHtml}${navHtml}</div>`;
+            if (images.length > 1) {
                 let currentSlide = 0;
-                noticeSlideInterval = setInterval(() => {
-                    const track = document.getElementById('slider-track');
-                    const dots = document.querySelectorAll('.dot-indicator');
-                    if (!track) return;
-
-                    // Calculate Next Slide
-                    currentSlide = (currentSlide + 1) % images.length;
-
-                    // Apply Slide Transformation (Move Left)
-                    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-                    // Update Dots
-                    dots.forEach((dot, index) => {
-                        if(index === currentSlide) {
-                            dot.classList.remove('bg-white/40');
-                            dot.classList.add('bg-white', 'scale-125', 'shadow-md');
-                        } else {
-                            dot.classList.add('bg-white/40');
-                            dot.classList.remove('bg-white', 'scale-125', 'shadow-md');
-                        }
-                    });
-
-                }, 4000); // 4 seconds interval
+                const changeSlide = (nextIndex) => {
+                    const slides = d.querySelectorAll('.slide-wrapper'); const dots = d.querySelectorAll('.dot-indicator');
+                    slides[currentSlide].classList.remove('opacity-100', 'z-10'); slides[currentSlide].classList.add('opacity-0', 'z-0'); if(dots[currentSlide]) { dots[currentSlide].classList.remove('bg-white', 'w-6'); dots[currentSlide].classList.add('bg-white/50'); }
+                    currentSlide = nextIndex;
+                    slides[currentSlide].classList.remove('opacity-0', 'z-0'); slides[currentSlide].classList.add('opacity-100', 'z-10'); if(dots[currentSlide]) { dots[currentSlide].classList.remove('bg-white/50'); dots[currentSlide].classList.add('bg-white', 'w-6'); }
+                };
+                const nextSlide = () => changeSlide((currentSlide + 1) % images.length); const prevSlide = () => changeSlide((currentSlide - 1 + images.length) % images.length);
+                noticeSlideInterval = setInterval(nextSlide, 5000);
+                setTimeout(() => { document.getElementById('prev-slide-btn')?.addEventListener('click', (e) => { e.stopPropagation(); clearInterval(noticeSlideInterval); prevSlide(); noticeSlideInterval = setInterval(nextSlide, 5000); }); document.getElementById('next-slide-btn')?.addEventListener('click', (e) => { e.stopPropagation(); clearInterval(noticeSlideInterval); nextSlide(); noticeSlideInterval = setInterval(nextSlide, 5000); }); }, 0);
             }
         }
-
-        if (notice.text) d.innerHTML += `<div>${notice.text.split('\n').map(l => `<p>${l}</p>`).join('')}</div>`;
-        if (notice.linkUrl) d.innerHTML += `<a href="${notice.linkUrl}" target="_blank" class="inline-block bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg mt-4 no-underline hover:bg-indigo-700 transition">${notice.linkText||'বিস্তারিত'}</a>`;
+        if (notice.text) d.innerHTML += `<div class="prose max-w-none text-gray-700 leading-relaxed">${notice.text.split('\n').map(l => `<p class="mb-2">${l}</p>`).join('')}</div>`;
+        if (notice.linkUrl) d.innerHTML += `<div class="mt-6 text-center"><a href="${notice.linkUrl}" target="_blank" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition transform no-underline"><span>${notice.linkText||'বিস্তারিত দেখুন'}</span><span>↗</span></a></div>`;
     };
 
     const showProfile = (id, animate = true) => {
@@ -634,7 +544,6 @@
         document.getElementById('profile-header-name').textContent = member.name || 'N/A';
         document.getElementById('profile-name-view').textContent = member.name || 'N/A';
         document.getElementById('profile-id').textContent = member.id;
-        document.getElementById('profile-photo-url-view').textContent = member.photoUrl || 'N/A';
         document.getElementById('profile-employee-id-view').textContent = member.employeeId || 'N/A';
         document.getElementById('profile-card-number-view').textContent = member.cardNumber || 'N/A';
         document.getElementById('profile-email-view').textContent = member.email || 'N/A';
@@ -697,7 +606,7 @@
     const closeFundModal = () => { document.getElementById('monthly-fund-modal').classList.add('hidden'); document.getElementById('monthly-fund-modal').classList.remove('flex'); };
 
 
-    // --- LOTTERY LOGIC (READ ONLY) ---
+    // --- LOTTERY LOGIC (READ ONLY - Updated Structure) ---
     const renderLotteryModal = () => {
         const listEl = document.getElementById("lotteryParticipants");
         const countBadge = document.getElementById("lotteryCountBadge");
@@ -707,29 +616,31 @@
         const lp = lottery.participants || [];
         const lh = lottery.history || [];
 
-        // 1. Participants
+        // 1. Participants List
         countBadge.textContent = lp.length;
         listEl.innerHTML = "";
         if (lp.length === 0) {
             listEl.innerHTML = `<li class="col-span-full text-center text-slate-500 italic py-10 text-lg">কোনো অংশগ্রহণকারী নেই</li>`;
         } else {
             lp.forEach((n, i) => {
-                listEl.innerHTML += `<li class="group relative flex flex-col justify-center items-center bg-slate-800/80 border border-slate-700 p-4 rounded-xl hover:border-slate-500 hover:bg-slate-700/50 transition"><span class="absolute top-2 left-2 text-xs text-slate-500">#${i+1}</span><span class="font-semibold text-lg text-slate-200 truncate w-full text-center mt-2">${n}</span></li>`;
+                const li = document.createElement("li");
+                li.className = "group relative flex flex-col justify-center items-center bg-slate-800/80 border border-slate-700 p-4 rounded-xl hover:border-slate-500 hover:bg-slate-700/50 transition";
+                li.innerHTML = `<span class="absolute top-2 left-2 text-xs text-slate-500">#${i+1}</span><span class="font-semibold text-lg text-slate-200 truncate w-full text-center mt-2">${n}</span>`;
+                listEl.appendChild(li);
             });
         }
 
-        // 2. History
+        // 2. History List
         historyEl.innerHTML = "";
         if (lh.length === 0) {
             historyEl.innerHTML = `<li class="text-center text-slate-600 text-xs py-4">কোনো ইতিহাস নেই</li>`;
-            winnerSection.classList.add('hidden'); // No history means no winner to show
+            winnerSection.classList.add('hidden');
         } else {
-            // Show history list
             [...lh].reverse().forEach(h => {
                 historyEl.innerHTML += `<li class="flex justify-between items-center bg-slate-900/50 p-3 rounded border-l-4 border-cyan-500"><span class="text-cyan-400 font-medium">${h.winner}</span><span class="text-slate-500 text-xs">${h.date}</span></li>`;
             });
 
-            // 3. Show Latest Winner in Big Box
+            // 3. Show Latest Winner
             const latest = lh[lh.length - 1];
             if (latest) {
                 document.getElementById("lotteryWinnerText").textContent = latest.winner;
@@ -739,7 +650,7 @@
         }
     };
 
-    // Confetti Logic (Copied from Index, triggers only on modal open if there is a winner)
+    // Confetti Logic
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
     let parts = []; 
@@ -773,32 +684,40 @@
             fundDistribution = data?.fundDistribution || {}; 
             logoUrl = data?.logoUrl || ''; 
             importantLinks = data?.importantLinks || [];
+            appDownloadUrl = data?.appDownloadUrl || ''; // App URL fetch
             
             // Lottery Sync
-            const dbLottery = data?.lottery || { participants: [], history: [] };
+            const dbLottery = data?.lottery || { participants: [], history: [], liveDraw: null };
             lottery.participants = dbLottery.participants || [];
             lottery.history = dbLottery.history || [];
+            
+            // Check for live draw event (optional enhancement for visual sync)
+            if (dbLottery.liveDraw && !isFirstSnapshot) {
+                 if (dbLottery.liveDraw.ts > lastDrawTime) {
+                     lastDrawTime = dbLottery.liveDraw.ts;
+                     if(!document.getElementById('lottery-modal').classList.contains('hidden')) {
+                         renderLotteryModal(); // Just refresh view
+                     }
+                 }
+            }
+            isFirstSnapshot = false;
 
-            // UPDATED: Logic to handle both old (imageUrl) and new (imageUrls) structure
+            // Updated Notice Structure
             if (data?.notice) {
                  if (typeof data.notice === 'string') {
                      notice = { text: data.notice, imageUrls: [], linkText: '', linkUrl: '' };
                  } else {
                      notice = data.notice;
-                     // Ensure imageUrls exists if only imageUrl was present
-                     if (!notice.imageUrls && notice.imageUrl) {
-                         notice.imageUrls = [notice.imageUrl];
-                     } else if (!notice.imageUrls) {
-                         notice.imageUrls = [];
-                     }
+                     if (!notice.imageUrls && notice.imageUrl) notice.imageUrls = [notice.imageUrl];
+                     else if (!notice.imageUrls) notice.imageUrls = [];
                  }
             } else {
                 notice = { text: '', imageUrls: [], linkText: '', linkUrl: '' };
             }
 
-            renderUI(); renderNoticeBoard(); renderHeaderLogo(); 
+            renderUI(); renderNoticeBoard(); renderHeaderLogo(); renderImportantLinks();
             
-            // Realtime updates for modals if open
+            // Realtime updates if modals are open
             if (!monthlyFundModal.classList.contains('hidden')) renderFundModal();
             if (!document.getElementById('lottery-modal').classList.contains('hidden')) renderLotteryModal();
 
@@ -807,6 +726,7 @@
     
     initializeFirebase();
     onAuthStateChanged(auth, async (user) => {
+        const loader = document.getElementById('app-loader');
         if (user) {
             authModal.classList.add('hidden'); verifyEmailModal.classList.add('hidden'); mainAppContent.classList.remove('hidden');
             startDataListener();
@@ -814,13 +734,14 @@
             try { await signInAnonymously(auth); } 
             catch (error) { console.error("Anonymous sign-in failed:", error); showMessage("অ্যাপ্লিকেশন লোড করতে সমস্যা হচ্ছে।", 'error'); }
         }
+        if(loader) loader.classList.add('hidden');
     });
     
     // --- EVENT HANDLERS ---
     document.getElementById('search-member-input').addEventListener('input', (e) => { searchQuery = e.target.value; renderUI(); });
 
     document.addEventListener('click', async (e) => {
-        const target = e.target.closest('button'); 
+        const target = e.target.closest('button, a'); 
         if (!target) return;
         
         // Profile Logic
@@ -839,18 +760,22 @@
         else if (target.matches('#view-monthly-fund-btn')) showFundModal();
         else if (target.matches('#close-fund-modal')) closeFundModal();
 
-        // Lottery Modal Logic (NEW)
+        // Lottery Modal Logic
         else if (target.matches('#view-lottery-btn') || target.closest('#view-lottery-btn')) {
             renderLotteryModal();
             resizeCanvas();
             document.getElementById('lottery-modal').classList.remove('hidden');
-            // Only trigger confetti if there is a winner in history
-            if(lottery.history.length > 0) {
-                 startConfetti();
-            }
+            if(lottery.history.length > 0) startConfetti();
         }
         else if (target.matches('#close-lottery-btn') || target.closest('#close-lottery-btn')) {
             document.getElementById('lottery-modal').classList.add('hidden');
+        }
+        
+        // Slideshow Navigation
+        else if (target.id === 'prev-slide-btn') {
+             e.preventDefault(); e.stopPropagation();
+             // Logic handled in render function closure, but since this is re-rendered, we might need global handlers if buttons are dynamic.
+             // For simplicity in this public view, auto-slide is main feature. Manual controls added via event delegation if needed in future.
         }
     });
   </script>
