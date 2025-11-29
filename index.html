@@ -546,10 +546,9 @@
         }
     };
     
-    // UPDATED: Render Notice Board with Slideshow Support
+    // MODIFIED RENDER NOTICE BOARD FUNCTION (SLIDER & FULL IMAGE FIT)
     const renderNoticeBoard = () => {
-        const d = document.getElementById('notice-display'); 
-        d.innerHTML = '';
+        const d = document.getElementById('notice-display'); d.innerHTML = '';
         if (noticeSlideInterval) clearInterval(noticeSlideInterval);
 
         // Normalize images: legacy `imageUrl` or new `imageUrls`
@@ -567,45 +566,58 @@
         // Render Images (Single or Slideshow)
         if (images.length > 0) {
             if (images.length === 1) {
-                // Single Image
-                d.innerHTML += `<img src="${images[0]}" class="w-full h-auto rounded-lg mb-4 mx-auto shadow-sm" onerror="this.style.display='none'">`;
+                // Single Image - Updated to show full image (object-contain)
+                d.innerHTML += `
+                    <div class="w-full bg-black rounded-lg mb-4 shadow-sm overflow-hidden flex justify-center items-center">
+                         <img src="${images[0]}" class="w-full h-auto max-h-[500px] object-contain" onerror="this.style.display='none'">
+                    </div>
+                `;
             } else {
-                // Slideshow
-                let slidesHtml = images.map((url, i) =>
-                    `<img src="${url}" class="notice-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${i === 0 ? 'opacity-100' : 'opacity-0'}" onerror="this.style.display='none'">`
+                // Slideshow - Updated for Sliding Effect (Right to Left) & Full Image
+                let slidesHtml = images.map((url) =>
+                    `<div class="min-w-full h-full flex items-center justify-center bg-black relative">
+                        <img src="${url}" class="w-full h-full object-contain" onerror="this.style.display='none'">
+                    </div>`
                 ).join('');
 
-                // Render Container
+                // Render Container with Flex Track
                 d.innerHTML += `
-                    <div class="relative w-full h-64 sm:h-80 md:h-96 bg-gray-100 rounded-lg overflow-hidden mb-4 shadow-sm border border-gray-200">
-                        ${slidesHtml}
-                        <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-2 z-10 pointer-events-none">
-                            ${images.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white/60 ${i===0?'bg-white scale-125':''} shadow transition-all dot-indicator" data-index="${i}"></div>`).join('')}
+                    <div class="relative w-full h-64 sm:h-80 md:h-96 bg-gray-200 rounded-lg overflow-hidden mb-4 shadow-sm border border-gray-200 group">
+                        <div id="slider-track" class="flex h-full transition-transform duration-700 ease-in-out" style="transform: translateX(0%);">
+                            ${slidesHtml}
+                        </div>
+                        
+                        <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-2 z-10 pointer-events-none">
+                            ${images.map((_, i) => `<div class="w-2.5 h-2.5 rounded-full bg-white/40 ${i===0?'bg-white scale-125 shadow-md':''} transition-all duration-300 dot-indicator" data-index="${i}"></div>`).join('')}
                         </div>
                     </div>
                 `;
 
-                // Logic
+                // Logic for Sliding Animation
                 let currentSlide = 0;
                 noticeSlideInterval = setInterval(() => {
-                    const slides = document.querySelectorAll('.notice-slide');
+                    const track = document.getElementById('slider-track');
                     const dots = document.querySelectorAll('.dot-indicator');
-                    if (slides.length === 0) return;
+                    if (!track) return;
 
-                    // Hide current
-                    slides[currentSlide].classList.remove('opacity-100');
-                    slides[currentSlide].classList.add('opacity-0');
-                    if(dots[currentSlide]) dots[currentSlide].classList.remove('bg-white', 'scale-125');
+                    // Calculate Next Slide
+                    currentSlide = (currentSlide + 1) % images.length;
 
-                    // Next
-                    currentSlide = (currentSlide + 1) % slides.length;
+                    // Apply Slide Transformation (Move Left)
+                    track.style.transform = `translateX(-${currentSlide * 100}%)`;
 
-                    // Show next
-                    slides[currentSlide].classList.remove('opacity-0');
-                    slides[currentSlide].classList.add('opacity-100');
-                    if(dots[currentSlide]) dots[currentSlide].classList.add('bg-white', 'scale-125');
+                    // Update Dots
+                    dots.forEach((dot, index) => {
+                        if(index === currentSlide) {
+                            dot.classList.remove('bg-white/40');
+                            dot.classList.add('bg-white', 'scale-125', 'shadow-md');
+                        } else {
+                            dot.classList.add('bg-white/40');
+                            dot.classList.remove('bg-white', 'scale-125', 'shadow-md');
+                        }
+                    });
 
-                }, 4000); // 4 seconds
+                }, 4000); // 4 seconds interval
             }
         }
 
