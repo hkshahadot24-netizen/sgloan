@@ -17,6 +17,10 @@
     /* স্পিনার */
     .spinner { border: 3px solid rgba(255,255,255,0.3); border-left-color: #ffffff; border-radius:50%; width:20px; height:20px; animation:spin 1s linear infinite;}
     @keyframes spin { 100% { transform: rotate(360deg);} }
+
+    /* Reverse Spin for Double Ring Effect (New Loader) */
+    @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+    .animate-spin-reverse { animation: spin-reverse 1.5s linear infinite; }
     
     /* মডাল এনিমেশন */
     .modal-enter { opacity: 0; transform: scale(0.95); }
@@ -54,14 +58,17 @@
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-  <!-- APP LOADER -->
+  <!-- INITIAL APP LOADER (Redesigned) -->
   <div id="app-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-500">
-      <div class="relative w-24 h-24">
-          <div class="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
-          <div class="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
-          <div class="absolute inset-0 flex items-center justify-center font-bold text-indigo-700 text-xl">S</div>
+      <div class="relative w-20 h-20 mb-4">
+          <!-- Outer Ring (Clockwise) -->
+          <div class="absolute inset-0 border-[5px] border-rose-500 border-t-transparent border-b-transparent rounded-full animate-spin"></div>
+          <!-- Inner Ring (Counter-Clockwise) -->
+          <div class="absolute inset-3 border-[4px] border-pink-400 border-l-transparent border-r-transparent rounded-full animate-spin-reverse"></div>
+          <!-- Center Dot -->
+          <div class="absolute inset-0 m-auto w-2 h-2 bg-rose-600 rounded-full animate-pulse"></div>
       </div>
-      <h2 class="mt-4 text-xl font-bold text-gray-700 animate-pulse">লোড হচ্ছে...</h2>
+      <h2 class="text-sm font-semibold text-rose-600 tracking-widest uppercase animate-pulse">মেইন গেইট সমবায় সমিতি</h2>
   </div>
 
   <!-- Main Application Content -->
