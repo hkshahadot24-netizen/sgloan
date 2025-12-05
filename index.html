@@ -204,19 +204,35 @@
   <div id="verify-email-modal" class="hidden fixed inset-0 bg-gray-100 z-[150] justify-center items-center p-4" style="display: none;"></div>
   <div id="auth-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 z-[200] justify-center items-center p-4" style="display: none;"></div>
 
-  <!-- Notification Modal (NEW) -->
-  <div id="notif-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 z-[80] justify-end transition-opacity duration-300">
-    <div id="notif-panel" class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out">
+  <!-- Notification Modal (MODERN UPDATE) -->
+  <div id="notif-modal" class="hidden fixed inset-0 z-[80] justify-end">
+    <!-- Backdrop Overlay with Blur -->
+    <div id="notif-overlay-bg" class="absolute inset-0 bg-gray-900/30 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+
+    <!-- Notification Panel -->
+    <div id="notif-panel" class="relative bg-white/95 w-full max-w-sm h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out z-10">
         <!-- Header -->
-        <div class="p-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex justify-between items-center shadow-md">
+        <div class="p-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex justify-between items-center shadow-md flex-shrink-0">
             <h3 class="text-lg font-bold flex items-center gap-2">🔔 নোটিফিকেশন <span id="notif-count" class="bg-white/20 text-xs px-2 py-0.5 rounded-full">0</span></h3>
-            <button id="close-notif-btn" class="text-white hover:bg-white/20 rounded-full p-1 transition">&times;</button>
+            <div class="flex items-center gap-2">
+                <!-- Mark All Read Button -->
+                <button id="mark-read-btn" title="সব পঠিত করুন" class="flex items-center justify-center p-2 rounded-full hover:bg-white/20 transition text-white/90 hover:text-white" style="font-size: 10px;">
+                    <span class="text-lg leading-none">✓✓</span>
+                </button>
+                <!-- Close Button -->
+                <button id="close-notif-btn" class="text-white hover:bg-white/20 rounded-full p-2 transition text-xl leading-none">&times;</button>
+            </div>
         </div>
         
         <!-- List Container -->
-        <div id="notif-list" class="flex-1 overflow-y-auto p-2 space-y-2 bg-gray-50">
+        <div id="notif-list" class="flex-1 overflow-y-auto p-2 space-y-2 bg-gray-50 scroll-smooth">
             <!-- Items will be injected here via JS -->
             <div class="text-center text-gray-400 mt-10 text-sm">কোনো আপডেট নেই</div>
+        </div>
+
+        <!-- Swipe Hint (Mobile) -->
+        <div class="sm:hidden w-full py-2 flex justify-center items-center text-gray-400/50 bg-gray-50 border-t">
+            <span class="text-xs mr-2">⟸ সোয়াইপ করে বন্ধ করুন</span>
         </div>
     </div>
   </div>
@@ -419,13 +435,46 @@
         return totals;
     };
 
-    // --- NEW: NOTIFICATION RENDERER (READ ONLY) ---
+    // --- MODERN NOTIFICATION LOGIC ---
+    
+    // 1. Open/Close Logic with Animations
+    const openNotif = () => {
+        const modal = document.getElementById('notif-modal');
+        const panel = document.getElementById('notif-panel');
+        const overlay = document.getElementById('notif-overlay-bg');
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Animations
+        setTimeout(() => {
+            panel.classList.remove('translate-x-full');
+            overlay.classList.remove('opacity-0');
+        }, 10);
+        
+        // Auto mark read logic removed from here, moved to manual user action (Mark Read Button) or individual click
+    };
+
+    const closeNotif = () => {
+        const modal = document.getElementById('notif-modal');
+        const panel = document.getElementById('notif-panel');
+        const overlay = document.getElementById('notif-overlay-bg');
+        
+        panel.classList.add('translate-x-full');
+        overlay.classList.add('opacity-0');
+        
+        setTimeout(() => { 
+            modal.classList.add('hidden'); 
+            modal.classList.remove('flex'); 
+        }, 300);
+    };
+
+    // 2. Render Notifications with Smart Features
     const renderNotifications = () => {
         const list = document.getElementById('notif-list');
         const badge = document.getElementById('notif-badge');
         const countSpan = document.getElementById('notif-count');
         
-        // --- BADGE LOGIC (READ/UNREAD) ---
         const lastRead = Number(localStorage.getItem('samiti_notif_last_read') || 0);
         const unreadCount = activityLog.filter(l => l.ts > lastRead).length;
 
@@ -438,7 +487,6 @@
             badge.classList.remove('animate-bounce');
         }
 
-        // Modal Content
         countSpan.textContent = getBengaliNumber(activityLog.length);
         list.innerHTML = '';
 
@@ -457,23 +505,49 @@
             if(log.msg.includes('সদস্য')) { icon = '👤'; colorClass = 'border-l-4 border-blue-500'; }
             if(log.msg.includes('নোটিশ')) { icon = '📢'; colorClass = 'border-l-4 border-yellow-500'; }
 
-            // Highlight new items inside the list as well
             const isUnread = log.ts > lastRead;
-            const bgClass = isUnread ? 'bg-blue-50' : 'bg-white';
+            const bgClass = isUnread ? 'bg-indigo-50' : 'bg-white';
+            
+            // Smart Action: Find if member exists in message
+            let memberActionData = '';
+            let profileLink = '';
+            const foundMember = members.find(m => log.msg.includes(m.name));
+            
+            if (foundMember) {
+                memberActionData = `data-member-id="${foundMember.id}" class="cursor-pointer hover:bg-gray-100 ring-2 ring-transparent hover:ring-indigo-100"`;
+                profileLink = `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-2 py-0.5 rounded-full font-bold ml-auto border border-indigo-200">প্রোফাইল ➜</span>`;
+            }
 
             list.innerHTML += `
-                <div class="${bgClass} p-3 rounded-lg shadow-sm ${colorClass} hover:bg-gray-50 transition text-sm">
+                <div ${memberActionData} class="${bgClass} p-3 rounded-lg shadow-sm ${colorClass} transition text-sm relative group mb-2">
                     <div class="flex justify-between items-start">
-                        <span class="font-bold text-gray-800 flex items-center gap-1">${icon} ${log.msg}</span>
-                        ${isUnread ? '<span class="w-2 h-2 rounded-full bg-red-500 mt-1"></span>' : ''}
+                        <span class="font-bold text-gray-800 flex items-center gap-1 flex-1">${icon} <span class="break-words">${log.msg}</span></span>
+                        ${isUnread ? '<span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0 mt-1.5 ml-1 animate-pulse"></span>' : ''}
                     </div>
-                    <p class="text-xs text-gray-500 mt-1 flex justify-end items-center gap-1">
-                        🕒 ${log.dateStr}
-                    </p>
+                    <div class="flex items-center justify-between mt-2">
+                        <p class="text-xs text-gray-500 flex items-center gap-1">🕒 ${log.dateStr}</p>
+                        ${profileLink}
+                    </div>
                 </div>
             `;
         });
     };
+
+    // 3. Swipe Gesture Logic (Touch)
+    const notifPanel = document.getElementById('notif-panel');
+    let touchStartX = 0;
+    
+    notifPanel.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    notifPanel.addEventListener('touchend', e => {
+        const touchEndX = e.changedTouches[0].screenX;
+        // Right swipe detection (threshold 50px)
+        if (touchEndX > touchStartX + 50) {
+            closeNotif();
+        }
+    });
 
     // --- CHART RENDERING ---
     const renderCharts = (td, tlt, tlr) => {
@@ -826,30 +900,29 @@
     // --- EVENT HANDLERS ---
     document.getElementById('search-member-input').addEventListener('input', (e) => { searchQuery = e.target.value; renderUI(); });
 
+    // Global Click Listener (Delegate)
     document.addEventListener('click', async (e) => {
-        const target = e.target.closest('button, a'); 
+        const target = e.target.closest('button, a, div[data-member-id]'); 
         if (!target) return;
         
-        // Notification Logic (NEW)
+        // --- NOTIFICATION HANDLERS (UPDATED) ---
         if (target.id === 'open-notif-btn' || target.closest('#open-notif-btn')) {
-            const modal = document.getElementById('notif-modal');
-            const panel = document.getElementById('notif-panel');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => panel.classList.remove('translate-x-full'), 10);
-            
-            // Mark as read locally
-            if(activityLog.length > 0) {
-                const newestLogTime = activityLog[0].ts; 
-                localStorage.setItem('samiti_notif_last_read', newestLogTime);
-                document.getElementById('notif-badge').classList.add('hidden');
-            }
+            openNotif();
         }
-        else if (target.id === 'close-notif-btn' || target.closest('#close-notif-btn')) {
-            const modal = document.getElementById('notif-modal');
-            const panel = document.getElementById('notif-panel');
-            panel.classList.add('translate-x-full');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); renderNotifications(); }, 300);
+        else if (target.id === 'close-notif-btn' || target.closest('#close-notif-btn') || target.id === 'notif-overlay-bg') {
+            closeNotif();
+        }
+        else if (target.id === 'mark-read-btn' || target.closest('#mark-read-btn')) {
+            const newestLogTime = activityLog.length > 0 ? activityLog[0].ts : 0;
+            localStorage.setItem('samiti_notif_last_read', newestLogTime);
+            renderNotifications();
+            showMessage('সব নোটিফিকেশন পঠিত হয়েছে', 'info');
+        }
+        // Smart Deep Link Click inside Notification
+        else if (target.hasAttribute('data-member-id')) {
+            const mId = target.getAttribute('data-member-id');
+            showProfile(mId);
+            closeNotif();
         }
 
         // Profile Logic
