@@ -267,8 +267,8 @@
 
     </main>
 
-    <!-- AUTO TOAST CONTAINER (UPDATED: Top centered on mobile, Bottom right on desktop) -->
-    <div id="auto-toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 sm:top-auto sm:bottom-10 sm:left-auto sm:right-4 sm:translate-x-0 z-[200] flex flex-col gap-2 items-center sm:items-end pointer-events-none w-full max-w-[90%] sm:max-w-sm px-0 sm:px-4"></div>
+    <!-- AUTO TOAST CONTAINER (UPDATED: Top Right, Glassy, "Thrown" Animation) -->
+    <div id="auto-toast-container" class="fixed top-[70px] right-2 z-[200] flex flex-col items-end pointer-events-none max-w-[250px] sm:max-w-sm"></div>
 
     <!-- FIXED BOTTOM TICKER (Modernized) -->
     <div id="bottom-ticker" class="fixed bottom-0 left-0 w-full bg-slate-900 text-white z-40 border-t-2 border-indigo-500 hidden shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
@@ -341,15 +341,15 @@
 
       <!-- Navigation Tabs -->
       <div class="flex border-b border-slate-200 bg-slate-50 shrink-0 overflow-x-auto">
-          <button id="profile-tab-details" class="profile-tab tab-active flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center">👤 বিস্তারিত</button>
-          <button id="profile-tab-transactions" class="profile-tab text-slate-500 flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center">🧾 লেনদেন</button>
-          <button id="profile-tab-summary" class="profile-tab text-slate-500 flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center">📈 সার-সংক্ষেপ</button>
+          <button id="profile-tab-details" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center text-slate-500">👤 বিস্তারিত</button>
+          <button id="profile-tab-transactions" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center text-slate-500">🧾 লেনদেন</button>
+          <button id="profile-tab-summary" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center text-slate-500">📈 সার-সংক্ষেপ</button>
       </div>
 
       <!-- Content Area -->
       <div id="profile-content-container" class="overflow-y-auto flex-grow bg-slate-50 p-4 sm:p-8">
           <!-- Details -->
-          <div id="profile-content-details" class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+          <div id="profile-content-details" class="hidden max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-sm border border-slate-100">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div class="space-y-4">
                       <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">নাম</p><p id="profile-name-view" class="text-slate-800 font-medium"></p></div>
@@ -575,32 +575,41 @@
         setTimeout(() => playNotificationSequence(logs.slice(1)), 3000);
     };
     
-    // UPDATED: Show Auto Toast with Mobile-Optimized Design
+    // UPDATED: Show Auto Toast with "Thrown" Animation & Glassy Look
     const showAutoToast = (log) => {
-        const c = document.getElementById('auto-toast-container'), t = document.createElement('div');
-        let icon = '📌', border = 'border-l-4 border-slate-300';
-        if(log.msg.includes('জমা')) { icon = '💰'; border = 'border-l-4 border-green-500'; }
-        else if(log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-4 border-red-500'; }
+        const c = document.getElementById('auto-toast-container');
+        // Clear previous toasts to ensure "one by one" behavior strictly visual
+        c.innerHTML = ''; 
+
+        const t = document.createElement('div');
+        let icon = '📌', border = 'border-l-2 border-indigo-300';
+        if(log.msg.includes('জমা')) { icon = '💰'; border = 'border-l-2 border-green-400'; }
+        else if(log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-2 border-red-400'; }
         
         const memberMatch = members.find(m => log.msg.includes(m.name));
         
-        // Mobile: Compact, Top-aligned (slight slide down). Desktop: Normal, Bottom-aligned (slide up).
-        t.className = `bg-white/95 backdrop-blur-sm p-3 sm:p-4 rounded-lg sm:rounded-xl shadow-lg sm:shadow-2xl ${border} w-full flex items-center gap-3 transform -translate-y-4 sm:translate-y-10 opacity-0 transition-all duration-500 cursor-pointer pointer-events-auto border border-slate-100`;
+        // Glassy, thin, light styling
+        // Animation start state: scaled down, transparent, positioned at top-right (origin of throw)
+        t.className = `bg-white/70 backdrop-blur-xl p-3 rounded-2xl shadow-xl ${border} w-auto max-w-[280px] flex items-center gap-3 transform transition-all duration-500 ease-out origin-top-right scale-0 opacity-0 translate-x-[20px] -translate-y-[20px] cursor-pointer pointer-events-auto border border-white/50 ring-1 ring-white/60`;
         t.setAttribute('data-notification-msg', log.msg);
         if (memberMatch) t.setAttribute('data-member-id', memberMatch.id);
 
-        t.innerHTML = `<div class="text-xl sm:text-2xl">${icon}</div><div class="flex-1 min-w-0"><p class="font-bold text-slate-800 text-xs sm:text-sm truncate">${log.msg}</p><p class="text-[10px] text-slate-400 mt-0.5">এখনই</p></div>`;
+        t.innerHTML = `<div class="text-lg">${icon}</div><div class="flex-1 min-w-0"><p class="font-bold text-slate-800 text-xs truncate">${log.msg}</p><p class="text-[9px] text-slate-500 mt-0.5">এখনই</p></div>`;
         
         c.appendChild(t);
         
-        // Trigger enter animation
-        requestAnimationFrame(() => { t.classList.remove('-translate-y-4', 'translate-y-10', 'opacity-0'); });
+        // Trigger "Throw" animation (Scale up and move into place)
+        requestAnimationFrame(() => { 
+            t.classList.remove('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]');
+            t.classList.add('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0');
+        });
         
-        // Trigger exit animation
+        // Trigger "Fade/Shrink" exit animation
         setTimeout(() => { 
-            t.classList.add('opacity-0', 'scale-95'); // Fade out
+            t.classList.remove('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0');
+            t.classList.add('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]'); // Go back to origin
             setTimeout(() => t.remove(), 500); 
-        }, 3500);
+        }, 3000);
     };
 
     // Swipe Notification
@@ -683,7 +692,8 @@
                         <img class="w-14 h-14 rounded-full object-cover border-2 border-slate-100 shadow-sm" src="${m.photoUrl||ph}" onerror="this.src='${ph}'">
                         <div class="overflow-hidden">
                             <h4 class="font-bold text-slate-800 truncate text-lg">${m.name}</h4>
-                            <p class="text-xs text-slate-500 font-mono">ID: ${m.id}</p>
+                            <p class="text-xs text-indigo-500 font-mono font-semibold">💳 ${m.cardNumber || 'N/A'}</p>
+                            <p class="text-xs text-slate-500 font-mono mt-0.5">ID: ${m.id}</p>
                             <p class="text-xs text-slate-500 mt-0.5">📞 ${m.phone}</p>
                         </div>
                     </div>
@@ -738,7 +748,7 @@
         if (!images.length && !notice.text) display.innerHTML = `<div class="text-center text-slate-400 py-6 italic">কোনো নোটিশ নেই</div>`;
     };
 
-    // Profile & Modal Logic
+    // Profile & Modal Logic (UPDATED: Default to Transactions Tab)
     const showProfile = (id, animate = true) => {
         const m = members.find(x => x.id === id); activeMember = m; if(!m) return;
         const t = calculateMemberTotals(m);
@@ -766,12 +776,21 @@
             return `<tr class="hover:bg-slate-50"><td class="py-3 px-4 text-slate-600">${formatDate(x.date)}</td><td class="py-3 px-4"><span class="font-medium text-slate-700">${lbl}</span>${x.description?`<br><span class="text-xs text-slate-400">${x.description}</span>`:''}</td><td class="py-3 px-4 text-right font-mono font-bold ${clr}">${getBengaliNumber(x.amount)}</td></tr>`;
         }).join('');
 
-        document.querySelectorAll('.profile-tab').forEach(x => { x.classList.remove('tab-active','text-indigo-600'); x.classList.add('text-slate-500'); });
-        document.getElementById('profile-tab-details').classList.add('tab-active','text-indigo-600'); document.getElementById('profile-tab-details').classList.remove('text-slate-500');
+        // Reset all tabs
+        document.querySelectorAll('.profile-tab').forEach(x => { 
+            x.classList.remove('tab-active','text-indigo-600'); 
+            x.classList.add('text-slate-500'); 
+        });
+
+        // ACTIVATE TRANSACTIONS TAB BY DEFAULT
+        const txTab = document.getElementById('profile-tab-transactions');
+        txTab.classList.add('tab-active','text-indigo-600'); 
+        txTab.classList.remove('text-slate-500');
         
-        document.getElementById('profile-content-details').classList.remove('hidden');
-        document.getElementById('profile-content-transactions').classList.add('hidden');
+        // Show Transactions Content, Hide Others
+        document.getElementById('profile-content-details').classList.add('hidden');
         document.getElementById('profile-content-summary').classList.add('hidden');
+        document.getElementById('profile-content-transactions').classList.remove('hidden');
 
         if(animate) { 
             profileModal.classList.remove('hidden'); profileModal.classList.add('flex');
