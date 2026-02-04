@@ -34,8 +34,25 @@
     @keyframes kenburns { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
     .animate-kenburns { animation: kenburns 15s ease-in-out infinite alternate; }
 
-    @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 30s linear infinite; padding-left: 100%; }
+    /* UPDATED: Seamless Marquee Animation */
+    @keyframes marquee { 
+        0% { transform: translateX(0); } 
+        100% { transform: translateX(-100%); } 
+    }
+    .ticker-scroll-wrapper {
+        display: flex;
+        width: 100%;
+        overflow: hidden;
+    }
+    .ticker-item {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding-right: 50px; /* Gap between the end and start */
+        animation: marquee 40s linear infinite; /* Smooth continuous speed */
+    }
+    .ticker-scroll-wrapper:hover .ticker-item {
+        animation-play-state: paused;
+    }
 
     .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; transform: translateY(20px); }
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
@@ -259,8 +276,11 @@
             <div class="bg-indigo-600 text-white px-4 h-full flex items-center font-bold z-10 shadow-lg whitespace-nowrap text-xs sm:text-sm tracking-wide">
                 📢 আপডেট:
             </div>
-            <div class="w-full overflow-hidden relative h-full flex items-center ticker-container bg-slate-800/50 backdrop-blur-sm">
-                <p id="ticker-content" class="animate-marquee text-xs sm:text-sm font-medium text-indigo-100"></p>
+            <!-- UPDATED: Ticker container structure for seamless loop -->
+            <div class="w-full overflow-hidden relative h-full flex items-center bg-slate-800/50 backdrop-blur-sm">
+                <div id="ticker-wrapper" class="ticker-scroll-wrapper">
+                     <!-- JS will inject duplicated items here -->
+                </div>
             </div>
         </div>
     </div>
@@ -669,9 +689,23 @@
 
     const renderNoticeBoard = () => {
         const display = document.getElementById('notice-display'); display.innerHTML = '';
-        const ticker = document.getElementById('bottom-ticker'), tickerContent = document.getElementById('ticker-content');
+        const ticker = document.getElementById('bottom-ticker');
+        const tickerWrapper = document.getElementById('ticker-wrapper');
         
-        if (notice.scrollingText?.trim()) { ticker.classList.remove('hidden'); tickerContent.textContent = notice.scrollingText; } 
+        // UPDATED: Ticker Logic for seamless infinite loop
+        if (notice.scrollingText?.trim()) { 
+            ticker.classList.remove('hidden'); 
+            const text = notice.scrollingText;
+            // Add spacing between the two copies
+            const separator = '<span class="mx-8 text-indigo-400">❖</span>';
+            const fullText = (text + separator).repeat(Math.max(1, Math.ceil(window.innerWidth / (text.length * 10)))); // Basic repeat if text is short
+            
+            // Inject two identical items for the infinite scroll effect
+            tickerWrapper.innerHTML = `
+                <div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>
+                <div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>
+            `;
+        } 
         else ticker.classList.add('hidden');
 
         if (noticeSlideInterval) clearInterval(noticeSlideInterval);
