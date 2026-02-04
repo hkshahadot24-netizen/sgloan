@@ -267,8 +267,8 @@
 
     </main>
 
-    <!-- AUTO TOAST CONTAINER -->
-    <div id="auto-toast-container" class="fixed bottom-20 sm:bottom-10 right-4 z-[200] flex flex-col gap-2 items-end pointer-events-none w-full max-w-sm px-4 sm:px-0"></div>
+    <!-- AUTO TOAST CONTAINER (UPDATED: Top centered on mobile, Bottom right on desktop) -->
+    <div id="auto-toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 sm:top-auto sm:bottom-10 sm:left-auto sm:right-4 sm:translate-x-0 z-[200] flex flex-col gap-2 items-center sm:items-end pointer-events-none w-full max-w-[90%] sm:max-w-sm px-0 sm:px-4"></div>
 
     <!-- FIXED BOTTOM TICKER (Modernized) -->
     <div id="bottom-ticker" class="fixed bottom-0 left-0 w-full bg-slate-900 text-white z-40 border-t-2 border-indigo-500 hidden shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
@@ -574,6 +574,8 @@
         localStorage.setItem('samiti_notif_last_read', current.ts); renderNotifications();
         setTimeout(() => playNotificationSequence(logs.slice(1)), 3000);
     };
+    
+    // UPDATED: Show Auto Toast with Mobile-Optimized Design
     const showAutoToast = (log) => {
         const c = document.getElementById('auto-toast-container'), t = document.createElement('div');
         let icon = '📌', border = 'border-l-4 border-slate-300';
@@ -581,14 +583,24 @@
         else if(log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-4 border-red-500'; }
         
         const memberMatch = members.find(m => log.msg.includes(m.name));
-        t.className = `bg-white p-4 rounded-xl shadow-2xl ${border} w-full flex items-start gap-3 transform translate-y-10 opacity-0 transition-all duration-500 cursor-pointer pointer-events-auto border border-slate-100`;
+        
+        // Mobile: Compact, Top-aligned (slight slide down). Desktop: Normal, Bottom-aligned (slide up).
+        t.className = `bg-white/95 backdrop-blur-sm p-3 sm:p-4 rounded-lg sm:rounded-xl shadow-lg sm:shadow-2xl ${border} w-full flex items-center gap-3 transform -translate-y-4 sm:translate-y-10 opacity-0 transition-all duration-500 cursor-pointer pointer-events-auto border border-slate-100`;
         t.setAttribute('data-notification-msg', log.msg);
         if (memberMatch) t.setAttribute('data-member-id', memberMatch.id);
 
-        t.innerHTML = `<div class="text-2xl">${icon}</div><div><p class="font-bold text-slate-800 text-sm">${log.msg}</p><p class="text-[10px] text-slate-400 mt-1">এখনই</p></div>`;
+        t.innerHTML = `<div class="text-xl sm:text-2xl">${icon}</div><div class="flex-1 min-w-0"><p class="font-bold text-slate-800 text-xs sm:text-sm truncate">${log.msg}</p><p class="text-[10px] text-slate-400 mt-0.5">এখনই</p></div>`;
+        
         c.appendChild(t);
-        requestAnimationFrame(() => { t.classList.remove('translate-y-10', 'opacity-0'); });
-        setTimeout(() => { t.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => t.remove(), 500); }, 3500);
+        
+        // Trigger enter animation
+        requestAnimationFrame(() => { t.classList.remove('-translate-y-4', 'translate-y-10', 'opacity-0'); });
+        
+        // Trigger exit animation
+        setTimeout(() => { 
+            t.classList.add('opacity-0', 'scale-95'); // Fade out
+            setTimeout(() => t.remove(), 500); 
+        }, 3500);
     };
 
     // Swipe Notification
