@@ -4,959 +4,861 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>মেইন গেইট সমবায় সমিতি</title>
-  <!-- Added typography plugin for better notice rendering -->
+  <!-- Tailwind CSS with Typography Plugin -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Chart.js CDN -->
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
-    /* ফন্ট আপডেট */
-    body { font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; }
+    /* --- Base Styles --- */
+    body { 
+        font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; 
+        background-color: #f8fafc; /* Slate 50 */
+        padding-bottom: 60px;
+    }
     
-    /* স্পিনার */
-    .spinner { border: 3px solid rgba(255,255,255,0.3); border-left-color: #ffffff; border-radius:50%; width:20px; height:20px; animation:spin 1s linear infinite;}
+    /* --- Custom Scrollbar --- */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* --- Animations --- */
     @keyframes spin { 100% { transform: rotate(360deg);} }
-
-    /* Reverse Spin for Double Ring Effect (New Loader) */
     @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
-    .animate-spin-reverse { animation: spin-reverse 1.5s linear infinite; }
+    .animate-spin-slow { animation: spin 3s linear infinite; }
+    .animate-spin-reverse { animation: spin-reverse 2s linear infinite; }
     
-    /* মডাল এনিমেশন */
-    .modal-enter { opacity: 0; transform: scale(0.95); }
-    .modal-enter-active { opacity: 1; transform: scale(1); transition: all 300ms ease-out; }
-    .modal-exit { opacity: 1; transform: scale(1); }
-    .modal-exit-active { opacity: 0; transform: scale(0.95); transition: all 300ms ease-in; }
-    
-    .tab-active {
-        border-color: #4f46e5;
-        color: #4f46e5;
-        background-color: #eef2ff;
+    @keyframes kenburns { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+    .animate-kenburns { animation: kenburns 15s ease-in-out infinite alternate; }
+
+    @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+    .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 30s linear infinite; padding-left: 100%; }
+
+    .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; transform: translateY(20px); }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* --- Glassmorphism Header --- */
+    .glass-header {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     }
 
-    /* --- PREMIUM SLIDER STYLES (KEN BURNS EFFECT) --- */
-    @keyframes kenburns {
-        0% { transform: scale(1); }
-        100% { transform: scale(1.15); }
-    }
-    .animate-kenburns {
-        animation: kenburns 12s ease-in-out infinite alternate;
-        transform-origin: center center;
-    }
-    .slide-wrapper {
-        position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 1.5s ease-in-out;
-    }
+    /* --- Modern Card Hover Effects --- */
+    .hover-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .hover-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
 
-    /* --- LOTTERY STYLES (Read Only - Dark Theme) --- */
+    /* --- Lottery Modal Styles --- */
     #lottery-modal { font-family: 'Hind Siliguri', sans-serif; background-color: #0f172a; color: #f1f5f9; }
-    #lottery-modal ::-webkit-scrollbar { width: 8px; }
-    #lottery-modal ::-webkit-scrollbar-track { background: #1e293b; }
-    #lottery-modal ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-    .lottery-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-    #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    .lottery-card { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    
+    /* --- Utility --- */
+    .tab-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; background-color: #eef2ff; }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="text-slate-800 antialiased">
 
-  <!-- INITIAL APP LOADER (Redesigned) -->
+  <!-- APP LOADER WITH DOUBLE RING & LOGO -->
   <div id="app-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-500">
-      <div class="relative w-20 h-20 mb-4">
-          <!-- Outer Ring (Clockwise) -->
-          <div class="absolute inset-0 border-[5px] border-rose-500 border-t-transparent border-b-transparent rounded-full animate-spin"></div>
-          <!-- Inner Ring (Counter-Clockwise) -->
-          <div class="absolute inset-3 border-[4px] border-pink-400 border-l-transparent border-r-transparent rounded-full animate-spin-reverse"></div>
-          <!-- Center Dot -->
-          <div class="absolute inset-0 m-auto w-2 h-2 bg-rose-600 rounded-full animate-pulse"></div>
+      <div class="relative w-32 h-32 mb-6 flex justify-center items-center">
+          <!-- Outer Ring Background -->
+          <div class="absolute inset-0 border-[6px] border-indigo-50 rounded-full"></div>
+          <!-- Outer Ring Spinner -->
+          <div class="absolute inset-0 border-[6px] border-indigo-600 border-t-transparent border-b-transparent rounded-full animate-spin-slow"></div>
+          
+          <!-- Inner Ring Background -->
+          <div class="absolute inset-4 border-[4px] border-pink-50 rounded-full"></div>
+          <!-- Inner Ring Spinner (Reverse) -->
+          <div class="absolute inset-4 border-[4px] border-pink-500 border-l-transparent border-r-transparent rounded-full animate-spin-reverse"></div>
+          
+          <!-- Center Logo -->
+          <div class="absolute inset-0 m-auto w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-md z-10 bg-white flex justify-center items-center">
+               <img id="loader-logo-img" src="https://placehold.co/64x64/FFFFFF/6366f1?text=MG" alt="Logo" class="w-full h-full object-cover p-1">
+          </div>
       </div>
-      <h2 class="text-sm font-semibold text-rose-600 tracking-widest uppercase animate-pulse">মেইন গেইট সমবায় সমিতি</h2>
+      <h2 class="text-lg font-bold text-slate-700 tracking-wider uppercase animate-pulse">লোড হচ্ছে...</h2>
   </div>
 
   <!-- Main Application Content -->
   <div id="main-app-content" class="hidden">
     
-    <!-- Header -->
-    <header class="w-full bg-gradient-to-r from-pink-600 to-red-600 text-white p-3 shadow-lg sticky top-0 z-40">
-      <div class="max-w-2xl mx-auto px-4">
-        <div class="flex flex-row justify-between items-center gap-4">
+    <!-- Modern Header -->
+    <header class="fixed top-0 w-full z-50 glass-header transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16 sm:h-20">
           
-          <!-- Logo & Title -->
-          <div class="flex items-center gap-3 flex-shrink-0 overflow-hidden">
-            <img id="header-logo-img" src="https://placehold.co/40x40/FFFFFF/F87171?text=লোগো" alt="লোগো" class="w-10 h-10 rounded-full border-2 border-white object-cover bg-white">
-            <div class="flex-grow">
-              <h1 class="text-xl sm:text-2xl font-bold text-white py-0 truncate">
+          <!-- Logo Area -->
+          <div class="flex items-center gap-3">
+            <div class="relative group cursor-pointer">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
+                <img id="header-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=MG" alt="লোগো" class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white object-cover bg-white shadow-sm">
+            </div>
+            <div class="flex flex-col">
+              <h1 class="text-lg sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-pink-600 truncate leading-tight">
                 মেইন গেইট সমবায় সমিতি
               </h1>
-              <p class="text-xs font-semibold text-pink-100"> স্থাপিত: ২০২৫</p>
-              <p class="text-xs font-semibold text-pink-100 mt-1">★ বিশ্বাস ★ মানবিকতা ★ উন্নয়ন ★</p>
+              <span class="text-[10px] sm:text-xs font-medium text-slate-500 tracking-wide">বিশ্বাস • একতা • সমৃদ্ধি</span>
             </div>
           </div>
 
-          <!-- Actions: App Button & Notification -->
-          <div class="flex items-center gap-2">
-            <!-- Notification Button (NEW) -->
-            <button id="open-notif-btn" class="relative bg-white/10 hover:bg-white/20 text-white font-semibold p-2 rounded-lg backdrop-blur-sm transition border border-white/30 shadow-sm hover:shadow-md group">
-                <span class="text-xl">🔔</span>
-                <span id="notif-badge" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center border-2 border-white shadow-sm hidden"></span>
+          <!-- Smart Action Buttons -->
+          <div class="flex items-center gap-3 sm:gap-4">
+            
+            <!-- Notification Bell -->
+            <button id="open-notif-btn" class="relative group p-2 rounded-full hover:bg-slate-100 transition duration-200">
+                <div class="text-2xl sm:text-2xl text-slate-600 group-hover:text-indigo-600 transition-colors">🔔</div>
+                <span id="notif-badge" class="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm hidden transform scale-0 transition-transform duration-300"></span>
+                <!-- Tooltip for PC -->
+                <span class="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block pointer-events-none whitespace-nowrap">নোটিফিকেশন</span>
             </button>
 
             <!-- App Button -->
-            <a id="header-app-btn" href="#" class="bg-white/10 hover:bg-white/20 text-white font-semibold py-2 px-3 rounded-lg backdrop-blur-sm transition flex items-center gap-2 border border-white/30 shadow-sm hover:shadow-md group">
-                <span class="text-xl group-hover:scale-110 transition-transform">📱</span> 
-                <span class="hidden sm:inline">অ্যাপ</span>
+            <a id="header-app-btn" href="#" class="relative overflow-hidden group bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full px-4 py-1.5 sm:px-6 sm:py-2.5 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+                <span class="text-lg sm:text-xl">📱</span> 
+                <span class="text-xs sm:text-sm font-semibold hidden sm:inline">অ্যাপ ডাউনলোড</span>
+                <span class="text-xs font-semibold sm:hidden">অ্যাপ</span>
+                <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             </a>
+
           </div>
         </div>
       </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-2xl mx-auto p-4 space-y-4">
+    <!-- Main Layout Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8 space-y-6 sm:space-y-8">
       
-      <div class="space-y-4">
-        
-        <!-- Notice Board (Updated with Ken Burns Slideshow) -->
-        <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden group">
-           <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
-           
-           <!-- পিন করা লিংকগুলো লুকানো হয়েছে (class="hidden") -->
-           <div id="important-links-display" class="hidden mb-4 relative z-10"></div>
-           
-           <div id="notice-display" class="text-gray-700 relative z-10"></div>
+      <!-- Top Section: Stats & Feature Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.1s;">
+        <!-- Stat 1 -->
+        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 hover-card relative overflow-hidden group">
+            <div class="absolute right-0 top-0 w-24 h-24 bg-indigo-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+            <p class="text-sm font-medium text-slate-500 relative z-10">মোট সদস্য</p>
+            <p id="total-members" class="text-2xl sm:text-4xl font-bold text-slate-800 mt-1 relative z-10">০</p>
+            <div class="mt-2 text-xs text-indigo-500 font-semibold flex items-center gap-1">👥 একটিভ মেম্বার</div>
         </div>
-
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
-            <h3 class="text-md font-semibold text-gray-500 mb-1">মোট সদস্য</h3>
-            <p id="total-members" class="text-3xl font-bold text-indigo-600">০</p>
-          </div>
-          <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
-            <h3 class="text-md font-semibold text-gray-500 mb-1">মোট জমা</h3>
-            <p id="total-paid" class="text-3xl font-bold text-green-600">৳ ০</p>
-          </div>
-          <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105">
-            <h3 class="text-md font-semibold text-gray-500 mb-1">মোট ঋণ প্রদান</h3>
-            <p id="total-loan-given" class="text-3xl font-bold text-red-600">৳ ০</p>
-          </div>
-          
-          <!-- Monthly Fund Card -->
-          <div class="bg-white p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-105 flex flex-col justify-between">
-            <h3 class="text-md font-semibold text-gray-500 mb-1">মাসিক তহবিল</h3>
-            <button id="view-monthly-fund-btn" class="mt-2 w-full bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition shadow">
-                ব্যবস্থাপনা দেখুন
-            </button>
-          </div>
-
-          <!-- Lottery Card (Dark Themed Trigger) -->
-          <div class="col-span-2 bg-[#0f172a] p-4 rounded-xl shadow-lg text-center transition-transform hover:scale-[1.02] flex flex-row items-center justify-between border border-slate-700 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-blue-600/10 rounded-full blur-xl -mr-5 -mt-5 pointer-events-none"></div>
-            <div class="text-left z-10">
-                <h3 class="text-lg font-bold text-cyan-400 mb-0">🎲 লাকি লটারি</h3>
-                <p class="text-xs text-slate-400">ভাগ্য পরীক্ষা ও ফলাফল</p>
+        <!-- Stat 2 -->
+        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 hover-card relative overflow-hidden group">
+            <div class="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+            <p class="text-sm font-medium text-slate-500 relative z-10">মোট জমা</p>
+            <p id="total-paid" class="text-xl sm:text-3xl font-bold text-green-600 mt-1 relative z-10 truncate">৳ ০</p>
+            <div class="mt-2 text-xs text-green-500 font-semibold">💰 সেভিংস</div>
+        </div>
+        <!-- Stat 3 -->
+        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 hover-card relative overflow-hidden group">
+            <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+            <p class="text-sm font-medium text-slate-500 relative z-10">ঋণ প্রদান</p>
+            <p id="total-loan-given" class="text-xl sm:text-3xl font-bold text-red-500 mt-1 relative z-10 truncate">৳ ০</p>
+            <div class="mt-2 text-xs text-red-500 font-semibold">📉 বিনিয়োগ</div>
+        </div>
+        <!-- Monthly Fund Feature -->
+        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 sm:p-6 rounded-2xl shadow-lg hover-card text-white flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            <div>
+                <h3 class="text-lg font-bold">মাসিক তহবিল</h3>
+                <p class="text-xs text-indigo-100 opacity-90">ব্যবস্থাপনা ও বিতরণ</p>
             </div>
-            <button id="view-lottery-btn" class="z-10 bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-2 rounded-lg text-sm font-bold hover:shadow-lg hover:shadow-blue-600/30 transition shadow border border-white/10">
-                ফলাফল দেখুন
+            <button id="view-monthly-fund-btn" class="mt-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center justify-center gap-2">
+                <span>দেখুন</span> <span>➜</span>
             </button>
-          </div>
         </div>
+      </div>
 
-        <!-- CHARTS SECTION -->
-        <div class="grid grid-cols-1 gap-6">
-            <!-- Financial Overview Chart -->
-            <div class="bg-white p-4 rounded-xl shadow-lg flex flex-col">
-                <h3 class="text-lg font-bold text-gray-700 mb-4 text-center border-b pb-2">আর্থিক সারসংক্ষেপ</h3>
-                <div class="flex-grow relative h-64 w-full">
+      <!-- Middle Section: Notice & Charts (Grid Layout) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+          
+          <!-- Left Column (Notice & Lottery) - Span 4 on Desktop -->
+          <div class="lg:col-span-4 space-y-6 fade-in-up" style="animation-delay: 0.2s;">
+              
+              <!-- Interactive Notice Board -->
+              <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group hover:shadow-md transition duration-300">
+                   <div class="bg-slate-50 border-b border-slate-100 p-4 flex items-center justify-between">
+                       <h3 class="font-bold text-slate-700 flex items-center gap-2">📢 নোটিশ বোর্ড</h3>
+                       <span class="flex h-3 w-3 relative">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                       </span>
+                   </div>
+                   <div class="p-4">
+                       <!-- Links hidden as per request -->
+                       <div id="important-links-display" class="hidden mb-4"></div>
+                       <div id="notice-display" class="text-slate-600 text-sm"></div>
+                   </div>
+              </div>
+
+              <!-- Premium Lottery Card -->
+              <div class="relative bg-slate-900 rounded-2xl p-1 overflow-hidden group hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
+                  <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 opacity-75 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                  <div class="relative bg-slate-900 rounded-xl p-5 h-full flex flex-col items-center text-center">
+                      <div class="text-4xl mb-2 group-hover:rotate-12 transition-transform duration-300">🎲</div>
+                      <h3 class="text-xl font-bold text-white mb-1">লাকি লটারি</h3>
+                      <p class="text-slate-400 text-xs mb-4">ভাগ্য পরীক্ষা করুন এবং ফলাফল দেখুন</p>
+                      <button id="view-lottery-btn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold py-2 rounded-lg shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 border border-white/10">
+                          ফলাফল দেখুন
+                      </button>
+                  </div>
+              </div>
+
+          </div>
+
+          <!-- Right Column (Charts) - Span 8 on Desktop -->
+          <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6 fade-in-up" style="animation-delay: 0.3s;">
+             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-[350px]">
+                <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2"><span class="w-2 h-6 bg-green-500 rounded-full"></span>আর্থিক সারসংক্ষেপ</h3>
+                <div class="flex-grow relative w-full">
                     <canvas id="financeChart"></canvas>
                 </div>
-            </div>
-            
-            <!-- Monthly Trend Chart -->
-            <div class="bg-white p-4 rounded-xl shadow-lg flex flex-col">
-                <h3 class="text-lg font-bold text-gray-700 mb-4 text-center border-b pb-2">মাসিক জমার হার</h3>
-                <div class="flex-grow relative h-64 w-full">
+             </div>
+             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-[350px]">
+                <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2"><span class="w-2 h-6 bg-indigo-500 rounded-full"></span>মাসিক জমার হার</h3>
+                <div class="flex-grow relative w-full">
                     <canvas id="trendChart"></canvas>
                 </div>
+             </div>
+          </div>
+
+      </div>
+
+      <!-- Member List Section -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden fade-in-up" style="animation-delay: 0.4s;">
+        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/50">
+           <div>
+               <h3 class="text-2xl font-bold text-slate-800">সম্মানিত সদস্যবৃন্দ</h3>
+               <p class="text-sm text-slate-500 mt-1">সকল সদস্যদের তথ্য এবং প্রোফাইল</p>
+           </div>
+           <!-- Modern Search Bar -->
+           <div class="relative w-full sm:w-80">
+               <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🔍</span>
+               <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-sm transition-all" autocomplete="off">
+           </div>
+        </div>
+        
+        <!-- Grid of Members -->
+        <div class="p-6">
+            <div id="member-list-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="member-list-placeholder" class="hidden py-12 flex flex-col items-center justify-center text-slate-400">
+                <span class="text-4xl mb-2">🕵️‍♂️</span>
+                <p>কোনো সদস্য পাওয়া যায়নি</p>
             </div>
         </div>
+      </div>
 
-        <!-- Member List -->
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div class="p-4 sm:p-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b">
-            <h3 class="text-2xl font-bold text-gray-800">সদস্য তালিকা</h3>
-          </div>
-          <div class="p-4 border-b">
-              <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন (নাম, মোবাইল, আইডি, কার্ড...)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" autocomplete="off">
-          </div>
-          <div id="member-list-cards" class="p-4 grid grid-cols-1 gap-4"></div>
-          <div id="member-list-placeholder" class="hidden p-6 text-center text-gray-500"></div>
-        </div>
-
-      </div> 
     </main>
 
+    <!-- AUTO TOAST CONTAINER -->
+    <div id="auto-toast-container" class="fixed bottom-20 sm:bottom-10 right-4 z-[200] flex flex-col gap-2 items-end pointer-events-none w-full max-w-sm px-4 sm:px-0"></div>
+
+    <!-- FIXED BOTTOM TICKER (Modernized) -->
+    <div id="bottom-ticker" class="fixed bottom-0 left-0 w-full bg-slate-900 text-white z-40 border-t-2 border-indigo-500 hidden shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
+        <div class="flex items-center h-10 sm:h-12 overflow-hidden relative">
+            <div class="bg-indigo-600 text-white px-4 h-full flex items-center font-bold z-10 shadow-lg whitespace-nowrap text-xs sm:text-sm tracking-wide">
+                📢 আপডেট:
+            </div>
+            <div class="w-full overflow-hidden relative h-full flex items-center ticker-container bg-slate-800/50 backdrop-blur-sm">
+                <p id="ticker-content" class="animate-marquee text-xs sm:text-sm font-medium text-indigo-100"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sync Status -->
+    <div id="sync-status" class="fixed bottom-20 left-4 bg-slate-800/90 backdrop-blur text-white py-1.5 px-3 rounded-full shadow-xl transition-opacity duration-300 opacity-0 z-50 flex items-center gap-2 text-xs border border-slate-600">
+          <div id="sync-spinner" class="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          <span id="sync-text">সিঙ্ক...</span>
+    </div>
+    
     <!-- Message Box -->
-    <div id="message-box" class="fixed top-5 left-1/2 -translate-x-1/2 z-[300] transition-opacity duration-300 opacity-0">
-        <div id="message-content"></div>
+    <div id="message-box" class="fixed top-20 sm:top-24 left-1/2 -translate-x-1/2 z-[300] transition-opacity duration-300 opacity-0 w-[90%] max-w-md">
+        <div id="message-content" class="shadow-2xl rounded-xl p-4 font-semibold text-white flex items-center gap-3 backdrop-blur-md"></div>
     </div>
   </div>
   
   <!-- Hidden Modals (Auth & Verify) -->
-  <div id="verify-email-modal" class="hidden fixed inset-0 bg-gray-100 z-[150] justify-center items-center p-4" style="display: none;"></div>
-  <div id="auth-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 z-[200] justify-center items-center p-4" style="display: none;"></div>
+  <div id="verify-email-modal" class="hidden fixed inset-0 bg-slate-50 z-[150] justify-center items-center p-4"></div>
+  <div id="auth-modal" class="hidden fixed inset-0 bg-slate-900/80 z-[200] justify-center items-center p-4 backdrop-blur-sm"></div>
 
-  <!-- Notification Modal (MODERN UPDATE) -->
-  <div id="notif-modal" class="hidden fixed inset-0 z-[80] justify-end">
-    <!-- Backdrop Overlay with Blur -->
-    <div id="notif-overlay-bg" class="absolute inset-0 bg-gray-900/30 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
-
-    <!-- Notification Panel -->
-    <div id="notif-panel" class="relative bg-white/95 w-full max-w-sm h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out z-10">
-        <!-- Header -->
-        <div class="p-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex justify-between items-center shadow-md flex-shrink-0">
-            <h3 class="text-lg font-bold flex items-center gap-2">🔔 নোটিফিকেশন <span id="notif-count" class="bg-white/20 text-xs px-2 py-0.5 rounded-full">0</span></h3>
-            <div class="flex items-center gap-2">
-                <!-- Mark All Read Button -->
-                <button id="mark-read-btn" title="সব পঠিত করুন" class="flex items-center justify-center p-2 rounded-full hover:bg-white/20 transition text-white/90 hover:text-white" style="font-size: 10px;">
-                    <span class="text-lg leading-none">✓✓</span>
-                </button>
-                <!-- Close Button -->
-                <button id="close-notif-btn" class="text-white hover:bg-white/20 rounded-full p-2 transition text-xl leading-none">&times;</button>
+  <!-- Notification Modal (Side Panel) -->
+  <div id="notif-modal" class="hidden fixed inset-0 z-[80] justify-end overflow-hidden">
+    <div id="notif-overlay-bg" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+    <div id="notif-panel" class="relative bg-white w-full max-w-sm h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out z-10">
+        <div class="p-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex justify-between items-center shadow-md shrink-0">
+            <h3 class="text-lg font-bold flex items-center gap-2">🔔 নোটিফিকেশন <span id="notif-count" class="bg-white/20 text-xs px-2 py-0.5 rounded-full border border-white/30">0</span></h3>
+            <div class="flex items-center gap-1">
+                <button id="mark-read-btn" title="সব পঠিত করুন" class="p-2 rounded-full hover:bg-white/20 transition text-white/90">✓✓</button>
+                <button id="close-notif-btn" class="p-2 rounded-full hover:bg-white/20 transition text-xl leading-none">&times;</button>
             </div>
         </div>
-        
-        <!-- List Container -->
-        <div id="notif-list" class="flex-1 overflow-y-auto p-2 space-y-2 bg-gray-50 scroll-smooth">
-            <!-- Items will be injected here via JS -->
-            <div class="text-center text-gray-400 mt-10 text-sm">কোনো আপডেট নেই</div>
+        <div id="notif-list" class="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50 scroll-smooth">
+            <div class="flex flex-col items-center justify-center h-full text-slate-400 gap-2"><span class="text-4xl">🔕</span><span>কোনো আপডেট নেই</span></div>
         </div>
-
-        <!-- Swipe Hint (Mobile) -->
-        <div class="sm:hidden w-full py-2 flex justify-center items-center text-gray-400/50 bg-gray-50 border-t">
-            <span class="text-xs mr-2">⟸ সোয়াইপ করে বন্ধ করুন</span>
-        </div>
+        <div class="sm:hidden w-full py-3 flex justify-center items-center text-slate-400 bg-white border-t text-xs">⟸ সোয়াইপ করে বন্ধ করুন</div>
     </div>
   </div>
 
-  <!-- Profile Modal -->
-  <div id="profile-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-center p-4">
-    <div id="profile-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-7xl p-6 relative h-[90vh] flex flex-col">
-      <button id="close-profile" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
+  <!-- Profile Modal (Modernized) -->
+  <div id="profile-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 justify-center items-center p-0 sm:p-4">
+    <div id="profile-modal-box" class="bg-white sm:rounded-2xl shadow-2xl w-full max-w-6xl h-full sm:h-[90vh] flex flex-col relative overflow-hidden modal-exit">
       
-      <div id="profile-modal-content" class="flex flex-col h-full">
-        <div class="flex flex-col items-center justify-center pt-2 pb-6 border-b">
-            <img id="profile-header-img" src="https://placehold.co/96x96/EFEFEF/AAAAAA?text=?" alt="সদস্যের ছবি" class="w-24 h-24 rounded-full object-cover border-4 border-indigo-200 shadow-lg mb-3">
-            <h2 id="profile-header-name" class="text-3xl font-bold text-indigo-700 truncate">সদস্যের নাম</h2>
-        </div>
-
-        <div class="flex border-b border-gray-200 mb-6 flex-shrink-0">
-            <button id="profile-tab-details" class="profile-tab tab-active flex items-center justify-center gap-2 py-3 px-6 font-semibold"><span class="hidden sm:inline">👤</span><span>সদস্য বিস্তারিত</span></button>
-            <button id="profile-tab-transactions" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold"><span class="hidden sm:inline">🧾</span><span>লেনদেন</span></button>
-            <button id="profile-tab-summary" class="profile-tab text-gray-500 flex items-center justify-center gap-2 py-3 px-6 font-semibold"><span class="hidden sm:inline">📈</span><span>সার-সংক্ষেপ</span></button>
-        </div>
-
-        <div id="profile-content-container" class="overflow-y-auto flex-grow">
-            <div id="profile-content-details">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
-                    <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">নাম:</span><span id="profile-name-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
-                    <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">ইউজার আইডি:</span> <span id="profile-id" class="text-xs text-indigo-500 bg-gray-100 p-2 rounded select-all"></span></p>
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">এমপ্লয়ি আইডি:</span><span id="profile-employee-id-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">কার্ড নম্বর:</span><span id="profile-card-number-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ইমেইল:</span><span id="profile-email-view" class="text-gray-900 bg-gray-100 p-2 rounded break-all"></span></p>
-                    <p class="text-gray-600 flex flex-col"><span class="font-semibold text-gray-800 mb-1">ফোন:</span><span id="profile-phone-view" class="text-gray-900 bg-gray-100 p-2 rounded"></span></p>
-                    <p class="text-gray-600 flex flex-col sm:col-span-2"><span class="font-semibold text-gray-800 mb-1">সদস্য সম্পর্কে নোট:</span><span id="profile-notes-view" class="text-gray-900 bg-gray-100 p-2 rounded min-h-[50px] whitespace-pre-wrap"></span></p>
-                </div>
-            </div>
-            <div id="profile-content-transactions" class="hidden h-full">
-                <div class="overflow-y-auto border rounded-lg shadow-inner h-full">
-                    <table class="min-w-full bg-gray-50">
-                        <thead class="bg-indigo-100 sticky top-0"><tr><th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">তারিখ</th><th class="py-2 px-4 text-left text-xs font-medium text-gray-600 uppercase">বিবরণ</th><th class="py-2 px-4 text-right text-xs font-medium text-gray-600 uppercase">পরিমাণ (৳)</th></tr></thead>
-                        <tbody id="transactions-table-body" class="divide-y divide-gray-200"></tbody>
-                    </table>
-                </div>
-            </div>
-            <div id="profile-content-summary" class="hidden">
-                 <h3 class="text-2xl font-semibold text-green-600 border-b pb-2 pt-4 mb-6">📈 সারসংক্ষেপ</h3>
-                <div class="grid grid-cols-2 gap-4 text-center py-4">
-                    <div><p class="text-sm text-gray-500">মোট জমা</p><p id="paid-total" class="text-2xl font-bold text-green-600">৳ ০</p></div>
-                    <div><p class="text-sm text-gray-500">মোট ঋণ গ্রহণ</p><p id="loan-taken" class="text-2xl font-bold text-blue-600">৳ ০</p></div>
-                    <div><p class="text-sm text-gray-500">মোট ঋণ পরিশোধ</p><p id="loan-repaid" class="text-2xl font-bold text-yellow-600">৳ ০</p></div>
-                    <div><p class="text-sm text-gray-500">বর্তমান ঋণ</p><p id="current-loan" class="text-2xl font-bold text-red-600">৳ ০</p></div>
-                </div>
-            </div>
-        </div> 
+      <!-- Modal Header -->
+      <div class="relative bg-slate-800 text-white p-6 sm:p-8 flex flex-col items-center justify-center shrink-0 overflow-hidden">
+           <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 opacity-90"></div>
+           <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+           <button id="close-profile" class="absolute top-4 right-4 text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition z-20">&times;</button>
+           
+           <div class="relative z-10 flex flex-col items-center">
+               <div class="relative">
+                   <img id="profile-header-img" src="" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-white/20 shadow-xl mb-3 bg-slate-200">
+                   <div class="absolute bottom-4 right-0 w-6 h-6 bg-green-500 border-4 border-slate-800 rounded-full"></div>
+               </div>
+               <h2 id="profile-header-name" class="text-2xl sm:text-3xl font-bold text-white tracking-wide">সদস্যের নাম</h2>
+               <span id="profile-id" class="text-indigo-200 text-sm font-mono mt-1 bg-white/10 px-2 py-0.5 rounded">ID: ---</span>
+           </div>
       </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex border-b border-slate-200 bg-slate-50 shrink-0 overflow-x-auto">
+          <button id="profile-tab-details" class="profile-tab tab-active flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center">👤 বিস্তারিত</button>
+          <button id="profile-tab-transactions" class="profile-tab text-slate-500 flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center">🧾 লেনদেন</button>
+          <button id="profile-tab-summary" class="profile-tab text-slate-500 flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center">📈 সার-সংক্ষেপ</button>
+      </div>
+
+      <!-- Content Area -->
+      <div id="profile-content-container" class="overflow-y-auto flex-grow bg-slate-50 p-4 sm:p-8">
+          <!-- Details -->
+          <div id="profile-content-details" class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="space-y-4">
+                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">নাম</p><p id="profile-name-view" class="text-slate-800 font-medium"></p></div>
+                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">ইমেইল</p><p id="profile-email-view" class="text-slate-800 font-medium break-all"></p></div>
+                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">ফোন</p><p id="profile-phone-view" class="text-slate-800 font-medium"></p></div>
+                  </div>
+                  <div class="space-y-4">
+                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">এমপ্লয়ি আইডি</p><p id="profile-employee-id-view" class="text-slate-800 font-medium"></p></div>
+                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">কার্ড নম্বর</p><p id="profile-card-number-view" class="text-slate-800 font-medium"></p></div>
+                  </div>
+                  <div class="md:col-span-2">
+                       <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-100"><p class="text-xs text-yellow-700 uppercase font-bold mb-2">নোট / মন্তব্য</p><p id="profile-notes-view" class="text-slate-700 text-sm whitespace-pre-wrap leading-relaxed"></p></div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Transactions -->
+          <div id="profile-content-transactions" class="hidden h-full">
+              <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full flex flex-col">
+                  <div class="overflow-y-auto flex-grow">
+                      <table class="min-w-full text-left text-sm">
+                          <thead class="bg-slate-100 text-slate-600 sticky top-0 z-10 shadow-sm"><tr><th class="py-3 px-4 font-semibold">তারিখ</th><th class="py-3 px-4 font-semibold">বিবরণ</th><th class="py-3 px-4 text-right font-semibold">পরিমাণ (৳)</th></tr></thead>
+                          <tbody id="transactions-table-body" class="divide-y divide-slate-100"></tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Summary -->
+          <div id="profile-content-summary" class="hidden max-w-4xl mx-auto">
+               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                   <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 flex flex-col items-center justify-center">
+                       <div class="text-green-100 bg-green-500 p-3 rounded-full mb-3 text-2xl">💰</div>
+                       <p class="text-slate-500 text-sm">মোট জমা</p>
+                       <p id="paid-total" class="text-3xl font-bold text-slate-800 mt-1">৳ ০</p>
+                   </div>
+                   <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500 flex flex-col items-center justify-center">
+                       <div class="text-red-100 bg-red-500 p-3 rounded-full mb-3 text-2xl">📉</div>
+                       <p class="text-slate-500 text-sm">বর্তমান ঋণ</p>
+                       <p id="current-loan" class="text-3xl font-bold text-slate-800 mt-1">৳ ০</p>
+                   </div>
+                   <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 flex flex-col items-center justify-center">
+                       <p class="text-slate-500 text-sm">মোট ঋণ গ্রহণ</p>
+                       <p id="loan-taken" class="text-xl font-bold text-blue-600 mt-1">৳ ০</p>
+                   </div>
+                   <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-500 flex flex-col items-center justify-center">
+                       <p class="text-slate-500 text-sm">মোট ঋণ পরিশোধ</p>
+                       <p id="loan-repaid" class="text-xl font-bold text-yellow-600 mt-1">৳ ০</p>
+                   </div>
+               </div>
+          </div>
+      </div> 
     </div>
   </div>
 
-  <!-- মাসিক তহবিল মডাল -->
-  <div id="monthly-fund-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 justify-center items-start p-4 pt-16">
-    <div id="monthly-fund-modal-box" class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 relative modal-exit">
-      <button id="close-fund-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold" title="বন্ধ করুন">&times;</button>
-      <h3 class="text-2xl font-bold mb-6 text-center text-blue-600">মাসিক তহবিল ব্যবস্থাপনা</h3>
-      <div id="fund-list-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2"></div>
+  <!-- Monthly Fund Modal -->
+  <div id="monthly-fund-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 justify-center items-center p-4">
+    <div id="monthly-fund-modal-box" class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-0 relative overflow-hidden flex flex-col max-h-[80vh]">
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-5 flex justify-between items-center text-white shrink-0">
+          <h3 class="text-xl font-bold">মাসিক তহবিল</h3>
+          <button id="close-fund-modal" class="hover:bg-white/20 rounded-full p-1 transition text-2xl leading-none">&times;</button>
+      </div>
+      <div id="fund-list-container" class="p-4 space-y-3 overflow-y-auto bg-slate-50 flex-grow"></div>
     </div>
   </div>
 
-  <!-- Updated Lottery Modal (Read Only + Dark Theme) -->
-  <div id="lottery-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-[#0f172a]">
-    <canvas id="confetti"></canvas>
-    <div class="absolute top-4 left-4 z-50">
-        <button id="close-lottery-btn" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg border border-slate-500"><span>⬅ ফিরে যান</span></button>
+  <!-- Lottery Modal (Full Screen Immersive) -->
+  <div id="lottery-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-[#0f172a] text-slate-200">
+    <canvas id="confetti" class="fixed inset-0 pointer-events-none z-0"></canvas>
+    
+    <!-- Lottery Header -->
+    <div class="relative z-10 flex justify-between items-center p-4 lg:px-8 border-b border-slate-800 bg-[#0f172a]/80 backdrop-blur">
+        <button id="close-lottery-btn" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition border border-slate-700">
+            <span>⬅ ফিরে যান</span>
+        </button>
+        <div class="text-right">
+            <h1 class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">লাকি লটারি</h1>
+        </div>
     </div>
     
-    <div class="w-full max-w-[1800px] mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 grow mt-12 overflow-y-auto">
-        
-        <!-- Left Sidebar (History & Info) -->
-        <div class="lg:col-span-4 flex flex-col gap-6 order-2 lg:order-1">
-            <div class="text-center lg:text-left">
-                <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-2">মাসিক লটারি ফলাফল</h1>
-                <p class="text-slate-400 text-sm">সমিতির সকল সদস্যদের নিয়ে মাসিক লটারি</p>
-            </div>
-            
-            <!-- History Panel -->
-            <div class="lottery-card p-4 rounded-xl flex-1 min-h-[300px]">
-                <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
-                    <h2 class="text-lg font-semibold text-slate-300">📜 পূর্ববর্তী বিজয়ী তালিকা</h2>
-                </div>
-                <ul id="lotteryHistory" class="space-y-2 max-h-[400px] overflow-y-auto pr-2 text-sm"></ul>
+    <!-- Lottery Content -->
+    <div class="relative z-10 w-full max-w-[1600px] mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 grow overflow-y-auto">
+        <!-- Sidebar: History -->
+        <div class="lg:col-span-3 flex flex-col gap-4 order-2 lg:order-1">
+            <div class="lottery-card p-4 rounded-xl flex-1 flex flex-col">
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">📜 পূর্ববর্তী বিজয়ী</h2>
+                <ul id="lotteryHistory" class="space-y-2 overflow-y-auto flex-1 max-h-[300px] lg:max-h-none text-sm pr-1 custom-scrollbar"></ul>
             </div>
         </div>
 
-        <!-- Right/Main Display (Winner & Participants) -->
-        <div class="lg:col-span-8 flex flex-col gap-6 h-full order-1 lg:order-2">
-            <!-- Winner Display -->
-            <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-500">
-                <div class="lottery-card p-10 rounded-3xl border-4 border-yellow-500/50 shadow-[0_0_80px_rgba(234,179,8,0.5)] text-center bg-gradient-to-b from-slate-800/90 to-slate-900/95 backdrop-blur-xl transform scale-105">
-                    <h3 class="text-3xl text-yellow-400 mb-6 font-bold animate-pulse">🎉 আজকের বিজয়ী 🎉</h3>
-                    <div id="lotteryWinnerText" class="text-6xl md:text-8xl font-extrabold text-white break-words drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] tracking-wide"></div>
-                    <div id="lotteryWinnerDate" class="text-slate-400 mt-4 font-mono text-lg"></div>
+        <!-- Main: Winner & Participants -->
+        <div class="lg:col-span-9 flex flex-col gap-6 order-1 lg:order-2">
+            <!-- Winner Showcase -->
+            <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-700 transform scale-95 opacity-0">
+                <div class="lottery-card p-8 md:p-12 rounded-2xl border border-yellow-500/30 shadow-[0_0_50px_rgba(234,179,8,0.2)] text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/10 to-transparent"></div>
+                    <h3 class="text-2xl md:text-3xl text-yellow-400 mb-4 font-bold animate-pulse relative z-10">🎉 আজকের বিজয়ী 🎉</h3>
+                    <div id="lotteryWinnerText" class="text-5xl md:text-7xl font-extrabold text-white break-words drop-shadow-xl tracking-wide relative z-10"></div>
+                    <div id="lotteryWinnerDate" class="text-slate-400 mt-4 font-mono text-sm relative z-10"></div>
                 </div>
             </div>
 
-            <!-- Participants List -->
-            <div class="lottery-card p-6 rounded-xl flex-1 flex flex-col shadow-xl h-full min-h-[400px]">
-                <div class="flex justify-between items-center mb-4 px-2">
-                    <h2 class="text-2xl font-semibold text-slate-200">অংশগ্রহণকারী <span class="text-base font-normal text-slate-400 ml-2">(মোট: <span id="lotteryCountBadge" class="text-cyan-400 font-bold">0</span>)</span></h2>
+            <!-- Participants Grid -->
+            <div class="lottery-card p-6 rounded-xl flex-1 flex flex-col shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-slate-200">অংশগ্রহণকারী</h2>
+                    <span class="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-bold border border-cyan-500/20">মোট: <span id="lotteryCountBadge">0</span></span>
                 </div>
-                <ul id="lotteryParticipants" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 overflow-y-auto pr-2 flex-1 content-start">
-                    <li class="col-span-full text-center text-slate-500 italic py-10 text-lg">অপেক্ষা করুন...</li>
+                <ul id="lotteryParticipants" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 overflow-y-auto max-h-[500px] pr-2">
+                    <li class="col-span-full text-center text-slate-600 italic py-10">অপেক্ষা করুন...</li>
                 </ul>
             </div>
         </div>
     </div>
-    
-    <footer class="w-full py-6 text-center border-t border-slate-800/50 mt-auto bg-[#0f172a]/50 backdrop-blur-sm">
-        <p class="text-slate-500 text-sm font-mono">All rights reserved © Sahadot 2025</p>
-    </footer>
   </div>
 
 
+  <!-- JAVASCRIPT LOGIC (Unchanged but connected to new UI) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     
-    setLogLevel('Debug');
-
+    // Config
     const appId = 'default-samiti-app-id'; 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBdfxO5LL9KfzJe-PhvaRbhDhz9G-QH1aE",
-      authDomain: "sg-loan-online.firebaseapp.com",
-      projectId: "sg-loan-online",
-      storageBucket: "sg-loan-online.firebasestorage.app",
-      messagingSenderId: "933667418231",
-      appId: "1:933667418231:web:11c24150426bf869381672"
-    };
+    const firebaseConfig = { apiKey: "AIzaSyBdfxO5LL9KfzJe-PhvaRbhDhz9G-QH1aE", authDomain: "sg-loan-online.firebaseapp.com", projectId: "sg-loan-online", storageBucket: "sg-loan-online.firebasestorage.app", messagingSenderId: "933667418231", appId: "1:933667418231:web:11c24150426bf869381672" };
 
     let app, db, auth;
-    let members = [], fundDistribution = {}, notice = { text: '', imageUrls: [], linkText: '', linkUrl: '' }, logoUrl = '', importantLinks = [], lottery = { participants: [], history: [], liveDraw: null };
-    let activityLog = []; // NEW: Activity Log
+    let members = [], fundDistribution = {}, notice = { text: '', imageUrls: [], linkText: '', linkUrl: '', scrollingText: '' }, logoUrl = '', importantLinks = [], lottery = { participants: [], history: [], liveDraw: null };
+    let activityLog = []; 
     let appDownloadUrl = ''; 
     let activeMember = null, searchQuery = '';
     
-    // Variables
     let noticeSlideInterval = null;
     let financeChartInstance = null;
     let trendChartInstance = null;
     let lastDrawTime = 0;
     let isFirstSnapshot = true;
+    let initialLoadComplete = false;
     
-    // UI Elements
+    // DOM Elements
     const mainAppContent = document.getElementById('main-app-content');
-    const authModal = document.getElementById('auth-modal');
-    const verifyEmailModal = document.getElementById('verify-email-modal');
     const memberListCardContainer = document.getElementById('member-list-cards');
     const memberListPlaceholder = document.getElementById('member-list-placeholder');
     const profileModal = document.getElementById('profile-modal');
     const monthlyFundModal = document.getElementById('monthly-fund-modal'); 
 
-    // --- UTILITY FUNCTIONS ---
+    // Utils
     const getBengaliNumber = (n) => {
         if (n === null || n === undefined || isNaN(n)) return "০";
         return new Intl.NumberFormat('bn-BD', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n);
     };
-
     const formatDate = (dateString, format = 'long') => {
         if (!dateString) return '';
         const date = new Date(dateString);
-        if (format === 'long') {
-            const day = new Intl.NumberFormat('bn-BD').format(date.getDate());
-            const month = date.toLocaleString('bn-BD', { month: 'long' });
-            const year = new Intl.NumberFormat('bn-BD').format(date.getFullYear());
-            return `${day} ${month}, ${year}`;
-        }
-        if (format === 'monthYear') {
-            return date.toLocaleString('bn-BD', { month: 'long', year: 'numeric'});
-        }
+        if (format === 'long') return `${new Intl.NumberFormat('bn-BD').format(date.getDate())} ${date.toLocaleString('bn-BD', { month: 'long' })}, ${new Intl.NumberFormat('bn-BD').format(date.getFullYear())}`;
+        if (format === 'monthYear') return date.toLocaleString('bn-BD', { month: 'long', year: 'numeric'});
         return '';
     };
-
-    const showMessage = (message, type = 'success') => {
-      const messageBox = document.getElementById('message-box');
-      const messageContent = document.getElementById('message-content');
-      let bgColor = 'bg-green-500'; if (type === 'error') bgColor = 'bg-red-500'; else if (type === 'info') bgColor = 'bg-blue-500';
-      messageContent.className = `shadow-xl rounded-lg p-4 font-semibold text-white ${bgColor} flex items-center space-x-2`;
-      messageContent.innerHTML = `<span>${message}</span>`;
-      messageBox.classList.remove('opacity-0');
-      setTimeout(() => { messageBox.classList.add('opacity-0'); }, 4000);
+    const showMessage = (msg, type = 'success') => {
+      const box = document.getElementById('message-box');
+      const content = document.getElementById('message-content');
+      let color = type === 'error' ? 'bg-red-500' : type === 'info' ? 'bg-blue-600' : 'bg-green-600';
+      content.className = `shadow-2xl rounded-xl p-4 font-semibold text-white flex items-center gap-3 backdrop-blur-md ${color}`;
+      content.innerHTML = `<span>${type === 'error' ? '⚠️' : '✅'}</span><span>${msg}</span>`;
+      box.classList.remove('opacity-0'); setTimeout(() => box.classList.add('opacity-0'), 3000);
+    };
+    const calculateMemberTotals = (m) => {
+        const t = { totalDeposit: 0, totalLoanTaken: 0, totalLoanRepaid: 0, currentLoan: 0 };
+        if(m?.transactions) m.transactions.forEach(x => { const a = Number(x.amount)||0; if(x.type === 'deposit') t.totalDeposit+=a; else if(x.type === 'loanTaken') t.totalLoanTaken+=a; else if(x.type === 'loanRepayment') t.totalLoanRepaid+=a; });
+        t.currentLoan = t.totalLoanTaken - t.totalLoanRepaid; return t;
     };
 
-    const calculateMemberTotals = (member) => {
-        const totals = { totalDeposit: 0, totalLoanTaken: 0, totalLoanRepaid: 0, currentLoan: 0 };
-        if(member?.transactions) {
-            member.transactions.forEach(t => {
-                const amount = Number(t.amount) || 0;
-                if (t.type === 'deposit') totals.totalDeposit += amount;
-                else if (t.type === 'loanTaken') totals.totalLoanTaken += amount;
-                else if (t.type === 'loanRepayment') totals.totalLoanRepaid += amount;
-            });
-        }
-        totals.currentLoan = totals.totalLoanTaken - totals.totalLoanRepaid;
-        return totals;
-    };
-
-    // --- MODERN NOTIFICATION LOGIC ---
-    
-    // 1. Open/Close Logic with Animations
+    // Notifications
     const openNotif = () => {
-        const modal = document.getElementById('notif-modal');
-        const panel = document.getElementById('notif-panel');
-        const overlay = document.getElementById('notif-overlay-bg');
-        
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        
-        // Animations
-        setTimeout(() => {
-            panel.classList.remove('translate-x-full');
-            overlay.classList.remove('opacity-0');
-        }, 10);
-        
-        // Auto mark read logic removed from here, moved to manual user action (Mark Read Button) or individual click
+        const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
+        m.classList.remove('hidden'); m.classList.add('flex');
+        setTimeout(() => { p.classList.remove('translate-x-full'); o.classList.remove('opacity-0'); }, 10);
     };
-
     const closeNotif = () => {
-        const modal = document.getElementById('notif-modal');
-        const panel = document.getElementById('notif-panel');
-        const overlay = document.getElementById('notif-overlay-bg');
-        
-        panel.classList.add('translate-x-full');
-        overlay.classList.add('opacity-0');
-        
-        setTimeout(() => { 
-            modal.classList.add('hidden'); 
-            modal.classList.remove('flex'); 
-        }, 300);
+        const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
+        p.classList.add('translate-x-full'); o.classList.add('opacity-0');
+        setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
     };
-
-    // 2. Render Notifications with Smart Features
     const renderNotifications = () => {
-        const list = document.getElementById('notif-list');
-        const badge = document.getElementById('notif-badge');
-        const countSpan = document.getElementById('notif-count');
-        
+        const list = document.getElementById('notif-list'), badge = document.getElementById('notif-badge'), count = document.getElementById('notif-count');
         const lastRead = Number(localStorage.getItem('samiti_notif_last_read') || 0);
-        const unreadCount = activityLog.filter(l => l.ts > lastRead).length;
-
-        if (unreadCount > 0) {
-            badge.textContent = getBengaliNumber(unreadCount);
-            badge.classList.remove('hidden');
-            badge.classList.add('animate-bounce');
-        } else {
-            badge.classList.add('hidden');
-            badge.classList.remove('animate-bounce');
-        }
-
-        countSpan.textContent = getBengaliNumber(activityLog.length);
+        const unread = activityLog.filter(l => l.ts > lastRead).length;
+        
+        if (unread > 0) { badge.textContent = getBengaliNumber(unread); badge.classList.remove('hidden'); badge.classList.add('animate-bounce'); } 
+        else { badge.classList.add('hidden'); badge.classList.remove('animate-bounce'); }
+        count.textContent = getBengaliNumber(activityLog.length);
         list.innerHTML = '';
 
-        if (activityLog.length === 0) {
-            list.innerHTML = '<div class="flex flex-col items-center justify-center h-48 text-gray-400 gap-2"><span class="text-4xl">🔕</span><span>কোনো নতুন আপডেট নেই</span></div>';
-            return;
-        }
-
+        if (activityLog.length === 0) { list.innerHTML = '<div class="flex flex-col items-center justify-center h-48 text-slate-400 gap-2"><span class="text-4xl">🔕</span><span>কোনো নতুন আপডেট নেই</span></div>'; return; }
+        
         activityLog.forEach(log => {
-            let icon = '📌';
-            let colorClass = 'border-l-4 border-gray-400';
+            let icon = '📌', border = 'border-l-4 border-slate-300';
+            if(log.msg.includes('জমা') || log.msg.includes('টাকা')) { icon = '💰'; border = 'border-l-4 border-green-500'; }
+            else if(log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-4 border-red-500'; }
+            else if(log.msg.includes('লটারি')) { icon = '🎲'; border = 'border-l-4 border-purple-500'; }
             
-            if(log.msg.includes('জমা') || log.msg.includes('টাকা')) { icon = '💰'; colorClass = 'border-l-4 border-green-500'; }
-            if(log.msg.includes('ঋণ') || log.msg.includes('খরচ')) { icon = '💸'; colorClass = 'border-l-4 border-red-500'; }
-            if(log.msg.includes('লটারি')) { icon = '🎲'; colorClass = 'border-l-4 border-purple-500'; }
-            if(log.msg.includes('সদস্য')) { icon = '👤'; colorClass = 'border-l-4 border-blue-500'; }
-            if(log.msg.includes('নোটিশ')) { icon = '📢'; colorClass = 'border-l-4 border-yellow-500'; }
-
             const isUnread = log.ts > lastRead;
-            const bgClass = isUnread ? 'bg-indigo-50' : 'bg-white';
-            
-            // Smart Action: Find if member exists in message
-            let memberActionData = '';
-            let profileLink = '';
-            const foundMember = members.find(m => log.msg.includes(m.name));
-            
-            if (foundMember) {
-                memberActionData = `data-member-id="${foundMember.id}" class="cursor-pointer hover:bg-gray-100 ring-2 ring-transparent hover:ring-indigo-100"`;
-                profileLink = `<span class="bg-indigo-100 text-indigo-700 text-[10px] px-2 py-0.5 rounded-full font-bold ml-auto border border-indigo-200">প্রোফাইল ➜</span>`;
-            }
+            const bg = isUnread ? 'bg-indigo-50/50' : 'bg-white';
+            const memberMatch = members.find(m => log.msg.includes(m.name));
+            const actionAttr = memberMatch ? `data-member-id="${memberMatch.id}"` : '';
+            const actionBtn = memberMatch ? `<span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full ml-auto">প্রোফাইল ➜</span>` : '';
 
-            list.innerHTML += `
-                <div ${memberActionData} class="${bgClass} p-3 rounded-lg shadow-sm ${colorClass} transition text-sm relative group mb-2">
-                    <div class="flex justify-between items-start">
-                        <span class="font-bold text-gray-800 flex items-center gap-1 flex-1">${icon} <span class="break-words">${log.msg}</span></span>
-                        ${isUnread ? '<span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0 mt-1.5 ml-1 animate-pulse"></span>' : ''}
-                    </div>
-                    <div class="flex items-center justify-between mt-2">
-                        <p class="text-xs text-gray-500 flex items-center gap-1">🕒 ${log.dateStr}</p>
-                        ${profileLink}
-                    </div>
-                </div>
-            `;
+            list.innerHTML += `<div data-notification-msg="${log.msg}" ${actionAttr} class="${bg} p-3 rounded-lg shadow-sm ${border} mb-2 cursor-pointer hover:bg-slate-50 transition relative"><div class="flex justify-between items-start"><span class="text-sm text-slate-700 font-medium flex gap-2">${icon} <span class="flex-1">${log.msg}</span></span>${isUnread?'<span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0"></span>':''}</div><div class="flex items-center mt-2 text-xs text-slate-400"><span>${log.dateStr}</span>${actionBtn}</div></div>`;
+        });
+    };
+    
+    // Auto Toast
+    const checkAndPlayNotifications = () => {
+        const lastRead = Number(localStorage.getItem('samiti_notif_last_read') || 0);
+        const unreadLogs = activityLog.filter(l => l.ts > lastRead).sort((a,b) => a.ts - b.ts);
+        if (unreadLogs.length > 0) playNotificationSequence(unreadLogs);
+    };
+    const playNotificationSequence = (logs) => {
+        if (logs.length === 0) return;
+        const current = logs[0]; showAutoToast(current);
+        localStorage.setItem('samiti_notif_last_read', current.ts); renderNotifications();
+        setTimeout(() => playNotificationSequence(logs.slice(1)), 3000);
+    };
+    const showAutoToast = (log) => {
+        const c = document.getElementById('auto-toast-container'), t = document.createElement('div');
+        let icon = '📌', border = 'border-l-4 border-slate-300';
+        if(log.msg.includes('জমা')) { icon = '💰'; border = 'border-l-4 border-green-500'; }
+        else if(log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-4 border-red-500'; }
+        
+        const memberMatch = members.find(m => log.msg.includes(m.name));
+        t.className = `bg-white p-4 rounded-xl shadow-2xl ${border} w-full flex items-start gap-3 transform translate-y-10 opacity-0 transition-all duration-500 cursor-pointer pointer-events-auto border border-slate-100`;
+        t.setAttribute('data-notification-msg', log.msg);
+        if (memberMatch) t.setAttribute('data-member-id', memberMatch.id);
+
+        t.innerHTML = `<div class="text-2xl">${icon}</div><div><p class="font-bold text-slate-800 text-sm">${log.msg}</p><p class="text-[10px] text-slate-400 mt-1">এখনই</p></div>`;
+        c.appendChild(t);
+        requestAnimationFrame(() => { t.classList.remove('translate-y-10', 'opacity-0'); });
+        setTimeout(() => { t.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => t.remove(), 500); }, 3500);
+    };
+
+    // Swipe Notification
+    let touchStartX = 0;
+    const np = document.getElementById('notif-panel');
+    np.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, {passive: true});
+    np.addEventListener('touchend', e => { if(e.changedTouches[0].screenX > touchStartX + 50) closeNotif(); });
+
+    // Charts
+    const renderCharts = (td, tlt, tlr) => {
+        const ctxF = document.getElementById('financeChart').getContext('2d');
+        if (financeChartInstance) financeChartInstance.destroy();
+        financeChartInstance = new Chart(ctxF, { 
+            type: 'bar', 
+            data: { labels: ['মোট জমা', 'ঋণ প্রদান', 'ঋণ ফেরত'], datasets: [{ data: [td, tlt, tlr], backgroundColor: ['#22c55e', '#ef4444', '#eab308'], borderRadius: 6, barThickness: 40 }] }, 
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { family: "'Hind Siliguri'" } } }, x: { grid: { display: false }, ticks: { font: { family: "'Hind Siliguri'", weight: '600' } } } } } 
+        });
+
+        const mData = {}; members.forEach(m => (m.transactions||[]).forEach(t => { if(t.type==='deposit') { const k = t.date.substring(0,7); mData[k] = (mData[k]||0)+Number(t.amount); } }));
+        const labels = Object.keys(mData).sort().map(m => { const d = new Date(m+'-01'); return d.toLocaleString('bn-BD', { month: 'short', year: '2-digit' }); });
+        const data = Object.keys(mData).sort().map(k => mData[k]);
+        
+        const ctxT = document.getElementById('trendChart').getContext('2d');
+        if (trendChartInstance) trendChartInstance.destroy();
+        trendChartInstance = new Chart(ctxT, { 
+            type: 'line', 
+            data: { labels: labels, datasets: [{ label: 'জমা', data: data, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', borderWidth: 3, tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#ffffff', pointBorderColor: '#6366f1', pointBorderWidth: 2 }] }, 
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9', borderDash: [5, 5] } }, x: { grid: { display: false } } } } 
         });
     };
 
-    // 3. Swipe Gesture Logic (Touch)
-    const notifPanel = document.getElementById('notif-panel');
-    let touchStartX = 0;
-    
-    notifPanel.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, {passive: true});
-
-    notifPanel.addEventListener('touchend', e => {
-        const touchEndX = e.changedTouches[0].screenX;
-        // Right swipe detection (threshold 50px)
-        if (touchEndX > touchStartX + 50) {
-            closeNotif();
-        }
-    });
-
-    // --- CHART RENDERING ---
-    const renderCharts = (td, tlt, tlr) => {
-        const ctxFinance = document.getElementById('financeChart').getContext('2d');
-        if (financeChartInstance) financeChartInstance.destroy();
-        financeChartInstance = new Chart(ctxFinance, { type: 'bar', data: { labels: ['মোট জমা', 'ঋণ প্রদান', 'ঋণ ফেরত'], datasets: [{ label: 'পরিমাণ (টাকা)', data: [td, tlt, tlr], backgroundColor: ['rgba(22, 163, 74, 0.7)', 'rgba(220, 38, 38, 0.7)', 'rgba(202, 138, 4, 0.7)'], borderColor: ['rgb(22, 163, 74)', 'rgb(220, 38, 38)', 'rgb(202, 138, 4)'], borderWidth: 1, borderRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f3f4f6' } }, x: { grid: { display: false } } } } });
-
-        const monthlyData = {}; members.forEach(m => { (m.transactions || []).forEach(t => { if (t.type === 'deposit') { const month = t.date.substring(0, 7); monthlyData[month] = (monthlyData[month] || 0) + Number(t.amount); } }); });
-        const sortedMonths = Object.keys(monthlyData).sort();
-        const displayMonths = sortedMonths; 
-        const labels = displayMonths.map(m => { const d = new Date(m + '-01'); return d.toLocaleString('bn-BD', { month: 'short', year: 'numeric' }); });
-        const data = displayMonths.map(m => monthlyData[m]);
-        const ctxTrend = document.getElementById('trendChart').getContext('2d');
-        if (trendChartInstance) trendChartInstance.destroy();
-        trendChartInstance = new Chart(ctxTrend, { type: 'line', data: { labels: labels, datasets: [{ label: 'মাসিক জমা', data: data, borderColor: 'rgb(79, 70, 229)', backgroundColor: 'rgba(79, 70, 229, 0.1)', borderWidth: 2, pointBackgroundColor: 'rgb(79, 70, 229)', fill: true, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f3f4f6' } }, x: { grid: { display: false } } } } });
-    };
-
-    // --- UI RENDERING FUNCTIONS ---
+    // Rendering UI
     const renderHeaderLogo = () => {
-      const logoImg = document.getElementById('header-logo-img');
-      const placeholder = 'https://placehold.co/40x40/FFFFFF/F87171?text=লোগো'; 
-      logoImg.src = logoUrl || placeholder;
-      logoImg.onerror = () => { logoImg.src = placeholder; };
-    };
-
-    const renderHeaderAppButton = () => {
-        const headerAppBtn = document.getElementById('header-app-btn');
-        if (headerAppBtn) {
-            if (appDownloadUrl && appDownloadUrl.trim() !== '') {
-                headerAppBtn.href = appDownloadUrl;
-                headerAppBtn.target = "_blank";
-            } else {
-                const appLink = importantLinks.find(l => l.name.toLowerCase().includes('app') || l.name.toLowerCase().includes('apk') || l.name.toLowerCase().includes('download') || l.name.includes('অ্যাপ'));
-                if (appLink) {
-                    headerAppBtn.href = appLink.url;
-                    headerAppBtn.target = "_blank";
-                } else {
-                    headerAppBtn.href = "#important-links-display";
-                    headerAppBtn.target = "_self";
-                }
-            }
+        const img = document.getElementById('header-logo-img');
+        if (logoUrl) { 
+            img.src = logoUrl; img.onerror = () => img.src = 'https://placehold.co/48x48/FFFFFF/6366f1?text=MG'; 
+            localStorage.setItem('cached_logo_url', logoUrl); // Cache Logo
         }
     };
+    const renderImportantLinks = () => {
+        // Hiding important links display as requested, but keeping app button logic working
+        const c = document.getElementById('important-links-display'); 
+        if(c) { c.innerHTML = ''; c.classList.add('hidden'); }
 
-    const renderImportantLinks = () => { 
-        const c = document.getElementById('important-links-display'); if (importantLinks.length === 0) { c.innerHTML = ''; return; } 
-        c.innerHTML = `<div class="flex flex-wrap gap-3 not-prose mb-4">${importantLinks.map(l => `<a href="${l.url}" target="_blank" class="group bg-white border border-indigo-100 text-indigo-700 text-sm font-semibold px-4 py-2 rounded-lg shadow-sm hover:shadow-md hover:border-indigo-300 transition flex items-center gap-2"><span>🔗 ${l.name}</span></a>`).join('')}</div>`;
-        renderHeaderAppButton();
+        // App Button Logic
+        const btn = document.getElementById('header-app-btn');
+        if (appDownloadUrl) { btn.href = appDownloadUrl; btn.target = "_blank"; }
+        else { 
+            const appLink = importantLinks.find(l => l.name.toLowerCase().includes('app') || l.name.includes('অ্যাপ'));
+            if(appLink) { btn.href = appLink.url; btn.target = "_blank"; } else { btn.href = "#"; btn.onclick = (e) => { e.preventDefault(); showMessage('অ্যাপ লিংক শীঘ্রই আসছে!', 'info'); }; }
+        }
     };
 
     const renderUI = () => {
-        let totalDeposit = 0, totalLoanTaken = 0, totalLoanRepaid = 0; 
-        members.forEach(member => {
-            const totals = calculateMemberTotals(member);
-            totalDeposit += totals.totalDeposit;
-            totalLoanTaken += totals.totalLoanTaken;
-            totalLoanRepaid += totals.totalLoanRepaid; 
-        });
+        let td = 0, tlt = 0, tlr = 0;
+        members.forEach(m => { const t = calculateMemberTotals(m); td+=t.totalDeposit; tlt+=t.totalLoanTaken; tlr+=t.totalLoanRepaid; });
         
         document.getElementById('total-members').textContent = getBengaliNumber(members.length);
-        document.getElementById('total-paid').textContent = `৳ ${getBengaliNumber(totalDeposit)}`;
-        document.getElementById('total-loan-given').textContent = `৳ ${getBengaliNumber(totalLoanTaken)}`;
-
-        renderCharts(totalDeposit, totalLoanTaken, totalLoanRepaid);
-
-        memberListCardContainer.innerHTML = ''; 
-        memberListPlaceholder.classList.add('hidden');
+        document.getElementById('total-paid').textContent = `৳ ${getBengaliNumber(td)}`;
+        document.getElementById('total-loan-given').textContent = `৳ ${getBengaliNumber(tlt)}`;
         
-        const filteredMembers = members.filter(member => {
-            const query = searchQuery.toLowerCase().trim();
-            if (!query) return true;
-            return (member.name || '').toLowerCase().includes(query) || 
-                   (member.id || '').toLowerCase().includes(query) || 
-                   (member.cardNumber || '').toLowerCase().includes(query) ||
-                   (member.phone || '').includes(query) || 
-                   (member.employeeId || '').toLowerCase().includes(query); 
+        renderCharts(td, tlt, tlr);
+        
+        memberListCardContainer.innerHTML = ''; memberListPlaceholder.classList.add('hidden');
+        const filtered = members.filter(m => {
+            const q = searchQuery.toLowerCase().trim();
+            return !q || (m.name||'').toLowerCase().includes(q) || (m.id||'').includes(q) || (m.phone||'').includes(q) || (m.cardNumber||'').includes(q);
         });
 
-        if (filteredMembers.length === 0) {
-            memberListPlaceholder.classList.remove('hidden');
-            memberListPlaceholder.textContent = searchQuery ? `"${searchQuery}" এর সাথে মিলে এমন কোনো সদস্য পাওয়া যায়নি।` : `এখনও কোনো সদস্য যোগ করা হয়নি।`;
-        } else {
-            const sortedMembers = [...filteredMembers].sort((a, b) => (a.name || '').localeCompare(b.name || '', 'bn'));
-            sortedMembers.forEach((member) => {
-                const totals = calculateMemberTotals(member);
+        if (filtered.length === 0) memberListPlaceholder.classList.remove('hidden');
+        else {
+            filtered.sort((a,b) => (a.name||'').localeCompare(b.name||'','bn')).forEach(m => {
+                const t = calculateMemberTotals(m);
+                const ph = `https://placehold.co/64x64/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-lg shadow-md border border-gray-200 p-4 flex flex-col transition-transform hover:scale-[1.02] duration-200';
-                const placeholderUrl = `https://placehold.co/64x64/EFEFEF/AAAAAA?text=${encodeURIComponent(member.name.charAt(0))}`;
+                card.className = 'bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-200 transition group flex flex-col h-full relative overflow-hidden';
                 card.innerHTML = `
-                    <div class="flex items-center gap-4 mb-4">
-                        <img class="h-16 w-16 rounded-full object-cover border-2 border-indigo-200 flex-shrink-0" src="${member.photoUrl || placeholderUrl}" onerror="this.onerror=null;this.src='${placeholderUrl}';" alt="${member.name}">
+                    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition text-6xl select-none">🆔</div>
+                    <div class="flex items-center gap-4 mb-4 relative z-10">
+                        <img class="w-14 h-14 rounded-full object-cover border-2 border-slate-100 shadow-sm" src="${m.photoUrl||ph}" onerror="this.src='${ph}'">
                         <div class="overflow-hidden">
-                            <h4 class="text-lg font-bold text-gray-900 truncate" title="${member.name}">${member.name}</h4>
-                            <p class="text-sm text-gray-600 truncate">কার্ড: ${member.cardNumber || 'N/A'}</p>
-                            <p class="text-sm text-gray-600 truncate">ফোন: ${member.phone}</p>
+                            <h4 class="font-bold text-slate-800 truncate text-lg">${m.name}</h4>
+                            <p class="text-xs text-slate-500 font-mono">ID: ${m.id}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">📞 ${m.phone}</p>
                         </div>
                     </div>
-                    <div class="space-y-2 flex-grow">
-                        <div class="flex justify-between items-center bg-green-50 p-2 rounded-md"><span class="text-sm font-medium text-green-700">মোট জমা:</span><span class="text-lg font-bold text-green-600">৳ ${getBengaliNumber(totals.totalDeposit)}</span></div>
-                        <div class="flex justify-between items-center bg-red-50 p-2 rounded-md"><span class="text-sm font-medium text-red-700">বর্তমান ঋণ:</span><span class="text-lg font-bold text-red-600">৳ ${getBengaliNumber(totals.currentLoan)}</span></div>
+                    <div class="mt-auto space-y-2 relative z-10">
+                        <div class="flex justify-between text-sm bg-green-50 px-3 py-2 rounded-lg border border-green-100"><span class="text-green-700 font-medium">মোট জমা</span><span class="font-bold text-green-700">৳ ${getBengaliNumber(t.totalDeposit)}</span></div>
+                        <div class="flex justify-between text-sm bg-red-50 px-3 py-2 rounded-lg border border-red-100"><span class="text-red-700 font-medium">ঋণ</span><span class="font-bold text-red-700">৳ ${getBengaliNumber(t.currentLoan)}</span></div>
                     </div>
-                    <button class="view-profile-btn mt-4 w-full bg-indigo-500 text-white px-3 py-2 rounded-lg text-sm font-bold hover:bg-indigo-600 transition shadow" data-id="${member.id}">বিস্তারিত দেখুন</button>
+                    <button class="view-profile-btn mt-4 w-full bg-indigo-50 text-indigo-600 py-2 rounded-lg text-sm font-bold hover:bg-indigo-600 hover:text-white transition shadow-sm" data-id="${m.id}">বিস্তারিত দেখুন</button>
                 `;
                 memberListCardContainer.appendChild(card);
             });
         }
-        if (activeMember) {
-            const latestData = members.find(m => m.id === activeMember.id);
-            if (latestData && filteredMembers.some(m => m.id === activeMember.id)) showProfile(latestData.id, false);
-            else closeProfileModal();
-        }
+        if(activeMember) { const fresh = members.find(m=>m.id===activeMember.id); if(fresh && filtered.includes(fresh)) showProfile(fresh.id, false); else closeProfileModal(); }
     };
-    
+
     const renderNoticeBoard = () => {
-        const d = document.getElementById('notice-display'); d.innerHTML = '';
+        const display = document.getElementById('notice-display'); display.innerHTML = '';
+        const ticker = document.getElementById('bottom-ticker'), tickerContent = document.getElementById('ticker-content');
+        
+        if (notice.scrollingText?.trim()) { ticker.classList.remove('hidden'); tickerContent.textContent = notice.scrollingText; } 
+        else ticker.classList.add('hidden');
+
         if (noticeSlideInterval) clearInterval(noticeSlideInterval);
-        let images = []; if (Array.isArray(notice.imageUrls)) { images = notice.imageUrls.filter(u => u.trim() !== ''); } else if (notice.imageUrl) { images = [notice.imageUrl]; }
-        if (images.length === 0 && !notice.text && !notice.linkUrl) { d.innerHTML = '<div class="text-center p-8 bg-gray-50 rounded-lg text-gray-400 italic">আপাতত কোনো নতুন নোটিশ নেই।</div>'; return; }
+        const images = (Array.isArray(notice.imageUrls) ? notice.imageUrls : [notice.imageUrl]).filter(u => u);
 
         if (images.length > 0) {
-            let slidesHtml = images.map((url, i) => `
-                <div class="slide-wrapper absolute top-0 left-0 w-full h-full ${i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} transition-opacity duration-1000">
-                    <img src="${url}" class="w-full h-full object-cover animate-kenburns" onerror="this.style.display='none'">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
-                </div>
-            `).join('');
-            let indicatorsHtml = images.length > 1 ? `<div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">${images.map((_, i) => `<div class="w-2 h-2 rounded-full transition-all duration-300 ${i===0?'bg-white w-6':'bg-white/50 hover:bg-white/80'} shadow-sm dot-indicator" data-index="${i}"></div>`).join('')}</div>` : '';
-            let navHtml = images.length > 1 ? `<button id="prev-slide-btn" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition opacity-0 group-hover:opacity-100">❮</button><button id="next-slide-btn" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition opacity-0 group-hover:opacity-100">❯</button>` : '';
-
-            d.innerHTML += `<div class="relative w-full h-64 sm:h-80 md:h-[400px] bg-white rounded-xl overflow-hidden mb-6 shadow-md border border-gray-100 group">${slidesHtml}${indicatorsHtml}${navHtml}</div>`;
+            const slides = images.map((u,i) => `<div class="absolute inset-0 transition-opacity duration-1000 ${i===0?'opacity-100 z-10':'opacity-0 z-0'} slide-wrapper"><img src="${u}" class="w-full h-full object-cover animate-kenburns"><div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div></div>`).join('');
+            display.innerHTML += `<div class="relative w-full h-48 sm:h-64 rounded-xl overflow-hidden mb-4 shadow-sm group">${slides}</div>`;
             if (images.length > 1) {
-                let currentSlide = 0;
-                const changeSlide = (nextIndex) => {
-                    const slides = d.querySelectorAll('.slide-wrapper'); const dots = d.querySelectorAll('.dot-indicator');
-                    slides[currentSlide].classList.remove('opacity-100', 'z-10'); slides[currentSlide].classList.add('opacity-0', 'z-0'); if(dots[currentSlide]) { dots[currentSlide].classList.remove('bg-white', 'w-6'); dots[currentSlide].classList.add('bg-white/50'); }
-                    currentSlide = nextIndex;
-                    slides[currentSlide].classList.remove('opacity-0', 'z-0'); slides[currentSlide].classList.add('opacity-100', 'z-10'); if(dots[currentSlide]) { dots[currentSlide].classList.remove('bg-white/50'); dots[currentSlide].classList.add('bg-white', 'w-6'); }
-                };
-                const nextSlide = () => changeSlide((currentSlide + 1) % images.length); const prevSlide = () => changeSlide((currentSlide - 1 + images.length) % images.length);
-                noticeSlideInterval = setInterval(nextSlide, 5000);
-                setTimeout(() => { document.getElementById('prev-slide-btn')?.addEventListener('click', (e) => { e.stopPropagation(); clearInterval(noticeSlideInterval); prevSlide(); noticeSlideInterval = setInterval(nextSlide, 5000); }); document.getElementById('next-slide-btn')?.addEventListener('click', (e) => { e.stopPropagation(); clearInterval(noticeSlideInterval); nextSlide(); noticeSlideInterval = setInterval(nextSlide, 5000); }); }, 0);
+                let cur = 0;
+                const els = () => display.querySelectorAll('.slide-wrapper');
+                const next = () => { const s = els(); s[cur].classList.remove('opacity-100','z-10'); s[cur].classList.add('opacity-0'); cur=(cur+1)%images.length; s[cur].classList.remove('opacity-0'); s[cur].classList.add('opacity-100','z-10'); };
+                noticeSlideInterval = setInterval(next, 5000);
             }
         }
-        if (notice.text) d.innerHTML += `<div class="prose max-w-none text-gray-700 leading-relaxed">${notice.text.split('\n').map(l => `<p class="mb-2">${l}</p>`).join('')}</div>`;
-        if (notice.linkUrl) d.innerHTML += `<div class="mt-6 text-center"><a href="${notice.linkUrl}" target="_blank" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition transform no-underline"><span>${notice.linkText||'বিস্তারিত দেখুন'}</span><span>↗</span></a></div>`;
+        if (notice.text) display.innerHTML += `<div class="prose prose-sm prose-slate max-w-none mb-3">${notice.text.split('\n').map(p=>`<p>${p}</p>`).join('')}</div>`;
+        if (notice.linkUrl) display.innerHTML += `<a href="${notice.linkUrl}" target="_blank" class="block text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-lg hover:bg-slate-700 transition">🔗 ${notice.linkText||'বিস্তারিত দেখুন'}</a>`;
+        if (!images.length && !notice.text) display.innerHTML = `<div class="text-center text-slate-400 py-6 italic">কোনো নোটিশ নেই</div>`;
     };
 
+    // Profile & Modal Logic
     const showProfile = (id, animate = true) => {
-        const member = members.find(m => m.id === id); activeMember = member; if (!member) return;
-        const totals = calculateMemberTotals(member);
-        const placeholderUrl = `https://placehold.co/96x96/EFEFEF/AAAAAA?text=${encodeURIComponent(member.name ? member.name.charAt(0) : '?')}`;
+        const m = members.find(x => x.id === id); activeMember = m; if(!m) return;
+        const t = calculateMemberTotals(m);
+        const ph = m.photoUrl || `https://placehold.co/96x96/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
         
-        document.getElementById('profile-header-img').src = member.photoUrl || placeholderUrl;
-        document.getElementById('profile-header-name').textContent = member.name || 'N/A';
-        document.getElementById('profile-name-view').textContent = member.name || 'N/A';
-        document.getElementById('profile-id').textContent = member.id;
-        document.getElementById('profile-employee-id-view').textContent = member.employeeId || 'N/A';
-        document.getElementById('profile-card-number-view').textContent = member.cardNumber || 'N/A';
-        document.getElementById('profile-email-view').textContent = member.email || 'N/A';
-        document.getElementById('profile-phone-view').textContent = member.phone || 'N/A';
-        document.getElementById('profile-notes-view').textContent = member.notes || 'N/A';
+        document.getElementById('profile-header-img').src = ph;
+        document.getElementById('profile-header-name').textContent = m.name || 'নাম নেই';
+        document.getElementById('profile-id').textContent = `ID: ${m.id}`;
         
-        document.getElementById('paid-total').textContent = `৳ ${getBengaliNumber(totals.totalDeposit)}`;
-        document.getElementById('loan-taken').textContent = `৳ ${getBengaliNumber(totals.totalLoanTaken)}`;
-        document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(totals.totalLoanRepaid)}`;
-        document.getElementById('current-loan').textContent = `৳ ${getBengaliNumber(totals.currentLoan)}`;
+        ['name','email','phone','employee-id','card-number','notes'].forEach(k => {
+             const v = m[k.replace('-','')] || m[k] || 'N/A';
+             document.getElementById(`profile-${k}-view`).textContent = v;
+        });
+        
+        document.getElementById('paid-total').textContent = `৳ ${getBengaliNumber(t.totalDeposit)}`;
+        document.getElementById('current-loan').textContent = `৳ ${getBengaliNumber(t.currentLoan)}`;
+        document.getElementById('loan-taken').textContent = `৳ ${getBengaliNumber(t.totalLoanTaken)}`;
+        document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(t.totalLoanRepaid)}`;
 
-        document.getElementById('transactions-table-body').innerHTML = !member.transactions || member.transactions.length === 0 
-            ? '<tr><td colspan="3" class="py-4 text-center text-gray-500">কোনো লেনদেন নেই।</td></tr>'
-            : [...member.transactions].sort((a, b) => new Date(b.date) - new Date(a.date)).map(t => {
-                let typeText = t.type === 'deposit' ? 'কিস্তি/জমা' : t.type === 'loanTaken' ? 'ঋণ গ্রহণ' : 'ঋণ পরিশোধ';
-                let amountColor = t.type === 'deposit' ? 'text-green-600' : t.type === 'loanTaken' ? 'text-blue-600' : 'text-yellow-700';
-                const description = t.description ? `<br><span class="text-xs text-gray-500">${t.description}</span>` : '';
-                return `<tr class="hover:bg-gray-100"><td class="py-2 px-4 text-sm text-gray-600">${formatDate(t.date)}</td><td class="py-2 px-4 text-sm">${typeText}${t.linkedDepositId ? ' 🔗' : ''}${description}</td><td class="py-2 px-4 text-right font-mono font-semibold ${amountColor}">${getBengaliNumber(t.amount)}</td></tr>`;
-            }).join('');
+        const tbody = document.getElementById('transactions-table-body');
+        tbody.innerHTML = (m.transactions||[]).length === 0 ? '<tr><td colspan="3" class="py-6 text-center text-slate-400 italic">কোনো লেনদেন নেই</td></tr>' : 
+        [...m.transactions].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(x => {
+            const clr = x.type==='deposit'?'text-green-600':x.type==='loanTaken'?'text-blue-600':'text-yellow-600';
+            const lbl = x.type==='deposit'?'কিস্তি/জমা':x.type==='loanTaken'?'ঋণ গ্রহণ':'ঋণ ফেরত';
+            return `<tr class="hover:bg-slate-50"><td class="py-3 px-4 text-slate-600">${formatDate(x.date)}</td><td class="py-3 px-4"><span class="font-medium text-slate-700">${lbl}</span>${x.description?`<br><span class="text-xs text-slate-400">${x.description}</span>`:''}</td><td class="py-3 px-4 text-right font-mono font-bold ${clr}">${getBengaliNumber(x.amount)}</td></tr>`;
+        }).join('');
+
+        document.querySelectorAll('.profile-tab').forEach(x => { x.classList.remove('tab-active','text-indigo-600'); x.classList.add('text-slate-500'); });
+        document.getElementById('profile-tab-details').classList.add('tab-active','text-indigo-600'); document.getElementById('profile-tab-details').classList.remove('text-slate-500');
         
-        document.querySelectorAll('.profile-tab').forEach(t => { t.classList.remove('tab-active', 'text-gray-500'); });
-        document.getElementById('profile-tab-details').classList.add('tab-active');
-        document.querySelectorAll('#profile-content-container > div').forEach(c => c.classList.add('hidden'));
         document.getElementById('profile-content-details').classList.remove('hidden');
+        document.getElementById('profile-content-transactions').classList.add('hidden');
+        document.getElementById('profile-content-summary').classList.add('hidden');
 
-        const profileModalBox = document.getElementById('profile-modal-box');
-        if (animate) { profileModal.classList.remove('hidden'); profileModal.classList.add('flex'); profileModalBox.classList.remove('modal-exit-active'); profileModalBox.classList.add('modal-enter-active'); }
+        if(animate) { 
+            profileModal.classList.remove('hidden'); profileModal.classList.add('flex');
+            document.getElementById('profile-modal-box').classList.remove('modal-exit');
+        }
     };
-    
     const closeProfileModal = () => {
-        const profileModalBox = document.getElementById('profile-modal-box');
-        profileModalBox.classList.remove('modal-enter-active'); profileModalBox.classList.add('modal-exit-active');
-        setTimeout(() => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); profileModalBox.classList.remove('modal-exit-active'); activeMember = null; }, 300);
+        const box = document.getElementById('profile-modal-box');
+        box.classList.add('modal-exit');
+        setTimeout(() => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); box.classList.remove('modal-exit'); activeMember = null; }, 200);
     };
 
-    // --- FUND MODAL ---
+    // Fund Modal
     const renderFundModal = () => {
-        const container = document.getElementById('fund-list-container');
-        const monthlyDeposits = members.reduce((acc, member) => {
-            (member.transactions || []).forEach(t => {
-                if (t.type === 'deposit' && t.date) {
-                    const monthKey = t.date.substring(0, 7);
-                    acc[monthKey] = (acc[monthKey] || 0) + Number(t.amount);
-                }
-            });
-            return acc;
-        }, {});
-
-        const sortedMonths = Object.keys(monthlyDeposits).sort().reverse();
-        container.innerHTML = sortedMonths.length === 0 ? '<div class="text-center text-gray-500">কোনো ডেটা নেই।</div>' : sortedMonths.map(monthKey => {
-                const distribution = fundDistribution[monthKey];
-                const receiver = distribution ? members.find(m => m.id === distribution.receiverId) : null;
-                const placeholderUrl = receiver ? `https://placehold.co/40x40/EFEFEF/AAAAAA?text=${encodeURIComponent(receiver.name ? receiver.name.charAt(0) : '?')}` : '';
-                return `<div class="p-4 border rounded-lg shadow-sm"><h4 class="text-lg font-semibold text-blue-700">${formatDate(monthKey + '-01', 'monthYear')}</h4><p>মোট জমা: <span class="font-bold">৳ ${getBengaliNumber(monthlyDeposits[monthKey])}</span></p>
-                    ${receiver ? `<div class="mt-3 p-3 bg-green-50 rounded-lg flex items-center gap-4"><img src="${receiver.photoUrl || placeholderUrl}" onerror="this.onerror=null;this.src='${placeholderUrl}';" class="w-12 h-12 rounded-full object-cover border-2 border-green-200 flex-shrink-0"><div><p class="text-sm font-semibold text-green-700">✅ তহবিল প্রাপ্ত:</p><p class="text-lg font-bold text-gray-800">${receiver.name}</p><p class="text-md font-semibold text-green-600 mt-1">৳ ${getBengaliNumber(distribution.amount)}</p></div></div>` : `<div class="mt-3 p-3 bg-gray-50 rounded-lg"><p class="text-sm font-semibold text-gray-600">এই মাসের তহবিল এখনও কাউকে প্রদান করা হয়নি।</p></div>`}</div>`;
-            }).join('');
+        const c = document.getElementById('fund-list-container');
+        const mDeps = members.reduce((acc,m) => { (m.transactions||[]).filter(t=>t.type==='deposit'&&t.date).forEach(t=>{ const k=t.date.substring(0,7); acc[k]=(acc[k]||0)+Number(t.amount); }); return acc; }, {});
+        const sorted = Object.keys(mDeps).sort().reverse();
+        
+        c.innerHTML = sorted.length ? sorted.map(k => {
+            const dist = fundDistribution[k];
+            const r = dist ? members.find(m=>m.id===dist.receiverId) : null;
+            return `<div class="p-4 border border-slate-200 rounded-xl bg-white shadow-sm"><div class="flex justify-between items-center mb-2"><h4 class="font-bold text-slate-700">${formatDate(k+'-01','monthYear')}</h4><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-bold">মোট: ৳ ${getBengaliNumber(mDeps[k])}</span></div>${r ? `<div class="flex items-center gap-3 bg-indigo-50 p-3 rounded-lg mt-2"><img src="${r.photoUrl||'https://placehold.co/40'}" class="w-10 h-10 rounded-full bg-white"><div><p class="text-xs text-indigo-500 font-bold uppercase">তহবিল প্রাপক</p><p class="text-sm font-bold text-slate-800">${r.name}</p><p class="text-xs text-slate-500">পরিমাণ: ৳ ${getBengaliNumber(dist.amount)}</p></div></div>` : `<p class="text-xs text-slate-400 italic mt-2">এখনও বিতরণ করা হয়নি</p>`}</div>`;
+        }).join('') : '<div class="text-center py-8 text-slate-400">কোনো তথ্য নেই</div>';
     };
 
-    const showFundModal = () => { renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); };
-    const closeFundModal = () => { document.getElementById('monthly-fund-modal').classList.add('hidden'); document.getElementById('monthly-fund-modal').classList.remove('flex'); };
-
-
-    // --- LOTTERY LOGIC (READ ONLY - Updated Structure) ---
+    // Lottery Render
     const renderLotteryModal = () => {
-        const listEl = document.getElementById("lotteryParticipants");
-        const countBadge = document.getElementById("lotteryCountBadge");
-        const historyEl = document.getElementById("lotteryHistory");
-        const winnerSection = document.getElementById("lotteryWinnerSection");
+        const lp = lottery.participants||[], lh = lottery.history||[];
+        document.getElementById("lotteryCountBadge").textContent = getBengaliNumber(lp.length);
+        const list = document.getElementById("lotteryParticipants");
+        list.innerHTML = lp.length ? lp.map((n,i)=>`<li class="bg-slate-800/50 border border-slate-700 rounded-lg p-2 text-center text-slate-300 text-sm font-medium relative overflow-hidden group hover:bg-cyan-900/20 hover:border-cyan-500/50 transition"><span class="absolute top-1 left-1 text-[10px] text-slate-600">#${i+1}</span>${n}</li>`).join('') : `<li class="col-span-full text-center text-slate-500 py-8">অংশগ্রহণকারী নেই</li>`;
         
-        const lp = lottery.participants || [];
-        const lh = lottery.history || [];
+        const hist = document.getElementById("lotteryHistory");
+        hist.innerHTML = lh.length ? [...lh].reverse().map(h=>`<li class="flex justify-between items-center bg-slate-800/40 p-2 rounded border-l-2 border-cyan-500 mb-2"><span class="text-cyan-200 font-medium text-xs">${h.winner}</span><span class="text-slate-500 text-[10px]">${h.date}</span></li>`).join('') : `<li class="text-center text-slate-600 text-xs py-2">ইতিহাস নেই</li>`;
 
-        // 1. Participants List
-        countBadge.textContent = lp.length;
-        listEl.innerHTML = "";
-        if (lp.length === 0) {
-            listEl.innerHTML = `<li class="col-span-full text-center text-slate-500 italic py-10 text-lg">কোনো অংশগ্রহণকারী নেই</li>`;
+        const winSec = document.getElementById("lotteryWinnerSection");
+        const latest = lh[lh.length-1];
+        if(latest) {
+            document.getElementById("lotteryWinnerText").textContent = latest.winner;
+            document.getElementById("lotteryWinnerDate").textContent = latest.date;
+            winSec.classList.remove('hidden', 'scale-95', 'opacity-0');
         } else {
-            lp.forEach((n, i) => {
-                const li = document.createElement("li");
-                li.className = "group relative flex flex-col justify-center items-center bg-slate-800/80 border border-slate-700 p-4 rounded-xl hover:border-slate-500 hover:bg-slate-700/50 transition";
-                li.innerHTML = `<span class="absolute top-2 left-2 text-xs text-slate-500">#${i+1}</span><span class="font-semibold text-lg text-slate-200 truncate w-full text-center mt-2">${n}</span>`;
-                listEl.appendChild(li);
-            });
-        }
-
-        // 2. History List
-        historyEl.innerHTML = "";
-        if (lh.length === 0) {
-            historyEl.innerHTML = `<li class="text-center text-slate-600 text-xs py-4">কোনো ইতিহাস নেই</li>`;
-            winnerSection.classList.add('hidden');
-        } else {
-            [...lh].reverse().forEach(h => {
-                historyEl.innerHTML += `<li class="flex justify-between items-center bg-slate-900/50 p-3 rounded border-l-4 border-cyan-500"><span class="text-cyan-400 font-medium">${h.winner}</span><span class="text-slate-500 text-xs">${h.date}</span></li>`;
-            });
-
-            // 3. Show Latest Winner
-            const latest = lh[lh.length - 1];
-            if (latest) {
-                document.getElementById("lotteryWinnerText").textContent = latest.winner;
-                document.getElementById("lotteryWinnerDate").textContent = `তারিখ: ${latest.date}`;
-                winnerSection.classList.remove('hidden');
-            }
+            winSec.classList.add('hidden', 'scale-95', 'opacity-0');
         }
     };
-
-    // Confetti Logic
-    const canvas = document.getElementById("confetti");
-    const ctx = canvas.getContext("2d");
-    let parts = []; 
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    
+    // Confetti
+    const canvas = document.getElementById("confetti"), ctx = canvas.getContext("2d");
+    let parts = [];
+    const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     window.addEventListener('resize', resizeCanvas);
-    
-    function startConfetti() {
-        parts = []; 
-        for(let i=0; i<150; i++) parts.push({x:window.innerWidth/2, y:window.innerHeight/2, vx:(Math.random()-.5)*25, vy:(Math.random()-.5)*25, c:`hsl(${Math.random()*360},70%,50%)`});
-        updateConfetti();
-    }
-    function updateConfetti() {
+    const updateConfetti = () => {
         ctx.clearRect(0,0,canvas.width,canvas.height);
-        let act = false; 
-        parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.2; p.vx*=0.95; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,8,8); if(p.y<canvas.height) act=true; });
-        if(act) requestAnimationFrame(updateConfetti); else ctx.clearRect(0,0,canvas.width,canvas.height);
-    }
-
-
-    // --- FIREBASE & INIT ---
-    const initializeFirebase = () => {
-        try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); } 
-        catch (error) { console.error("Firebase init failed:", error); showMessage("ডাটাবেস সংযোগে সমস্যা হয়েছে।", 'error'); }
+        let act = false;
+        parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.2; p.vx*=0.95; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,6,6); if(p.y<canvas.height) act=true; });
+        if(act) requestAnimationFrame(updateConfetti);
+    };
+    const startConfetti = () => {
+        parts=[]; for(let i=0;i<100;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*20, vy:(Math.random()-.5)*20, c:`hsl(${Math.random()*360},70%,50%)`});
+        updateConfetti();
     };
 
-    const startDataListener = () => {
-        const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
-        onSnapshot(docRef, (doc) => {
-            const data = doc.data();
-            members = data?.members || [];
-            fundDistribution = data?.fundDistribution || {}; 
-            logoUrl = data?.logoUrl || ''; 
-            importantLinks = data?.importantLinks || [];
-            appDownloadUrl = data?.appDownloadUrl || '';
-            activityLog = data?.activityLog || []; // Fetch Activity Log
-            
-            // Lottery Sync
-            const dbLottery = data?.lottery || { participants: [], history: [], liveDraw: null };
-            lottery.participants = dbLottery.participants || [];
-            lottery.history = dbLottery.history || [];
-            
-            if (dbLottery.liveDraw && !isFirstSnapshot) {
-                 if (dbLottery.liveDraw.ts > lastDrawTime) {
-                     lastDrawTime = dbLottery.liveDraw.ts;
-                     if(!document.getElementById('lottery-modal').classList.contains('hidden')) {
-                         renderLotteryModal();
-                     }
-                 }
-            }
-            isFirstSnapshot = false;
+    // Firebase Start
+    const initFirebase = () => {
+        // Initialize Cached Logo for Loader
+        const cachedLogo = localStorage.getItem('cached_logo_url');
+        if(cachedLogo) {
+            const loaderImg = document.getElementById('loader-logo-img');
+            if(loaderImg) loaderImg.src = cachedLogo;
+        }
 
-            // Updated Notice Structure
-            if (data?.notice) {
-                 if (typeof data.notice === 'string') {
-                     notice = { text: data.notice, imageUrls: [], linkText: '', linkUrl: '' };
-                 } else {
-                     notice = data.notice;
-                     if (!notice.imageUrls && notice.imageUrl) notice.imageUrls = [notice.imageUrl];
-                     else if (!notice.imageUrls) notice.imageUrls = [];
-                 }
-            } else {
-                notice = { text: '', imageUrls: [], linkText: '', linkUrl: '' };
-            }
-
-            renderUI(); renderNoticeBoard(); renderHeaderLogo(); renderImportantLinks(); renderNotifications(); // Refresh notifications
-            
-            // Realtime updates if modals are open
-            if (!monthlyFundModal.classList.contains('hidden')) renderFundModal();
-            if (!document.getElementById('lottery-modal').classList.contains('hidden')) renderLotteryModal();
-
-        }, (error) => { console.error("Firestore listener error:", error); showMessage("রিয়েল-টাইম ডেটা লোড করতে সমস্যা হয়েছে।", 'error'); });
+        try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); } catch(e) { console.error(e); }
+        onAuthStateChanged(auth, async (u) => {
+            if(u) {
+                mainAppContent.classList.remove('hidden'); document.getElementById('app-loader').classList.add('opacity-0'); setTimeout(()=>document.getElementById('app-loader').remove(),500);
+                const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
+                onSnapshot(docRef, (s) => {
+                    const d = s.data(); if(!d) return;
+                    members = d.members||[]; fundDistribution = d.fundDistribution||{};
+                    notice = typeof d.notice==='string' ? {text:d.notice} : (d.notice||{});
+                    logoUrl = d.logoUrl||''; importantLinks = d.importantLinks||[]; appDownloadUrl = d.appDownloadUrl||'';
+                    activityLog = d.activityLog||[];
+                    lottery = { participants: d.lottery?.participants||[], history: d.lottery?.history||[], liveDraw: d.lottery?.liveDraw };
+                    
+                    if(d.lottery?.liveDraw?.ts > lastDrawTime && !isFirstSnapshot) {
+                         lastDrawTime = d.lottery.liveDraw.ts;
+                         document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); startConfetti();
+                    }
+                    isFirstSnapshot = false;
+                    renderUI(); renderHeaderLogo(); renderImportantLinks(); renderNoticeBoard(); renderNotifications();
+                    if(!initialLoadComplete) { checkAndPlayNotifications(); initialLoadComplete=true; }
+                });
+            } else { try { await signInAnonymously(auth); } catch(e){console.error(e);} }
+        });
     };
-    
-    initializeFirebase();
-    onAuthStateChanged(auth, async (user) => {
-        const loader = document.getElementById('app-loader');
-        if (user) {
-            authModal.classList.add('hidden'); verifyEmailModal.classList.add('hidden'); mainAppContent.classList.remove('hidden');
-            startDataListener();
-        } else {
-            try { await signInAnonymously(auth); } 
-            catch (error) { console.error("Anonymous sign-in failed:", error); showMessage("অ্যাপ্লিকেশন লোড করতে সমস্যা হচ্ছে।", 'error'); }
-        }
-        if(loader) loader.classList.add('hidden');
-    });
-    
-    // --- EVENT HANDLERS ---
-    document.getElementById('search-member-input').addEventListener('input', (e) => { searchQuery = e.target.value; renderUI(); });
+    initFirebase();
 
-    // Global Click Listener (Delegate)
-    document.addEventListener('click', async (e) => {
-        const target = e.target.closest('button, a, div[data-member-id]'); 
-        if (!target) return;
+    // Event Delegation
+    document.addEventListener('click', e => {
+        const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg]');
+        if(!t) return;
         
-        // --- NOTIFICATION HANDLERS (UPDATED) ---
-        if (target.id === 'open-notif-btn' || target.closest('#open-notif-btn')) {
-            openNotif();
-        }
-        else if (target.id === 'close-notif-btn' || target.closest('#close-notif-btn') || target.id === 'notif-overlay-bg') {
+        // Notification Click
+        if(t.hasAttribute('data-notification-msg')) {
+            const mid = t.getAttribute('data-member-id');
+            const msg = t.getAttribute('data-notification-msg');
             closeNotif();
-        }
-        else if (target.id === 'mark-read-btn' || target.closest('#mark-read-btn')) {
-            const newestLogTime = activityLog.length > 0 ? activityLog[0].ts : 0;
-            localStorage.setItem('samiti_notif_last_read', newestLogTime);
-            renderNotifications();
-            showMessage('সব নোটিফিকেশন পঠিত হয়েছে', 'info');
-        }
-        // Smart Deep Link Click inside Notification
-        else if (target.hasAttribute('data-member-id')) {
-            const mId = target.getAttribute('data-member-id');
-            showProfile(mId);
-            closeNotif();
+            if(mid) showProfile(mid);
+            else if(msg.includes('লটারি')) { document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
+            else if(msg.includes('তহবিল')) { renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
+            return;
         }
 
-        // Profile Logic
-        else if (target.matches('.profile-tab')) {
-            document.querySelectorAll('.profile-tab').forEach(tab => { tab.classList.remove('tab-active', 'text-gray-500'); tab.classList.add('text-gray-500'); });
-            target.classList.add('tab-active'); target.classList.remove('text-gray-500');
-            document.querySelectorAll('#profile-content-container > div').forEach(content => content.classList.add('hidden'));
-            if (target.id === 'profile-tab-details') document.getElementById('profile-content-details').classList.remove('hidden');
-            else if (target.id === 'profile-tab-transactions') document.getElementById('profile-content-transactions').classList.remove('hidden');
-            else if (target.id === 'profile-tab-summary') document.getElementById('profile-content-summary').classList.remove('hidden');
+        // Actions
+        const id = t.id;
+        if(id === 'open-notif-btn') openNotif();
+        else if(id === 'close-notif-btn' || id === 'notif-overlay-bg') closeNotif();
+        else if(id === 'mark-read-btn') { localStorage.setItem('samiti_notif_last_read', activityLog.length?activityLog[0].ts:0); renderNotifications(); showMessage('পঠিত হিসেবে মার্ক করা হয়েছে'); }
+        else if(t.classList.contains('view-profile-btn')) showProfile(t.dataset.id);
+        else if(id === 'close-profile') closeProfileModal();
+        else if(t.classList.contains('profile-tab')) {
+            document.querySelectorAll('.profile-tab').forEach(x => { x.classList.remove('tab-active','text-indigo-600'); x.classList.add('text-slate-500'); });
+            t.classList.add('tab-active','text-indigo-600'); t.classList.remove('text-slate-500');
+            ['details','transactions','summary'].forEach(k => document.getElementById(`profile-content-${k}`).classList.add('hidden'));
+            document.getElementById(`profile-content-${id.replace('profile-tab-','')}`).classList.remove('hidden');
         }
-        else if (target.matches('.view-profile-btn')) showProfile(target.dataset.id);
-        else if (target.matches('#close-profile')) closeProfileModal();
-        
-        // Fund Modal Logic
-        else if (target.matches('#view-monthly-fund-btn')) showFundModal();
-        else if (target.matches('#close-fund-modal')) closeFundModal();
-
-        // Lottery Modal Logic
-        else if (target.matches('#view-lottery-btn') || target.closest('#view-lottery-btn')) {
-            renderLotteryModal();
-            resizeCanvas();
-            document.getElementById('lottery-modal').classList.remove('hidden');
-            if(lottery.history.length > 0) startConfetti();
-        }
-        else if (target.matches('#close-lottery-btn') || target.closest('#close-lottery-btn')) {
-            document.getElementById('lottery-modal').classList.add('hidden');
-        }
-        
-        // Slideshow Navigation
-        else if (target.id === 'prev-slide-btn') {
-             e.preventDefault(); e.stopPropagation();
-        }
+        else if(id === 'view-monthly-fund-btn') { renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
+        else if(id === 'close-fund-modal') { document.getElementById('monthly-fund-modal').classList.add('hidden'); document.getElementById('monthly-fund-modal').classList.remove('flex'); }
+        else if(id === 'view-lottery-btn') { document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
+        else if(id === 'close-lottery-btn') document.getElementById('lottery-modal').classList.add('hidden');
     });
+
+    document.getElementById('search-member-input').addEventListener('input', e => { searchQuery = e.target.value; renderUI(); });
   </script>
 </body>
 </html>
