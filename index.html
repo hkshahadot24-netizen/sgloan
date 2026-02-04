@@ -21,9 +21,9 @@
     
     /* --- Custom Scrollbar --- */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
     /* --- Animations --- */
     @keyframes spin { 100% { transform: rotate(360deg);} }
@@ -34,7 +34,15 @@
     @keyframes kenburns { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
     .animate-kenburns { animation: kenburns 15s ease-in-out infinite alternate; }
 
-    /* UPDATED: Seamless Marquee Animation */
+    /* Floating Animation for Fund Cards */
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+
+    /* Seamless Marquee Animation */
     @keyframes marquee { 
         0% { transform: translateX(0); } 
         100% { transform: translateX(-100%); } 
@@ -47,8 +55,8 @@
     .ticker-item {
         flex-shrink: 0;
         white-space: nowrap;
-        padding-right: 50px; /* Gap between the end and start */
-        animation: marquee 40s linear infinite; /* Smooth continuous speed */
+        padding-right: 50px; 
+        animation: marquee 40s linear infinite; 
     }
     .ticker-scroll-wrapper:hover .ticker-item {
         animation-play-state: paused;
@@ -70,9 +78,9 @@
     .hover-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .hover-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
 
-    /* --- Lottery Modal Styles --- */
-    #lottery-modal { font-family: 'Hind Siliguri', sans-serif; background-color: #0f172a; color: #f1f5f9; }
-    .lottery-card { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    /* --- Lottery & Fund Modal Styles --- */
+    #lottery-modal, #monthly-fund-modal { font-family: 'Hind Siliguri', sans-serif; background-color: #0f172a; color: #f1f5f9; }
+    .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
     
     /* --- Utility --- */
     .tab-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; background-color: #eef2ff; }
@@ -174,14 +182,17 @@
             <div class="mt-2 text-xs text-red-500 font-semibold">📉 বিনিয়োগ</div>
         </div>
         <!-- Monthly Fund Feature -->
-        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 sm:p-6 rounded-2xl shadow-lg hover-card text-white flex flex-col justify-between relative overflow-hidden">
+        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 sm:p-6 rounded-2xl shadow-lg hover-card text-white flex flex-col justify-between relative overflow-hidden group cursor-pointer" id="view-monthly-fund-btn">
             <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            <div class="absolute bottom-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition transform group-hover:scale-110 duration-500">
+                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" /></svg>
+            </div>
             <div>
                 <h3 class="text-lg font-bold">মাসিক তহবিল</h3>
                 <p class="text-xs text-indigo-100 opacity-90">ব্যবস্থাপনা ও বিতরণ</p>
             </div>
-            <button id="view-monthly-fund-btn" class="mt-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center justify-center gap-2">
-                <span>দেখুন</span> <span>➜</span>
+            <button class="mt-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center justify-center gap-2 w-full group-hover:bg-white group-hover:text-indigo-600">
+                <span>বিস্তারিত দেখুন</span> <span>➜</span>
             </button>
         </div>
       </div>
@@ -353,7 +364,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div class="space-y-4">
                       <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">নাম</p><p id="profile-name-view" class="text-slate-800 font-medium"></p></div>
-                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">ইমেইল</p><p id="profile-email-view" class="text-slate-800 font-medium break-all"></p></div>
+                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1"> ইমেইল</p><p id="profile-email-view" class="text-slate-800 font-medium break-all"></p></div>
                       <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">ফোন</p><p id="profile-phone-view" class="text-slate-800 font-medium"></p></div>
                   </div>
                   <div class="space-y-4">
@@ -405,15 +416,35 @@
     </div>
   </div>
 
-  <!-- Monthly Fund Modal -->
-  <div id="monthly-fund-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 justify-center items-center p-4">
-    <div id="monthly-fund-modal-box" class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-0 relative overflow-hidden flex flex-col max-h-[80vh]">
-      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-5 flex justify-between items-center text-white shrink-0">
-          <h3 class="text-xl font-bold">মাসিক তহবিল</h3>
-          <button id="close-fund-modal" class="hover:bg-white/20 rounded-full p-1 transition text-2xl leading-none">&times;</button>
+  <!-- Monthly Fund Modal (UPDATED: Immersive Full Screen with Animations) -->
+  <div id="monthly-fund-modal" class="hidden fixed inset-0 z-[150] flex flex-col bg-slate-900 text-white overflow-hidden transition-all duration-300">
+      <!-- Decorative Background -->
+      <div class="absolute inset-0 pointer-events-none">
+           <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-indigo-900/40 to-slate-900 z-0"></div>
+           <div class="absolute -top-40 -right-40 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-spin-slow"></div>
+           <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl max-h-4xl bg-blue-500/5 rounded-full blur-[100px]"></div>
       </div>
-      <div id="fund-list-container" class="p-4 space-y-3 overflow-y-auto bg-slate-50 flex-grow"></div>
-    </div>
+
+      <!-- Header -->
+      <div class="relative z-10 flex justify-between items-center p-6 border-b border-white/10 bg-slate-900/80 backdrop-blur-md">
+          <div class="flex items-center gap-4">
+              <div class="p-3 bg-indigo-500/20 rounded-full text-indigo-400">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <div>
+                  <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300">মাসিক তহবিল</h3>
+                  <p class="text-sm text-slate-400">স্বচ্ছ ও সুন্দর ব্যবস্থাপনা</p>
+              </div>
+          </div>
+          <button id="close-fund-modal" class="group relative px-4 py-2 rounded-full overflow-hidden bg-slate-800 hover:bg-red-500/20 transition-all duration-300 border border-white/10 hover:border-red-500/50">
+              <span class="relative z-10 text-slate-300 group-hover:text-red-400 font-bold flex items-center gap-2">বন্ধ করুন <span class="text-xl leading-none">&times;</span></span>
+          </button>
+      </div>
+
+      <!-- Content Grid -->
+      <div id="fund-list-container" class="relative z-10 p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 content-start h-full pb-20">
+          <!-- JS will inject animated cards here -->
+      </div>
   </div>
 
   <!-- Lottery Modal (Full Screen Immersive) -->
@@ -434,7 +465,7 @@
     <div class="relative z-10 w-full max-w-[1600px] mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 grow overflow-y-auto">
         <!-- Sidebar: History -->
         <div class="lg:col-span-3 flex flex-col gap-4 order-2 lg:order-1">
-            <div class="lottery-card p-4 rounded-xl flex-1 flex flex-col">
+            <div class="glass-card p-4 rounded-xl flex-1 flex flex-col">
                 <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">📜 পূর্ববর্তী বিজয়ী</h2>
                 <ul id="lotteryHistory" class="space-y-2 overflow-y-auto flex-1 max-h-[300px] lg:max-h-none text-sm pr-1 custom-scrollbar"></ul>
             </div>
@@ -444,7 +475,7 @@
         <div class="lg:col-span-9 flex flex-col gap-6 order-1 lg:order-2">
             <!-- Winner Showcase -->
             <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-700 transform scale-95 opacity-0">
-                <div class="lottery-card p-8 md:p-12 rounded-2xl border border-yellow-500/30 shadow-[0_0_50px_rgba(234,179,8,0.2)] text-center relative overflow-hidden">
+                <div class="glass-card p-8 md:p-12 rounded-2xl border border-yellow-500/30 shadow-[0_0_50px_rgba(234,179,8,0.2)] text-center relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/10 to-transparent"></div>
                     <h3 class="text-2xl md:text-3xl text-yellow-400 mb-4 font-bold animate-pulse relative z-10">🎉 আজকের বিজয়ী 🎉</h3>
                     <div id="lotteryWinnerText" class="text-5xl md:text-7xl font-extrabold text-white break-words drop-shadow-xl tracking-wide relative z-10"></div>
@@ -453,7 +484,7 @@
             </div>
 
             <!-- Participants Grid -->
-            <div class="lottery-card p-6 rounded-xl flex-1 flex flex-col shadow-lg">
+            <div class="glass-card p-6 rounded-xl flex-1 flex flex-col shadow-lg">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-slate-200">অংশগ্রহণকারী</h2>
                     <span class="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-bold border border-cyan-500/20">মোট: <span id="lotteryCountBadge">0</span></span>
@@ -467,7 +498,7 @@
   </div>
 
 
-  <!-- JAVASCRIPT LOGIC (Unchanged but connected to new UI) -->
+  <!-- JAVASCRIPT LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -523,6 +554,28 @@
         t.currentLoan = t.totalLoanTaken - t.totalLoanRepaid; return t;
     };
 
+    // --- SOUND EFFECT UTIL ---
+    const playBeep = () => {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine'; // Smooth tone
+            osc.frequency.setValueAtTime(880, ctx.currentTime); // High pitch start
+            osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15); // Drop pitch
+            gain.gain.setValueAtTime(0.05, ctx.currentTime); // Low volume
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15); // Fade out
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.2);
+        } catch (e) { 
+            // Silent fail if audio context not allowed
+        }
+    };
+
     // Notifications
     const openNotif = () => {
         const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
@@ -572,13 +625,14 @@
         if (logs.length === 0) return;
         const current = logs[0]; showAutoToast(current);
         localStorage.setItem('samiti_notif_last_read', current.ts); renderNotifications();
-        setTimeout(() => playNotificationSequence(logs.slice(1)), 3000);
+        setTimeout(() => playNotificationSequence(logs.slice(1)), 3500); // Slower sequence to enjoy the sound
     };
     
-    // UPDATED: Show Auto Toast with "Thrown" Animation & Glassy Look
     const showAutoToast = (log) => {
+        // Play Sound
+        playBeep();
+
         const c = document.getElementById('auto-toast-container');
-        // Clear previous toasts to ensure "one by one" behavior strictly visual
         c.innerHTML = ''; 
 
         const t = document.createElement('div');
@@ -588,8 +642,6 @@
         
         const memberMatch = members.find(m => log.msg.includes(m.name));
         
-        // Glassy, thin, light styling
-        // Animation start state: scaled down, transparent, positioned at top-right (origin of throw)
         t.className = `bg-white/70 backdrop-blur-xl p-3 rounded-2xl shadow-xl ${border} w-auto max-w-[280px] flex items-center gap-3 transform transition-all duration-500 ease-out origin-top-right scale-0 opacity-0 translate-x-[20px] -translate-y-[20px] cursor-pointer pointer-events-auto border border-white/50 ring-1 ring-white/60`;
         t.setAttribute('data-notification-msg', log.msg);
         if (memberMatch) t.setAttribute('data-member-id', memberMatch.id);
@@ -598,16 +650,14 @@
         
         c.appendChild(t);
         
-        // Trigger "Throw" animation (Scale up and move into place)
         requestAnimationFrame(() => { 
             t.classList.remove('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]');
             t.classList.add('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0');
         });
         
-        // Trigger "Fade/Shrink" exit animation
         setTimeout(() => { 
             t.classList.remove('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0');
-            t.classList.add('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]'); // Go back to origin
+            t.classList.add('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]'); 
             setTimeout(() => t.remove(), 500); 
         }, 3000);
     };
@@ -718,11 +768,9 @@
         if (notice.scrollingText?.trim()) { 
             ticker.classList.remove('hidden'); 
             const text = notice.scrollingText;
-            // Add spacing between the two copies
             const separator = '<span class="mx-8 text-indigo-400">❖</span>';
-            const fullText = (text + separator).repeat(Math.max(1, Math.ceil(window.innerWidth / (text.length * 10)))); // Basic repeat if text is short
+            const fullText = (text + separator).repeat(Math.max(1, Math.ceil(window.innerWidth / (text.length * 10))));
             
-            // Inject two identical items for the infinite scroll effect
             tickerWrapper.innerHTML = `
                 <div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>
                 <div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>
@@ -748,7 +796,7 @@
         if (!images.length && !notice.text) display.innerHTML = `<div class="text-center text-slate-400 py-6 italic">কোনো নোটিশ নেই</div>`;
     };
 
-    // Profile & Modal Logic (UPDATED: Default to Transactions Tab)
+    // Profile & Modal Logic
     const showProfile = (id, animate = true) => {
         const m = members.find(x => x.id === id); activeMember = m; if(!m) return;
         const t = calculateMemberTotals(m);
@@ -803,17 +851,54 @@
         setTimeout(() => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); box.classList.remove('modal-exit'); activeMember = null; }, 200);
     };
 
-    // Fund Modal
+    // Fund Modal (UPDATED: Modern Grid with Floating Animation)
     const renderFundModal = () => {
         const c = document.getElementById('fund-list-container');
         const mDeps = members.reduce((acc,m) => { (m.transactions||[]).filter(t=>t.type==='deposit'&&t.date).forEach(t=>{ const k=t.date.substring(0,7); acc[k]=(acc[k]||0)+Number(t.amount); }); return acc; }, {});
         const sorted = Object.keys(mDeps).sort().reverse();
         
-        c.innerHTML = sorted.length ? sorted.map(k => {
+        c.innerHTML = sorted.length ? sorted.map((k, idx) => {
             const dist = fundDistribution[k];
             const r = dist ? members.find(m=>m.id===dist.receiverId) : null;
-            return `<div class="p-4 border border-slate-200 rounded-xl bg-white shadow-sm"><div class="flex justify-between items-center mb-2"><h4 class="font-bold text-slate-700">${formatDate(k+'-01','monthYear')}</h4><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-bold">মোট: ৳ ${getBengaliNumber(mDeps[k])}</span></div>${r ? `<div class="flex items-center gap-3 bg-indigo-50 p-3 rounded-lg mt-2"><img src="${r.photoUrl||'https://placehold.co/40'}" class="w-10 h-10 rounded-full bg-white"><div><p class="text-xs text-indigo-500 font-bold uppercase">তহবিল প্রাপক</p><p class="text-sm font-bold text-slate-800">${r.name}</p><p class="text-xs text-slate-500">পরিমাণ: ৳ ${getBengaliNumber(dist.amount)}</p></div></div>` : `<p class="text-xs text-slate-400 italic mt-2">এখনও বিতরণ করা হয়নি</p>`}</div>`;
-        }).join('') : '<div class="text-center py-8 text-slate-400">কোনো তথ্য নেই</div>';
+            // Add animation delay for staggered effect
+            const delay = idx * 0.1; 
+            const floatDelay = Math.random() * 2; // Random start for float to look natural
+            
+            return `
+            <div class="animate-float group relative rounded-2xl p-0.5 overflow-hidden transition hover:scale-105 duration-500" style="animation-delay: ${floatDelay}s">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-cyan-500 opacity-20 group-hover:opacity-100 transition duration-500"></div>
+                <div class="relative h-full bg-slate-800/80 backdrop-blur-xl border border-white/10 p-5 rounded-2xl flex flex-col justify-between">
+                    <!-- Top Part -->
+                    <div class="flex justify-between items-start mb-4 border-b border-white/5 pb-3">
+                        <div>
+                           <h4 class="text-xl font-bold text-white tracking-wide">${formatDate(k+'-01','monthYear')}</h4>
+                           <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">তহবিলের বিবরণ</p>
+                        </div>
+                        <div class="bg-indigo-500/20 px-2 py-1 rounded text-center">
+                            <p class="text-[10px] text-indigo-300">মোট জমা</p>
+                            <p class="font-bold text-indigo-100">৳ ${getBengaliNumber(mDeps[k])}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Receiver Info -->
+                    ${r ? `
+                    <div class="flex items-center gap-3 bg-slate-700/50 p-3 rounded-xl border border-white/5">
+                        <img src="${r.photoUrl||'https://placehold.co/40'}" class="w-12 h-12 rounded-full border-2 border-green-500 shadow-lg object-cover">
+                        <div>
+                            <p class="text-[10px] text-green-400 font-bold uppercase tracking-wider">তহবিল প্রাপক</p>
+                            <p class="text-sm font-bold text-white">${r.name}</p>
+                            <p class="text-xs text-slate-300">পরিমাণ: <span class="text-yellow-400 font-mono">৳ ${getBengaliNumber(dist.amount)}</span></p>
+                        </div>
+                    </div>
+                    ` : `
+                    <div class="flex flex-col items-center justify-center py-4 text-slate-500 bg-slate-900/50 rounded-xl border border-dashed border-slate-700">
+                        <span class="text-2xl mb-1">⏳</span>
+                        <p class="text-xs italic">এখনও বিতরণ করা হয়নি</p>
+                    </div>
+                    `}
+                </div>
+            </div>`;
+        }).join('') : '<div class="col-span-full text-center py-20 text-slate-500 flex flex-col items-center"><span class="text-5xl mb-4 opacity-50">📂</span><span class="text-xl">কোনো তহবিলের তথ্য পাওয়া যায়নি</span></div>';
     };
 
     // Lottery Render
@@ -890,7 +975,7 @@
 
     // Event Delegation
     document.addEventListener('click', e => {
-        const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg]');
+        const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], #view-monthly-fund-btn');
         if(!t) return;
         
         // Notification Click
