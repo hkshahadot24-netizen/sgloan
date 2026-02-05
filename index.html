@@ -1,1014 +1,1479 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>মেইন গেইট সমবায় সমিতি</title>
-  <!-- Tailwind CSS with Typography Plugin -->
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <style>
-    /* --- Base Styles --- */
-    body { 
-        font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; 
-        background-color: #f8fafc; /* Slate 50 */
-        padding-bottom: 60px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CricScore Pro - Live Center</title>
     
-    /* --- Custom Scrollbar --- */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    <!-- App Icon -->
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/FRMTxVb2/app-icon-android.png">
 
-    /* --- Animations --- */
-    @keyframes spin { 100% { transform: rotate(360deg);} }
-    @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
-    .animate-spin-slow { animation: spin 3s linear infinite; }
-    .animate-spin-reverse { animation: spin-reverse 2s linear infinite; }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    @keyframes kenburns { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
-    .animate-kenburns { animation: kenburns 15s ease-in-out infinite alternate; }
-
-    /* Floating Animation for Fund Cards */
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
-    }
-    .animate-float { animation: float 6s ease-in-out infinite; }
-
-    /* Seamless Marquee Animation */
-    @keyframes marquee { 
-        0% { transform: translateX(0); } 
-        100% { transform: translateX(-100%); } 
-    }
-    .ticker-scroll-wrapper {
-        display: flex;
-        width: 100%;
-        overflow: hidden;
-    }
-    .ticker-item {
-        flex-shrink: 0;
-        white-space: nowrap;
-        padding-right: 50px; 
-        animation: marquee 40s linear infinite; 
-    }
-    .ticker-scroll-wrapper:hover .ticker-item {
-        animation-play-state: paused;
-    }
-
-    .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; transform: translateY(20px); }
-    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-
-    /* --- Glassmorphism Header --- */
-    .glass-header {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255,255,255,0.3);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    }
-
-    /* --- Modern Card Hover Effects --- */
-    .hover-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .hover-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-
-    /* --- Lottery & Fund Modal Styles --- */
-    #lottery-modal, #monthly-fund-modal { font-family: 'Hind Siliguri', sans-serif; background-color: #0f172a; color: #f1f5f9; }
-    .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    /* --- Utility --- */
-    .tab-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; background-color: #eef2ff; }
-  </style>
-</head>
-<body class="text-slate-800 antialiased">
+    <!-- Fonts: 'Inter' for UI, 'Oswald' for Numbers, 'Hind Siliguri' for Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@400;500;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- APP LOADER WITH DOUBLE RING & LOGO -->
-  <div id="app-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-500">
-      <div class="relative w-32 h-32 mb-6 flex justify-center items-center">
-          <!-- Outer Ring Background -->
-          <div class="absolute inset-0 border-[6px] border-indigo-50 rounded-full"></div>
-          <!-- Outer Ring Spinner -->
-          <div class="absolute inset-0 border-[6px] border-indigo-600 border-t-transparent border-b-transparent rounded-full animate-spin-slow"></div>
-          
-          <!-- Inner Ring Background -->
-          <div class="absolute inset-4 border-[4px] border-pink-50 rounded-full"></div>
-          <!-- Inner Ring Spinner (Reverse) -->
-          <div class="absolute inset-4 border-[4px] border-pink-500 border-l-transparent border-r-transparent rounded-full animate-spin-reverse"></div>
-          
-          <!-- Center Logo -->
-          <div class="absolute inset-0 m-auto w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-md z-10 bg-white flex justify-center items-center">
-               <img id="loader-logo-img" src="https://placehold.co/64x64/FFFFFF/6366f1?text=MG" alt="Logo" class="w-full h-full object-cover p-1">
-          </div>
-      </div>
-      <h2 class="text-lg font-bold text-slate-700 tracking-wider uppercase animate-pulse">লোড হচ্ছে...</h2>
-  </div>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Canvas Confetti for Celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Main Application Content -->
-  <div id="main-app-content" class="hidden">
-    
-    <!-- Modern Header -->
-    <header class="fixed top-0 w-full z-50 glass-header transition-all duration-300">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16 sm:h-20">
-          
-          <!-- Logo Area -->
-          <div class="flex items-center gap-3">
-            <div class="relative group cursor-pointer">
-                <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
-                <img id="header-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=MG" alt="লোগো" class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white object-cover bg-white shadow-sm">
-            </div>
-            <div class="flex flex-col">
-              <h1 class="text-lg sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-pink-600 truncate leading-tight">
-                মেইন গেইট সমবায় সমিতি
-              </h1>
-              <span class="text-[10px] sm:text-xs font-medium text-slate-500 tracking-wide">বিশ্বাস • একতা • সমৃদ্ধি</span>
-            </div>
-          </div>
-
-          <!-- Smart Action Buttons -->
-          <div class="flex items-center gap-3 sm:gap-4">
-            
-            <!-- Notification Bell -->
-            <button id="open-notif-btn" class="relative group p-2 rounded-full hover:bg-slate-100 transition duration-200">
-                <div class="text-2xl sm:text-2xl text-slate-600 group-hover:text-indigo-600 transition-colors">🔔</div>
-                <span id="notif-badge" class="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm hidden transform scale-0 transition-transform duration-300"></span>
-                <!-- Tooltip for PC -->
-                <span class="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block pointer-events-none whitespace-nowrap">নোটিফিকেশন</span>
-            </button>
-
-            <!-- App Button -->
-            <a id="header-app-btn" href="#" class="relative overflow-hidden group bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full px-4 py-1.5 sm:px-6 sm:py-2.5 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2">
-                <span class="text-lg sm:text-xl">📱</span> 
-                <span class="text-xs sm:text-sm font-semibold hidden sm:inline">অ্যাপ ডাউনলোড</span>
-                <span class="text-xs font-semibold sm:hidden">অ্যাপ</span>
-                <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-            </a>
-
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- Main Layout Grid -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8 space-y-6 sm:space-y-8">
-      
-      <!-- Top Section: Stats & Feature Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.1s;">
-        <!-- Stat 1 -->
-        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 hover-card relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-indigo-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-            <p class="text-sm font-medium text-slate-500 relative z-10">মোট সদস্য</p>
-            <p id="total-members" class="text-2xl sm:text-4xl font-bold text-slate-800 mt-1 relative z-10">০</p>
-            <div class="mt-2 text-xs text-indigo-500 font-semibold flex items-center gap-1">👥 একটিভ মেম্বার</div>
-        </div>
-        <!-- Stat 2 -->
-        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 hover-card relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-            <p class="text-sm font-medium text-slate-500 relative z-10">মোট জমা</p>
-            <p id="total-paid" class="text-xl sm:text-3xl font-bold text-green-600 mt-1 relative z-10 truncate">৳ ০</p>
-            <div class="mt-2 text-xs text-green-500 font-semibold">💰 সেভিংস</div>
-        </div>
-        <!-- Stat 3 -->
-        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 hover-card relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-            <p class="text-sm font-medium text-slate-500 relative z-10">ঋণ প্রদান</p>
-            <p id="total-loan-given" class="text-xl sm:text-3xl font-bold text-red-500 mt-1 relative z-10 truncate">৳ ০</p>
-            <div class="mt-2 text-xs text-red-500 font-semibold">📉 বিনিয়োগ</div>
-        </div>
-        <!-- Monthly Fund Feature -->
-        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 sm:p-6 rounded-2xl shadow-lg hover-card text-white flex flex-col justify-between relative overflow-hidden group cursor-pointer" id="view-monthly-fund-btn">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-            <div class="absolute bottom-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition transform group-hover:scale-110 duration-500">
-                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" /></svg>
-            </div>
-            <div>
-                <h3 class="text-lg font-bold">মাসিক তহবিল</h3>
-                <p class="text-xs text-indigo-100 opacity-90">ব্যবস্থাপনা ও বিতরণ</p>
-            </div>
-            <button class="mt-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center justify-center gap-2 w-full group-hover:bg-white group-hover:text-indigo-600">
-                <span>বিস্তারিত দেখুন</span> <span>➜</span>
-            </button>
-        </div>
-      </div>
-
-      <!-- Middle Section: Notice & Charts (Grid Layout) -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
-          
-          <!-- Left Column (Notice & Lottery) - Span 4 on Desktop -->
-          <div class="lg:col-span-4 space-y-6 fade-in-up" style="animation-delay: 0.2s;">
-              
-              <!-- Interactive Notice Board -->
-              <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group hover:shadow-md transition duration-300">
-                   <div class="bg-slate-50 border-b border-slate-100 p-4 flex items-center justify-between">
-                       <h3 class="font-bold text-slate-700 flex items-center gap-2">📢 নোটিশ বোর্ড</h3>
-                       <span class="flex h-3 w-3 relative">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                       </span>
-                   </div>
-                   <div class="p-4">
-                       <!-- Links hidden as per request -->
-                       <div id="important-links-display" class="hidden mb-4"></div>
-                       <div id="notice-display" class="text-slate-600 text-sm"></div>
-                   </div>
-              </div>
-
-              <!-- Premium Lottery Card -->
-              <div class="relative bg-slate-900 rounded-2xl p-1 overflow-hidden group hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-                  <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 opacity-75 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                  <div class="relative bg-slate-900 rounded-xl p-5 h-full flex flex-col items-center text-center">
-                      <div class="text-4xl mb-2 group-hover:rotate-12 transition-transform duration-300">🎲</div>
-                      <h3 class="text-xl font-bold text-white mb-1">লাকি লটারি</h3>
-                      <p class="text-slate-400 text-xs mb-4">ভাগ্য পরীক্ষা করুন এবং ফলাফল দেখুন</p>
-                      <button id="view-lottery-btn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold py-2 rounded-lg shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 border border-white/10">
-                          ফলাফল দেখুন
-                      </button>
-                  </div>
-              </div>
-
-          </div>
-
-          <!-- Right Column (Charts) - Span 8 on Desktop -->
-          <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6 fade-in-up" style="animation-delay: 0.3s;">
-             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-[350px]">
-                <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2"><span class="w-2 h-6 bg-green-500 rounded-full"></span>আর্থিক সারসংক্ষেপ</h3>
-                <div class="flex-grow relative w-full">
-                    <canvas id="financeChart"></canvas>
-                </div>
-             </div>
-             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-[350px]">
-                <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2"><span class="w-2 h-6 bg-indigo-500 rounded-full"></span>মাসিক জমার হার</h3>
-                <div class="flex-grow relative w-full">
-                    <canvas id="trendChart"></canvas>
-                </div>
-             </div>
-          </div>
-
-      </div>
-
-      <!-- Member List Section -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden fade-in-up" style="animation-delay: 0.4s;">
-        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/50">
-           <div>
-               <h3 class="text-2xl font-bold text-slate-800">সম্মানিত সদস্যবৃন্দ</h3>
-               <p class="text-sm text-slate-500 mt-1">সকল সদস্যদের তথ্য এবং প্রোফাইল</p>
-           </div>
-           <!-- Modern Search Bar -->
-           <div class="relative w-full sm:w-80">
-               <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🔍</span>
-               <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-sm transition-all" autocomplete="off">
-           </div>
-        </div>
-        
-        <!-- Grid of Members -->
-        <div class="p-6">
-            <div id="member-list-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <div id="member-list-placeholder" class="hidden py-12 flex flex-col items-center justify-center text-slate-400">
-                <span class="text-4xl mb-2">🕵️‍♂️</span>
-                <p>কোনো সদস্য পাওয়া যায়নি</p>
-            </div>
-        </div>
-      </div>
-
-    </main>
-
-    <!-- AUTO TOAST CONTAINER (UPDATED: Top Right, Glassy, "Thrown" Animation) -->
-    <div id="auto-toast-container" class="fixed top-[70px] right-2 z-[200] flex flex-col items-end pointer-events-none max-w-[250px] sm:max-w-sm"></div>
-
-    <!-- FIXED BOTTOM TICKER (Modernized) -->
-    <div id="bottom-ticker" class="fixed bottom-0 left-0 w-full bg-slate-900 text-white z-40 border-t-2 border-indigo-500 hidden shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
-        <div class="flex items-center h-10 sm:h-12 overflow-hidden relative">
-            <div class="bg-indigo-600 text-white px-4 h-full flex items-center font-bold z-10 shadow-lg whitespace-nowrap text-xs sm:text-sm tracking-wide">
-                📢 আপডেট:
-            </div>
-            <!-- UPDATED: Ticker container structure for seamless loop -->
-            <div class="w-full overflow-hidden relative h-full flex items-center bg-slate-800/50 backdrop-blur-sm">
-                <div id="ticker-wrapper" class="ticker-scroll-wrapper">
-                     <!-- JS will inject duplicated items here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sync Status -->
-    <div id="sync-status" class="fixed bottom-20 left-4 bg-slate-800/90 backdrop-blur text-white py-1.5 px-3 rounded-full shadow-xl transition-opacity duration-300 opacity-0 z-50 flex items-center gap-2 text-xs border border-slate-600">
-          <div id="sync-spinner" class="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-          <span id="sync-text">সিঙ্ক...</span>
-    </div>
-    
-    <!-- Message Box -->
-    <div id="message-box" class="fixed top-20 sm:top-24 left-1/2 -translate-x-1/2 z-[300] transition-opacity duration-300 opacity-0 w-[90%] max-w-md">
-        <div id="message-content" class="shadow-2xl rounded-xl p-4 font-semibold text-white flex items-center gap-3 backdrop-blur-md"></div>
-    </div>
-  </div>
-  
-  <!-- Hidden Modals (Auth & Verify) -->
-  <div id="verify-email-modal" class="hidden fixed inset-0 bg-slate-50 z-[150] justify-center items-center p-4"></div>
-  <div id="auth-modal" class="hidden fixed inset-0 bg-slate-900/80 z-[200] justify-center items-center p-4 backdrop-blur-sm"></div>
-
-  <!-- Notification Modal (Side Panel) -->
-  <div id="notif-modal" class="hidden fixed inset-0 z-[80] justify-end overflow-hidden">
-    <div id="notif-overlay-bg" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
-    <div id="notif-panel" class="relative bg-white w-full max-w-sm h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out z-10">
-        <div class="p-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex justify-between items-center shadow-md shrink-0">
-            <h3 class="text-lg font-bold flex items-center gap-2">🔔 নোটিফিকেশন <span id="notif-count" class="bg-white/20 text-xs px-2 py-0.5 rounded-full border border-white/30">0</span></h3>
-            <div class="flex items-center gap-1">
-                <button id="mark-read-btn" title="সব পঠিত করুন" class="p-2 rounded-full hover:bg-white/20 transition text-white/90">✓✓</button>
-                <button id="close-notif-btn" class="p-2 rounded-full hover:bg-white/20 transition text-xl leading-none">&times;</button>
-            </div>
-        </div>
-        <div id="notif-list" class="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50 scroll-smooth">
-            <div class="flex flex-col items-center justify-center h-full text-slate-400 gap-2"><span class="text-4xl">🔕</span><span>কোনো আপডেট নেই</span></div>
-        </div>
-        <div class="sm:hidden w-full py-3 flex justify-center items-center text-slate-400 bg-white border-t text-xs">⟸ সোয়াইপ করে বন্ধ করুন</div>
-    </div>
-  </div>
-
-  <!-- Profile Modal (Modernized) -->
-  <div id="profile-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 justify-center items-center p-0 sm:p-4">
-    <div id="profile-modal-box" class="bg-white sm:rounded-2xl shadow-2xl w-full max-w-6xl h-full sm:h-[90vh] flex flex-col relative overflow-hidden modal-exit">
-      
-      <!-- Modal Header -->
-      <div class="relative bg-slate-800 text-white p-6 sm:p-8 flex flex-col items-center justify-center shrink-0 overflow-hidden">
-           <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 opacity-90"></div>
-           <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-           <button id="close-profile" class="absolute top-4 right-4 text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition z-20">&times;</button>
-           
-           <div class="relative z-10 flex flex-col items-center">
-               <div class="relative">
-                   <img id="profile-header-img" src="" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-white/20 shadow-xl mb-3 bg-slate-200">
-                   <div class="absolute bottom-4 right-0 w-6 h-6 bg-green-500 border-4 border-slate-800 rounded-full"></div>
-               </div>
-               <h2 id="profile-header-name" class="text-2xl sm:text-3xl font-bold text-white tracking-wide">সদস্যের নাম</h2>
-               <span id="profile-id" class="text-indigo-200 text-sm font-mono mt-1 bg-white/10 px-2 py-0.5 rounded">ID: ---</span>
-           </div>
-      </div>
-
-      <!-- Navigation Tabs -->
-      <div class="flex border-b border-slate-200 bg-slate-50 shrink-0 overflow-x-auto">
-          <button id="profile-tab-details" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center text-slate-500">👤 বিস্তারিত</button>
-          <button id="profile-tab-transactions" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center text-slate-500">🧾 লেনদেন</button>
-          <button id="profile-tab-summary" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center text-slate-500">📈 সার-সংক্ষেপ</button>
-      </div>
-
-      <!-- Content Area -->
-      <div id="profile-content-container" class="overflow-y-auto flex-grow bg-slate-50 p-4 sm:p-8">
-          <!-- Details -->
-          <div id="profile-content-details" class="hidden max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div class="space-y-4">
-                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">নাম</p><p id="profile-name-view" class="text-slate-800 font-medium"></p></div>
-                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1"> ইমেইল</p><p id="profile-email-view" class="text-slate-800 font-medium break-all"></p></div>
-                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">ফোন</p><p id="profile-phone-view" class="text-slate-800 font-medium"></p></div>
-                  </div>
-                  <div class="space-y-4">
-                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">এমপ্লয়ি আইডি</p><p id="profile-employee-id-view" class="text-slate-800 font-medium"></p></div>
-                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">কার্ড নম্বর</p><p id="profile-card-number-view" class="text-slate-800 font-medium"></p></div>
-                  </div>
-                  <div class="md:col-span-2">
-                       <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-100"><p class="text-xs text-yellow-700 uppercase font-bold mb-2">নোট / মন্তব্য</p><p id="profile-notes-view" class="text-slate-700 text-sm whitespace-pre-wrap leading-relaxed"></p></div>
-                  </div>
-              </div>
-          </div>
-          
-          <!-- Transactions -->
-          <div id="profile-content-transactions" class="hidden h-full">
-              <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full flex flex-col">
-                  <div class="overflow-y-auto flex-grow">
-                      <table class="min-w-full text-left text-sm">
-                          <thead class="bg-slate-100 text-slate-600 sticky top-0 z-10 shadow-sm"><tr><th class="py-3 px-4 font-semibold">তারিখ</th><th class="py-3 px-4 font-semibold">বিবরণ</th><th class="py-3 px-4 text-right font-semibold">পরিমাণ (৳)</th></tr></thead>
-                          <tbody id="transactions-table-body" class="divide-y divide-slate-100"></tbody>
-                      </table>
-                  </div>
-              </div>
-          </div>
-          
-          <!-- Summary -->
-          <div id="profile-content-summary" class="hidden max-w-4xl mx-auto">
-               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                   <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 flex flex-col items-center justify-center">
-                       <div class="text-green-100 bg-green-500 p-3 rounded-full mb-3 text-2xl">💰</div>
-                       <p class="text-slate-500 text-sm">মোট জমা</p>
-                       <p id="paid-total" class="text-3xl font-bold text-slate-800 mt-1">৳ ০</p>
-                   </div>
-                   <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500 flex flex-col items-center justify-center">
-                       <div class="text-red-100 bg-red-500 p-3 rounded-full mb-3 text-2xl">📉</div>
-                       <p class="text-slate-500 text-sm">বর্তমান ঋণ</p>
-                       <p id="current-loan" class="text-3xl font-bold text-slate-800 mt-1">৳ ০</p>
-                   </div>
-                   <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 flex flex-col items-center justify-center">
-                       <p class="text-slate-500 text-sm">মোট ঋণ গ্রহণ</p>
-                       <p id="loan-taken" class="text-xl font-bold text-blue-600 mt-1">৳ ০</p>
-                   </div>
-                   <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-500 flex flex-col items-center justify-center">
-                       <p class="text-slate-500 text-sm">মোট ঋণ পরিশোধ</p>
-                       <p id="loan-repaid" class="text-xl font-bold text-yellow-600 mt-1">৳ ০</p>
-                   </div>
-               </div>
-          </div>
-      </div> 
-    </div>
-  </div>
-
-  <!-- Monthly Fund Modal (UPDATED: Immersive Full Screen with Animations) -->
-  <div id="monthly-fund-modal" class="hidden fixed inset-0 z-[150] flex flex-col bg-slate-900 text-white overflow-hidden transition-all duration-300">
-      <!-- Decorative Background -->
-      <div class="absolute inset-0 pointer-events-none">
-           <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-indigo-900/40 to-slate-900 z-0"></div>
-           <div class="absolute -top-40 -right-40 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-spin-slow"></div>
-           <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl max-h-4xl bg-blue-500/5 rounded-full blur-[100px]"></div>
-      </div>
-
-      <!-- Header -->
-      <div class="relative z-10 flex justify-between items-center p-6 border-b border-white/10 bg-slate-900/80 backdrop-blur-md">
-          <div class="flex items-center gap-4">
-              <div class="p-3 bg-indigo-500/20 rounded-full text-indigo-400">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              </div>
-              <div>
-                  <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300">মাসিক তহবিল</h3>
-                  <p class="text-sm text-slate-400">স্বচ্ছ ও সুন্দর ব্যবস্থাপনা</p>
-              </div>
-          </div>
-          <button id="close-fund-modal" class="group relative px-4 py-2 rounded-full overflow-hidden bg-slate-800 hover:bg-red-500/20 transition-all duration-300 border border-white/10 hover:border-red-500/50">
-              <span class="relative z-10 text-slate-300 group-hover:text-red-400 font-bold flex items-center gap-2">বন্ধ করুন <span class="text-xl leading-none">&times;</span></span>
-          </button>
-      </div>
-
-      <!-- Content Grid -->
-      <div id="fund-list-container" class="relative z-10 p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 content-start h-full pb-20">
-          <!-- JS will inject animated cards here -->
-      </div>
-  </div>
-
-  <!-- Lottery Modal (Full Screen Immersive) -->
-  <div id="lottery-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-[#0f172a] text-slate-200">
-    <canvas id="confetti" class="fixed inset-0 pointer-events-none z-0"></canvas>
-    
-    <!-- Lottery Header -->
-    <div class="relative z-10 flex justify-between items-center p-4 lg:px-8 border-b border-slate-800 bg-[#0f172a]/80 backdrop-blur">
-        <button id="close-lottery-btn" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition border border-slate-700">
-            <span>⬅ ফিরে যান</span>
-        </button>
-        <div class="text-right">
-            <h1 class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">লাকি লটারি</h1>
-        </div>
-    </div>
-    
-    <!-- Lottery Content -->
-    <div class="relative z-10 w-full max-w-[1600px] mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 grow overflow-y-auto">
-        <!-- Sidebar: History -->
-        <div class="lg:col-span-3 flex flex-col gap-4 order-2 lg:order-1">
-            <div class="glass-card p-4 rounded-xl flex-1 flex flex-col">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">📜 পূর্ববর্তী বিজয়ী</h2>
-                <ul id="lotteryHistory" class="space-y-2 overflow-y-auto flex-1 max-h-[300px] lg:max-h-none text-sm pr-1 custom-scrollbar"></ul>
-            </div>
-        </div>
-
-        <!-- Main: Winner & Participants -->
-        <div class="lg:col-span-9 flex flex-col gap-6 order-1 lg:order-2">
-            <!-- Winner Showcase -->
-            <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-700 transform scale-95 opacity-0">
-                <div class="glass-card p-8 md:p-12 rounded-2xl border border-yellow-500/30 shadow-[0_0_50px_rgba(234,179,8,0.2)] text-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/10 to-transparent"></div>
-                    <h3 class="text-2xl md:text-3xl text-yellow-400 mb-4 font-bold animate-pulse relative z-10">🎉 আজকের বিজয়ী 🎉</h3>
-                    <div id="lotteryWinnerText" class="text-5xl md:text-7xl font-extrabold text-white break-words drop-shadow-xl tracking-wide relative z-10"></div>
-                    <div id="lotteryWinnerDate" class="text-slate-400 mt-4 font-mono text-sm relative z-10"></div>
-                </div>
-            </div>
-
-            <!-- Participants Grid -->
-            <div class="glass-card p-6 rounded-xl flex-1 flex flex-col shadow-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-slate-200">অংশগ্রহণকারী</h2>
-                    <span class="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-bold border border-cyan-500/20">মোট: <span id="lotteryCountBadge">0</span></span>
-                </div>
-                <ul id="lotteryParticipants" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 overflow-y-auto max-h-[500px] pr-2">
-                    <li class="col-span-full text-center text-slate-600 italic py-10">অপেক্ষা করুন...</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-  </div>
-
-
-  <!-- JAVASCRIPT LOGIC -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    
-    // Config
-    const appId = 'default-samiti-app-id'; 
-    const firebaseConfig = { apiKey: "AIzaSyBdfxO5LL9KfzJe-PhvaRbhDhz9G-QH1aE", authDomain: "sg-loan-online.firebaseapp.com", projectId: "sg-loan-online", storageBucket: "sg-loan-online.firebasestorage.app", messagingSenderId: "933667418231", appId: "1:933667418231:web:11c24150426bf869381672" };
-
-    let app, db, auth;
-    let members = [], fundDistribution = {}, notice = { text: '', imageUrls: [], linkText: '', linkUrl: '', scrollingText: '' }, logoUrl = '', importantLinks = [], lottery = { participants: [], history: [], liveDraw: null };
-    let activityLog = []; 
-    let appDownloadUrl = ''; 
-    let activeMember = null, searchQuery = '';
-    
-    let noticeSlideInterval = null;
-    let financeChartInstance = null;
-    let trendChartInstance = null;
-    let lastDrawTime = 0;
-    let isFirstSnapshot = true;
-    let initialLoadComplete = false;
-    
-    // DOM Elements
-    const mainAppContent = document.getElementById('main-app-content');
-    const memberListCardContainer = document.getElementById('member-list-cards');
-    const memberListPlaceholder = document.getElementById('member-list-placeholder');
-    const profileModal = document.getElementById('profile-modal');
-    const monthlyFundModal = document.getElementById('monthly-fund-modal'); 
-
-    // Utils
-    const getBengaliNumber = (n) => {
-        if (n === null || n === undefined || isNaN(n)) return "০";
-        return new Intl.NumberFormat('bn-BD', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n);
-    };
-    const formatDate = (dateString, format = 'long') => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        if (format === 'long') return `${new Intl.NumberFormat('bn-BD').format(date.getDate())} ${date.toLocaleString('bn-BD', { month: 'long' })}, ${new Intl.NumberFormat('bn-BD').format(date.getFullYear())}`;
-        if (format === 'monthYear') return date.toLocaleString('bn-BD', { month: 'long', year: 'numeric'});
-        return '';
-    };
-    const showMessage = (msg, type = 'success') => {
-      const box = document.getElementById('message-box');
-      const content = document.getElementById('message-content');
-      let color = type === 'error' ? 'bg-red-500' : type === 'info' ? 'bg-blue-600' : 'bg-green-600';
-      content.className = `shadow-2xl rounded-xl p-4 font-semibold text-white flex items-center gap-3 backdrop-blur-md ${color}`;
-      content.innerHTML = `<span>${type === 'error' ? '⚠️' : '✅'}</span><span>${msg}</span>`;
-      box.classList.remove('opacity-0'); setTimeout(() => box.classList.add('opacity-0'), 3000);
-    };
-    const calculateMemberTotals = (m) => {
-        const t = { totalDeposit: 0, totalLoanTaken: 0, totalLoanRepaid: 0, currentLoan: 0 };
-        if(m?.transactions) m.transactions.forEach(x => { const a = Number(x.amount)||0; if(x.type === 'deposit') t.totalDeposit+=a; else if(x.type === 'loanTaken') t.totalLoanTaken+=a; else if(x.type === 'loanRepayment') t.totalLoanRepaid+=a; });
-        t.currentLoan = t.totalLoanTaken - t.totalLoanRepaid; return t;
-    };
-
-    // --- SOUND EFFECT UTIL ---
-    const playBeep = () => {
-        try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContext) return;
-            const ctx = new AudioContext();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine'; // Smooth tone
-            osc.frequency.setValueAtTime(880, ctx.currentTime); // High pitch start
-            osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15); // Drop pitch
-            gain.gain.setValueAtTime(0.05, ctx.currentTime); // Low volume
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15); // Fade out
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.2);
-        } catch (e) { 
-            // Silent fail if audio context not allowed
-        }
-    };
-
-    // Notifications
-    const openNotif = () => {
-        const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
-        m.classList.remove('hidden'); m.classList.add('flex');
-        setTimeout(() => { p.classList.remove('translate-x-full'); o.classList.remove('opacity-0'); }, 10);
-    };
-    const closeNotif = () => {
-        const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
-        p.classList.add('translate-x-full'); o.classList.add('opacity-0');
-        setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
-    };
-    const renderNotifications = () => {
-        const list = document.getElementById('notif-list'), badge = document.getElementById('notif-badge'), count = document.getElementById('notif-count');
-        const lastRead = Number(localStorage.getItem('samiti_notif_last_read') || 0);
-        const unread = activityLog.filter(l => l.ts > lastRead).length;
-        
-        if (unread > 0) { badge.textContent = getBengaliNumber(unread); badge.classList.remove('hidden'); badge.classList.add('animate-bounce'); } 
-        else { badge.classList.add('hidden'); badge.classList.remove('animate-bounce'); }
-        count.textContent = getBengaliNumber(activityLog.length);
-        list.innerHTML = '';
-
-        if (activityLog.length === 0) { list.innerHTML = '<div class="flex flex-col items-center justify-center h-48 text-slate-400 gap-2"><span class="text-4xl">🔕</span><span>কোনো নতুন আপডেট নেই</span></div>'; return; }
-        
-        activityLog.forEach(log => {
-            let icon = '📌', border = 'border-l-4 border-slate-300';
-            if(log.msg.includes('জমা') || log.msg.includes('টাকা')) { icon = '💰'; border = 'border-l-4 border-green-500'; }
-            else if(log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-4 border-red-500'; }
-            else if(log.msg.includes('লটারি')) { icon = '🎲'; border = 'border-l-4 border-purple-500'; }
-            
-            const isUnread = log.ts > lastRead;
-            const bg = isUnread ? 'bg-indigo-50/50' : 'bg-white';
-            const memberMatch = members.find(m => log.msg.includes(m.name));
-            const actionAttr = memberMatch ? `data-member-id="${memberMatch.id}"` : '';
-            const actionBtn = memberMatch ? `<span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full ml-auto">প্রোফাইল ➜</span>` : '';
-
-            list.innerHTML += `<div data-notification-msg="${log.msg}" ${actionAttr} class="${bg} p-3 rounded-lg shadow-sm ${border} mb-2 cursor-pointer hover:bg-slate-50 transition relative"><div class="flex justify-between items-start"><span class="text-sm text-slate-700 font-medium flex gap-2">${icon} <span class="flex-1">${log.msg}</span></span>${isUnread?'<span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0"></span>':''}</div><div class="flex items-center mt-2 text-xs text-slate-400"><span>${log.dateStr}</span>${actionBtn}</div></div>`;
-        });
-    };
-    
-    // Auto Toast
-    const checkAndPlayNotifications = () => {
-        const lastRead = Number(localStorage.getItem('samiti_notif_last_read') || 0);
-        const unreadLogs = activityLog.filter(l => l.ts > lastRead).sort((a,b) => a.ts - b.ts);
-        if (unreadLogs.length > 0) playNotificationSequence(unreadLogs);
-    };
-    const playNotificationSequence = (logs) => {
-        if (logs.length === 0) return;
-        const current = logs[0]; showAutoToast(current);
-        localStorage.setItem('samiti_notif_last_read', current.ts); renderNotifications();
-        setTimeout(() => playNotificationSequence(logs.slice(1)), 3500); // Slower sequence to enjoy the sound
-    };
-    
-    const showAutoToast = (log) => {
-        // Play Sound
-        playBeep();
-
-        const c = document.getElementById('auto-toast-container');
-        c.innerHTML = ''; 
-
-        const t = document.createElement('div');
-        let icon = '📌', border = 'border-l-2 border-indigo-300';
-        if(log.msg.includes('জমা')) { icon = '💰'; border = 'border-l-2 border-green-400'; }
-        else if(log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-2 border-red-400'; }
-        
-        const memberMatch = members.find(m => log.msg.includes(m.name));
-        
-        t.className = `bg-white/70 backdrop-blur-xl p-3 rounded-2xl shadow-xl ${border} w-auto max-w-[280px] flex items-center gap-3 transform transition-all duration-500 ease-out origin-top-right scale-0 opacity-0 translate-x-[20px] -translate-y-[20px] cursor-pointer pointer-events-auto border border-white/50 ring-1 ring-white/60`;
-        t.setAttribute('data-notification-msg', log.msg);
-        if (memberMatch) t.setAttribute('data-member-id', memberMatch.id);
-
-        t.innerHTML = `<div class="text-lg">${icon}</div><div class="flex-1 min-w-0"><p class="font-bold text-slate-800 text-xs truncate">${log.msg}</p><p class="text-[9px] text-slate-500 mt-0.5">এখনই</p></div>`;
-        
-        c.appendChild(t);
-        
-        requestAnimationFrame(() => { 
-            t.classList.remove('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]');
-            t.classList.add('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0');
-        });
-        
-        setTimeout(() => { 
-            t.classList.remove('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0');
-            t.classList.add('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]'); 
-            setTimeout(() => t.remove(), 500); 
-        }, 3000);
-    };
-
-    // Swipe Notification
-    let touchStartX = 0;
-    const np = document.getElementById('notif-panel');
-    np.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, {passive: true});
-    np.addEventListener('touchend', e => { if(e.changedTouches[0].screenX > touchStartX + 50) closeNotif(); });
-
-    // Charts
-    const renderCharts = (td, tlt, tlr) => {
-        const ctxF = document.getElementById('financeChart').getContext('2d');
-        if (financeChartInstance) financeChartInstance.destroy();
-        financeChartInstance = new Chart(ctxF, { 
-            type: 'bar', 
-            data: { labels: ['মোট জমা', 'ঋণ প্রদান', 'ঋণ ফেরত'], datasets: [{ data: [td, tlt, tlr], backgroundColor: ['#22c55e', '#ef4444', '#eab308'], borderRadius: 6, barThickness: 40 }] }, 
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { family: "'Hind Siliguri'" } } }, x: { grid: { display: false }, ticks: { font: { family: "'Hind Siliguri'", weight: '600' } } } } } 
-        });
-
-        const mData = {}; members.forEach(m => (m.transactions||[]).forEach(t => { if(t.type==='deposit') { const k = t.date.substring(0,7); mData[k] = (mData[k]||0)+Number(t.amount); } }));
-        const labels = Object.keys(mData).sort().map(m => { const d = new Date(m+'-01'); return d.toLocaleString('bn-BD', { month: 'short', year: '2-digit' }); });
-        const data = Object.keys(mData).sort().map(k => mData[k]);
-        
-        const ctxT = document.getElementById('trendChart').getContext('2d');
-        if (trendChartInstance) trendChartInstance.destroy();
-        trendChartInstance = new Chart(ctxT, { 
-            type: 'line', 
-            data: { labels: labels, datasets: [{ label: 'জমা', data: data, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', borderWidth: 3, tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#ffffff', pointBorderColor: '#6366f1', pointBorderWidth: 2 }] }, 
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9', borderDash: [5, 5] } }, x: { grid: { display: false } } } } 
-        });
-    };
-
-    // Rendering UI
-    const renderHeaderLogo = () => {
-        const img = document.getElementById('header-logo-img');
-        if (logoUrl) { 
-            img.src = logoUrl; img.onerror = () => img.src = 'https://placehold.co/48x48/FFFFFF/6366f1?text=MG'; 
-            localStorage.setItem('cached_logo_url', logoUrl); // Cache Logo
-        }
-    };
-    const renderImportantLinks = () => {
-        // Hiding important links display as requested, but keeping app button logic working
-        const c = document.getElementById('important-links-display'); 
-        if(c) { c.innerHTML = ''; c.classList.add('hidden'); }
-
-        // App Button Logic
-        const btn = document.getElementById('header-app-btn');
-        if (appDownloadUrl) { btn.href = appDownloadUrl; btn.target = "_blank"; }
-        else { 
-            const appLink = importantLinks.find(l => l.name.toLowerCase().includes('app') || l.name.includes('অ্যাপ'));
-            if(appLink) { btn.href = appLink.url; btn.target = "_blank"; } else { btn.href = "#"; btn.onclick = (e) => { e.preventDefault(); showMessage('অ্যাপ লিংক শীঘ্রই আসছে!', 'info'); }; }
-        }
-    };
-
-    const renderUI = () => {
-        let td = 0, tlt = 0, tlr = 0;
-        members.forEach(m => { const t = calculateMemberTotals(m); td+=t.totalDeposit; tlt+=t.totalLoanTaken; tlr+=t.totalLoanRepaid; });
-        
-        document.getElementById('total-members').textContent = getBengaliNumber(members.length);
-        document.getElementById('total-paid').textContent = `৳ ${getBengaliNumber(td)}`;
-        document.getElementById('total-loan-given').textContent = `৳ ${getBengaliNumber(tlt)}`;
-        
-        renderCharts(td, tlt, tlr);
-        
-        memberListCardContainer.innerHTML = ''; memberListPlaceholder.classList.add('hidden');
-        const filtered = members.filter(m => {
-            const q = searchQuery.toLowerCase().trim();
-            return !q || (m.name||'').toLowerCase().includes(q) || (m.id||'').includes(q) || (m.phone||'').includes(q) || (m.cardNumber||'').includes(q);
-        });
-
-        if (filtered.length === 0) memberListPlaceholder.classList.remove('hidden');
-        else {
-            filtered.sort((a,b) => (a.name||'').localeCompare(b.name||'','bn')).forEach(m => {
-                const t = calculateMemberTotals(m);
-                const ph = `https://placehold.co/64x64/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-200 transition group flex flex-col h-full relative overflow-hidden';
-                card.innerHTML = `
-                    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition text-6xl select-none">🆔</div>
-                    <div class="flex items-center gap-4 mb-4 relative z-10">
-                        <img class="w-14 h-14 rounded-full object-cover border-2 border-slate-100 shadow-sm" src="${m.photoUrl||ph}" onerror="this.src='${ph}'">
-                        <div class="overflow-hidden">
-                            <h4 class="font-bold text-slate-800 truncate text-lg">${m.name}</h4>
-                            <p class="text-xs text-indigo-500 font-mono font-semibold">💳 ${m.cardNumber || 'N/A'}</p>
-                            <p class="text-xs text-slate-500 font-mono mt-0.5">ID: ${m.id}</p>
-                            <p class="text-xs text-slate-500 mt-0.5">📞 ${m.phone}</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto space-y-2 relative z-10">
-                        <div class="flex justify-between text-sm bg-green-50 px-3 py-2 rounded-lg border border-green-100"><span class="text-green-700 font-medium">মোট জমা</span><span class="font-bold text-green-700">৳ ${getBengaliNumber(t.totalDeposit)}</span></div>
-                        <div class="flex justify-between text-sm bg-red-50 px-3 py-2 rounded-lg border border-red-100"><span class="text-red-700 font-medium">ঋণ</span><span class="font-bold text-red-700">৳ ${getBengaliNumber(t.currentLoan)}</span></div>
-                    </div>
-                    <button class="view-profile-btn mt-4 w-full bg-indigo-50 text-indigo-600 py-2 rounded-lg text-sm font-bold hover:bg-indigo-600 hover:text-white transition shadow-sm" data-id="${m.id}">বিস্তারিত দেখুন</button>
-                `;
-                memberListCardContainer.appendChild(card);
-            });
-        }
-        if(activeMember) { const fresh = members.find(m=>m.id===activeMember.id); if(fresh && filtered.includes(fresh)) showProfile(fresh.id, false); else closeProfileModal(); }
-    };
-
-    const renderNoticeBoard = () => {
-        const display = document.getElementById('notice-display'); display.innerHTML = '';
-        const ticker = document.getElementById('bottom-ticker');
-        const tickerWrapper = document.getElementById('ticker-wrapper');
-        
-        // UPDATED: Ticker Logic for seamless infinite loop
-        if (notice.scrollingText?.trim()) { 
-            ticker.classList.remove('hidden'); 
-            const text = notice.scrollingText;
-            const separator = '<span class="mx-8 text-indigo-400">❖</span>';
-            const fullText = (text + separator).repeat(Math.max(1, Math.ceil(window.innerWidth / (text.length * 10))));
-            
-            tickerWrapper.innerHTML = `
-                <div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>
-                <div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>
-            `;
-        } 
-        else ticker.classList.add('hidden');
-
-        if (noticeSlideInterval) clearInterval(noticeSlideInterval);
-        const images = (Array.isArray(notice.imageUrls) ? notice.imageUrls : [notice.imageUrl]).filter(u => u);
-
-        if (images.length > 0) {
-            const slides = images.map((u,i) => `<div class="absolute inset-0 transition-opacity duration-1000 ${i===0?'opacity-100 z-10':'opacity-0 z-0'} slide-wrapper"><img src="${u}" class="w-full h-full object-cover animate-kenburns"><div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div></div>`).join('');
-            display.innerHTML += `<div class="relative w-full h-48 sm:h-64 rounded-xl overflow-hidden mb-4 shadow-sm group">${slides}</div>`;
-            if (images.length > 1) {
-                let cur = 0;
-                const els = () => display.querySelectorAll('.slide-wrapper');
-                const next = () => { const s = els(); s[cur].classList.remove('opacity-100','z-10'); s[cur].classList.add('opacity-0'); cur=(cur+1)%images.length; s[cur].classList.remove('opacity-0'); s[cur].classList.add('opacity-100','z-10'); };
-                noticeSlideInterval = setInterval(next, 5000);
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif'],
+                        bengali: ['Hind Siliguri', 'sans-serif'],
+                    },
+                    colors: {
+                        app: {
+                            bg: '#0f172a', // Slate 900
+                            card: '#1e293b', // Slate 800
+                            primary: '#10b981', // Emerald 500
+                            accent: '#6366f1', // Indigo 500
+                            danger: '#ef4444',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                        'pop-in': 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        popIn: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        }
+                    }
+                }
             }
         }
-        if (notice.text) display.innerHTML += `<div class="prose prose-sm prose-slate max-w-none mb-3">${notice.text.split('\n').map(p=>`<p>${p}</p>`).join('')}</div>`;
-        if (notice.linkUrl) display.innerHTML += `<a href="${notice.linkUrl}" target="_blank" class="block text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-lg hover:bg-slate-700 transition">🔗 ${notice.linkText||'বিস্তারিত দেখুন'}</a>`;
-        if (!images.length && !notice.text) display.innerHTML = `<div class="text-center text-slate-400 py-6 italic">কোনো নোটিশ নেই</div>`;
-    };
+    </script>
 
-    // Profile & Modal Logic
-    const showProfile = (id, animate = true) => {
-        const m = members.find(x => x.id === id); activeMember = m; if(!m) return;
-        const t = calculateMemberTotals(m);
-        const ph = m.photoUrl || `https://placehold.co/96x96/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
-        
-        document.getElementById('profile-header-img').src = ph;
-        document.getElementById('profile-header-name').textContent = m.name || 'নাম নেই';
-        document.getElementById('profile-id').textContent = `ID: ${m.id}`;
-        
-        ['name','email','phone','employee-id','card-number','notes'].forEach(k => {
-             const v = m[k.replace('-','')] || m[k] || 'N/A';
-             document.getElementById(`profile-${k}-view`).textContent = v;
-        });
-        
-        document.getElementById('paid-total').textContent = `৳ ${getBengaliNumber(t.totalDeposit)}`;
-        document.getElementById('current-loan').textContent = `৳ ${getBengaliNumber(t.currentLoan)}`;
-        document.getElementById('loan-taken').textContent = `৳ ${getBengaliNumber(t.totalLoanTaken)}`;
-        document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(t.totalLoanRepaid)}`;
+    <style>
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
 
-        const tbody = document.getElementById('transactions-table-body');
-        tbody.innerHTML = (m.transactions||[]).length === 0 ? '<tr><td colspan="3" class="py-6 text-center text-slate-400 italic">কোনো লেনদেন নেই</td></tr>' : 
-        [...m.transactions].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(x => {
-            const clr = x.type==='deposit'?'text-green-600':x.type==='loanTaken'?'text-blue-600':'text-yellow-600';
-            const lbl = x.type==='deposit'?'কিস্তি/জমা':x.type==='loanTaken'?'ঋণ গ্রহণ':'ঋণ ফেরত';
-            return `<tr class="hover:bg-slate-50"><td class="py-3 px-4 text-slate-600">${formatDate(x.date)}</td><td class="py-3 px-4"><span class="font-medium text-slate-700">${lbl}</span>${x.description?`<br><span class="text-xs text-slate-400">${x.description}</span>`:''}</td><td class="py-3 px-4 text-right font-mono font-bold ${clr}">${getBengaliNumber(x.amount)}</td></tr>`;
-        }).join('');
-
-        // Reset all tabs
-        document.querySelectorAll('.profile-tab').forEach(x => { 
-            x.classList.remove('tab-active','text-indigo-600'); 
-            x.classList.add('text-slate-500'); 
-        });
-
-        // ACTIVATE TRANSACTIONS TAB BY DEFAULT
-        const txTab = document.getElementById('profile-tab-transactions');
-        txTab.classList.add('tab-active','text-indigo-600'); 
-        txTab.classList.remove('text-slate-500');
-        
-        // Show Transactions Content, Hide Others
-        document.getElementById('profile-content-details').classList.add('hidden');
-        document.getElementById('profile-content-summary').classList.add('hidden');
-        document.getElementById('profile-content-transactions').classList.remove('hidden');
-
-        if(animate) { 
-            profileModal.classList.remove('hidden'); profileModal.classList.add('flex');
-            document.getElementById('profile-modal-box').classList.remove('modal-exit');
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-    };
-    const closeProfileModal = () => {
-        const box = document.getElementById('profile-modal-box');
-        box.classList.add('modal-exit');
-        setTimeout(() => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); box.classList.remove('modal-exit'); activeMember = null; }, 200);
-    };
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.7); /* Slate 800 with opacity */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-    // Fund Modal (UPDATED: Modern Grid with Floating Animation)
-    const renderFundModal = () => {
-        const c = document.getElementById('fund-list-container');
-        const mDeps = members.reduce((acc,m) => { (m.transactions||[]).filter(t=>t.type==='deposit'&&t.date).forEach(t=>{ const k=t.date.substring(0,7); acc[k]=(acc[k]||0)+Number(t.amount); }); return acc; }, {});
-        const sorted = Object.keys(mDeps).sort().reverse();
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+        }
+        .dark .glass-card {
+            background: linear-gradient(135deg, rgba(30,41,59,1) 0%, rgba(15,23,42,1) 100%);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Bottom Nav Active State indicator */
+        .nav-item.active i { color: #10b981; transform: translateY(-2px); }
+        .nav-item.active span { color: #10b981; font-weight: 600; }
+        .nav-item i { transition: all 0.3s ease; }
         
-        c.innerHTML = sorted.length ? sorted.map((k, idx) => {
-            const dist = fundDistribution[k];
-            const r = dist ? members.find(m=>m.id===dist.receiverId) : null;
-            // Add animation delay for staggered effect
-            const delay = idx * 0.1; 
-            const floatDelay = Math.random() * 2; // Random start for float to look natural
-            
-            return `
-            <div class="animate-float group relative rounded-2xl p-0.5 overflow-hidden transition hover:scale-105 duration-500" style="animation-delay: ${floatDelay}s">
-                <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-cyan-500 opacity-20 group-hover:opacity-100 transition duration-500"></div>
-                <div class="relative h-full bg-slate-800/80 backdrop-blur-xl border border-white/10 p-5 rounded-2xl flex flex-col justify-between">
-                    <!-- Top Part -->
-                    <div class="flex justify-between items-start mb-4 border-b border-white/5 pb-3">
-                        <div>
-                           <h4 class="text-xl font-bold text-white tracking-wide">${formatDate(k+'-01','monthYear')}</h4>
-                           <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">তহবিলের বিবরণ</p>
-                        </div>
-                        <div class="bg-indigo-500/20 px-2 py-1 rounded text-center">
-                            <p class="text-[10px] text-indigo-300">মোট জমা</p>
-                            <p class="font-bold text-indigo-100">৳ ${getBengaliNumber(mDeps[k])}</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Receiver Info -->
-                    ${r ? `
-                    <div class="flex items-center gap-3 bg-slate-700/50 p-3 rounded-xl border border-white/5">
-                        <img src="${r.photoUrl||'https://placehold.co/40'}" class="w-12 h-12 rounded-full border-2 border-green-500 shadow-lg object-cover">
-                        <div>
-                            <p class="text-[10px] text-green-400 font-bold uppercase tracking-wider">তহবিল প্রাপক</p>
-                            <p class="text-sm font-bold text-white">${r.name}</p>
-                            <p class="text-xs text-slate-300">পরিমাণ: <span class="text-yellow-400 font-mono">৳ ${getBengaliNumber(dist.amount)}</span></p>
-                        </div>
-                    </div>
-                    ` : `
-                    <div class="flex flex-col items-center justify-center py-4 text-slate-500 bg-slate-900/50 rounded-xl border border-dashed border-slate-700">
-                        <span class="text-2xl mb-1">⏳</span>
-                        <p class="text-xs italic">এখনও বিতরণ করা হয়নি</p>
-                    </div>
-                    `}
+        /* Desktop Nav Active State */
+        .desktop-nav-item.active { color: #10b981; background-color: rgba(16, 185, 129, 0.1); }
+
+        /* View Transitions */
+        .view-section { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Score Ball */
+        .ball-circle {
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; font-size: 0.75rem; font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Toast Animation */
+        .toast-enter { animation: slideInRight 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; }
+        .toast-exit { animation: fadeOutRight 0.3s forwards; }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOutRight { to { transform: translateX(100%); opacity: 0; } }
+
+        /* Event Overlay Text */
+        .big-impact-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: 8rem; line-height: 1; font-weight: 700;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: linear-gradient(to bottom, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            transform: scale(0); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .active .big-impact-text { transform: scale(1); }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* --- NEW ANIMATION CSS --- */
+        .flying-run-indicator {
+            position: fixed;
+            z-index: 9999;
+            font-family: 'Oswald', sans-serif;
+            font-weight: bold;
+            pointer-events: none;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            will-change: transform, opacity;
+            user-select: none;
+        }
+        
+        @keyframes scorePulseImpact {
+            0% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.4); filter: brightness(1.3); text-shadow: 0 0 20px rgba(16, 185, 129, 0.6); color: #10b981; }
+            100% { transform: scale(1); filter: brightness(1); }
+        }
+        
+        .score-impact-anim {
+            animation: scorePulseImpact 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        /* Grid transition helper */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .match-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1024px) {
+            .match-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-app-bg text-gray-800 dark:text-gray-100 min-h-screen transition-colors duration-300 font-sans pb-24 lg:pb-0 selection:bg-green-500 selection:text-white">
+
+    <!-- Global Loader -->
+    <div id="globalLoader" class="fixed inset-0 z-[9999] bg-white dark:bg-app-bg flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="relative w-24 h-24 mb-4">
+            <div class="absolute inset-0 border-4 border-gray-200 dark:border-gray-800 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-green-500 rounded-full border-t-transparent animate-spin"></div>
+            <img src="https://i.postimg.cc/FRMTxVb2/app-icon-android.png" class="absolute inset-2 w-20 h-20 rounded-full object-cover p-1">
+        </div>
+        <h1 class="text-2xl font-display font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-700">CRICSCORE</h1>
+        <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest">Loading Live Data...</p>
+    </div>
+
+    <!-- Celebration Overlay (Confetti & Big Text) -->
+    <div id="eventOverlay" class="fixed inset-0 z-[5000] pointer-events-none flex items-center justify-center bg-black/80 opacity-0 transition-opacity duration-300 backdrop-blur-sm">
+        <div class="text-center transform scale-90 transition-transform duration-300" id="eventContent">
+            <div id="eventText" class="big-impact-text">6</div>
+            <div id="eventSub" class="text-2xl font-bold text-white uppercase tracking-[0.5em] mt-4 opacity-0 transition-opacity duration-500 delay-100">MAXIMUM</div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="fixed top-4 left-4 right-4 z-[6000] flex flex-col gap-2 pointer-events-none sm:left-auto sm:w-96 sm:right-4"></div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-40 glass shadow-sm transition-all duration-300">
+        <div class="w-full max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('live')">
+                <div class="relative">
+                    <img src="https://i.postimg.cc/FRMTxVb2/app-icon-android.png" class="w-9 h-9 rounded-xl shadow-lg border border-white/10">
+                    <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-900 animate-pulse"></div>
                 </div>
-            </div>`;
-        }).join('') : '<div class="col-span-full text-center py-20 text-slate-500 flex flex-col items-center"><span class="text-5xl mb-4 opacity-50">📂</span><span class="text-xl">কোনো তহবিলের তথ্য পাওয়া যায়নি</span></div>';
-    };
+                <span class="font-display font-bold text-xl tracking-tight text-gray-800 dark:text-white">CricScore<span class="text-green-500">.</span></span>
+            </div>
 
-    // Lottery Render
-    const renderLotteryModal = () => {
-        const lp = lottery.participants||[], lh = lottery.history||[];
-        document.getElementById("lotteryCountBadge").textContent = getBengaliNumber(lp.length);
-        const list = document.getElementById("lotteryParticipants");
-        list.innerHTML = lp.length ? lp.map((n,i)=>`<li class="bg-slate-800/50 border border-slate-700 rounded-lg p-2 text-center text-slate-300 text-sm font-medium relative overflow-hidden group hover:bg-cyan-900/20 hover:border-cyan-500/50 transition"><span class="absolute top-1 left-1 text-[10px] text-slate-600">#${i+1}</span>${n}</li>`).join('') : `<li class="col-span-full text-center text-slate-500 py-8">অংশগ্রহণকারী নেই</li>`;
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex items-center gap-1 bg-gray-100 dark:bg-gray-800/50 p-1 rounded-full border border-gray-200 dark:border-gray-700">
+                <button onclick="switchView('live')" class="desktop-nav-item active px-4 py-1.5 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors" data-target="live">Matches</button>
+                <button onclick="switchView('tournaments')" class="desktop-nav-item px-4 py-1.5 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors" data-target="tournaments">Leagues</button>
+                <button onclick="switchView('players')" class="desktop-nav-item px-4 py-1.5 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors" data-target="players">Stats</button>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="mainContainer" class="pt-24 px-4 w-full max-w-7xl mx-auto min-h-screen">
         
-        const hist = document.getElementById("lotteryHistory");
-        hist.innerHTML = lh.length ? [...lh].reverse().map(h=>`<li class="flex justify-between items-center bg-slate-800/40 p-2 rounded border-l-2 border-cyan-500 mb-2"><span class="text-cyan-200 font-medium text-xs">${h.winner}</span><span class="text-slate-500 text-[10px]">${h.date}</span></li>`).join('') : `<li class="text-center text-slate-600 text-xs py-2">ইতিহাস নেই</li>`;
+        <!-- Live Matches View -->
+        <div id="liveView" class="view-section">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold font-display text-gray-800 dark:text-white">Live Matches</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Real-time scores & updates</p>
+                </div>
+                <span class="text-xs font-bold bg-red-500/10 text-red-500 px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1">
+                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span> LIVE
+                </span>
+            </div>
+            
+            <div id="matchesList" class="match-grid pb-20 lg:pb-8">
+                <!-- Loading Skeleton -->
+                <div class="glass-card rounded-2xl p-4 animate-pulse">
+                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                        <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+                        <div class="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        const winSec = document.getElementById("lotteryWinnerSection");
-        const latest = lh[lh.length-1];
-        if(latest) {
-            document.getElementById("lotteryWinnerText").textContent = latest.winner;
-            document.getElementById("lotteryWinnerDate").textContent = latest.date;
-            winSec.classList.remove('hidden', 'scale-95', 'opacity-0');
-        } else {
-            winSec.classList.add('hidden', 'scale-95', 'opacity-0');
-        }
-    };
-    
-    // Confetti
-    const canvas = document.getElementById("confetti"), ctx = canvas.getContext("2d");
-    let parts = [];
-    const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-    window.addEventListener('resize', resizeCanvas);
-    const updateConfetti = () => {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        let act = false;
-        parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.2; p.vx*=0.95; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,6,6); if(p.y<canvas.height) act=true; });
-        if(act) requestAnimationFrame(updateConfetti);
-    };
-    const startConfetti = () => {
-        parts=[]; for(let i=0;i<100;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*20, vy:(Math.random()-.5)*20, c:`hsl(${Math.random()*360},70%,50%)`});
-        updateConfetti();
-    };
+        <!-- Tournaments View -->
+        <div id="tournamentsView" class="view-section hidden">
+            <h2 class="text-2xl font-bold font-display mb-6 text-gray-800 dark:text-white">Tournaments</h2>
+            <div class="glass-card rounded-2xl p-8 text-center border-l-4 border-yellow-500 max-w-2xl mx-auto">
+                <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-yellow-600 dark:text-yellow-400 text-2xl">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-2">No Active Tournaments</h3>
+                <p class="text-sm text-gray-500">Check back later for upcoming leagues.</p>
+            </div>
+        </div>
 
-    // Firebase Start
-    const initFirebase = () => {
-        // Initialize Cached Logo for Loader
-        const cachedLogo = localStorage.getItem('cached_logo_url');
-        if(cachedLogo) {
-            const loaderImg = document.getElementById('loader-logo-img');
-            if(loaderImg) loaderImg.src = cachedLogo;
-        }
+        <!-- Players View -->
+        <div id="playersView" class="view-section hidden">
+            <h2 class="text-2xl font-bold font-display mb-4 text-gray-800 dark:text-white">Player Stats</h2>
+            <div class="relative mb-6 max-w-md">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="playerSearch" onkeyup="filterPlayers()" placeholder="Search players..." 
+                    class="w-full pl-10 pr-4 py-3 bg-white dark:bg-gray-800 border-none rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 outline-none transition text-sm">
+            </div>
+            <div id="playersListContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20 lg:pb-8"></div>
+        </div>
 
-        try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); } catch(e) { console.error(e); }
-        onAuthStateChanged(auth, async (u) => {
-            if(u) {
-                mainAppContent.classList.remove('hidden'); document.getElementById('app-loader').classList.add('opacity-0'); setTimeout(()=>document.getElementById('app-loader').remove(),500);
-                const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
-                onSnapshot(docRef, (s) => {
-                    const d = s.data(); if(!d) return;
-                    members = d.members||[]; fundDistribution = d.fundDistribution||{};
-                    notice = typeof d.notice==='string' ? {text:d.notice} : (d.notice||{});
-                    logoUrl = d.logoUrl||''; importantLinks = d.importantLinks||[]; appDownloadUrl = d.appDownloadUrl||'';
-                    activityLog = d.activityLog||[];
-                    lottery = { participants: d.lottery?.participants||[], history: d.lottery?.history||[], liveDraw: d.lottery?.liveDraw };
+        <!-- Match Detail View -->
+        <div id="matchDetailView" class="view-section hidden pb-24 lg:pb-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Back Button Header override -->
+                <button onclick="switchView('live')" class="mb-4 flex items-center text-sm font-medium text-gray-500 hover:text-green-500 transition">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Matches
+                </button>
+
+                <!-- Main Score Card -->
+                <div class="glass-card rounded-3xl overflow-hidden relative mb-6 border border-gray-100 dark:border-gray-700 shadow-xl">
+                    <!-- Background Decoration -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                     
-                    if(d.lottery?.liveDraw?.ts > lastDrawTime && !isFirstSnapshot) {
-                         lastDrawTime = d.lottery.liveDraw.ts;
-                         document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); startConfetti();
-                    }
-                    isFirstSnapshot = false;
-                    renderUI(); renderHeaderLogo(); renderImportantLinks(); renderNoticeBoard(); renderNotifications();
-                    if(!initialLoadComplete) { checkAndPlayNotifications(); initialLoadComplete=true; }
-                });
-            } else { try { await signInAnonymously(auth); } catch(e){console.error(e);} }
-        });
-    };
-    initFirebase();
+                    <div class="p-6 relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <span id="matchStatusBadge" class="bg-red-500 text-white text-[10px] px-2.5 py-1 rounded-md uppercase font-bold tracking-wider shadow-sm animate-pulse">LIVE</span>
+                            <div class="text-right">
+                                 <span id="matchTournamentName" class="text-xs font-bold text-gray-500 uppercase tracking-wide">Tournament</span>
+                            </div>
+                        </div>
 
-    // Event Delegation
-    document.addEventListener('click', e => {
-        const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], #view-monthly-fund-btn');
-        if(!t) return;
+                        <div class="flex items-center justify-between mt-2">
+                            <div class="text-center w-[40%]">
+                                <h3 id="teamAName" class="font-bold text-lg sm:text-xl font-display leading-tight text-gray-800 dark:text-white truncate">Team A</h3>
+                                <div class="mt-2 text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-gray-900 dark:text-gray-100 tracking-tight transition-transform duration-150" id="teamAScore">0/0</div>
+                                <div class="text-sm font-medium text-gray-500 mt-1" id="teamAOvers">0.0 ov</div>
+                            </div>
+                            
+                            <div class="text-center w-[20%] flex flex-col items-center justify-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-400">VS</div>
+                            </div>
+
+                            <div class="text-center w-[40%]">
+                                <h3 id="teamBName" class="font-bold text-lg sm:text-xl font-display leading-tight text-gray-800 dark:text-white truncate">Team B</h3>
+                                <div class="mt-2 text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-gray-900 dark:text-gray-100 tracking-tight transition-transform duration-150" id="teamBScore">0/0</div>
+                                <div class="text-sm font-medium text-gray-500 mt-1" id="teamBOvers">0.0 ov</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex flex-col items-center gap-2">
+                             <!-- Current Partnership Display -->
+                            <div id="partnershipDisplay" class="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-xs font-bold text-gray-600 dark:text-gray-300 hidden">
+                                <i class="fas fa-handshake mr-1 text-green-500"></i> Partnership: <span id="partnerRuns">0</span> (<span id="partnerBalls">0</span>)
+                            </div>
+
+                            <div class="pt-2 border-t border-gray-100 dark:border-gray-700/50 flex flex-wrap justify-center gap-3 text-xs font-bold w-full">
+                                <span id="matchResult" class="text-green-600 dark:text-green-400">Match Started</span>
+                                <!-- Target ID kept, default hidden -->
+                                <span id="matchTargetDisplay" class="hidden text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded">Target: 0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Win Probability Bar -->
+                    <div id="winProbContainer" class="bg-gray-100 dark:bg-gray-800/50 h-1.5 w-full flex relative hidden mt-2 rounded-full overflow-hidden">
+                        <div id="winBarA" class="h-full bg-blue-500 transition-all duration-1000" style="width: 50%"></div>
+                        <div id="winBarB" class="h-full bg-orange-500 transition-all duration-1000" style="width: 50%"></div>
+                        <!-- Center Marker -->
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-full bg-white dark:bg-gray-900 z-10"></div>
+                    </div>
+                </div>
+
+                <!-- Recent Balls (Horizontal Scroll) -->
+                <div class="mb-6">
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">Recent Deliveries</h4>
+                    <div id="recentBallsContainer" class="flex gap-2 overflow-x-auto pb-4 hide-scrollbar snap-x min-h-[40px]">
+                        <!-- Balls injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Tabs: Scorecard / Commentary -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="flex border-b border-gray-100 dark:border-gray-700">
+                        <button onclick="switchMainTab('scorecard')" id="tab-scorecard" class="flex-1 py-4 text-sm font-bold text-green-500 border-b-2 border-green-500 bg-green-50/50 dark:bg-green-900/10 transition-colors">SCORECARD</button>
+                        <button onclick="switchMainTab('commentary')" id="tab-commentary" class="flex-1 py-4 text-sm font-bold text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">COMMENTARY</button>
+                        <button onclick="switchMainTab('analytics')" id="tab-analytics" class="flex-1 py-4 text-sm font-bold text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">ANALYTICS</button>
+                    </div>
+
+                    <div class="p-0 min-h-[300px]">
+                        <!-- Scorecard Tab -->
+                        <div id="content-scorecard" class="tab-content animate-pop-in">
+                            <div class="flex bg-gray-50 dark:bg-gray-700/30 p-1 m-3 rounded-lg">
+                                <button onclick="switchLiveTab('teamA')" id="btn-teamA" class="flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow-sm text-gray-800 dark:text-white transition-all">Team A</button>
+                                <button onclick="switchLiveTab('teamB')" id="btn-teamB" class="flex-1 py-1.5 text-xs font-bold rounded-md text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all">Team B</button>
+                            </div>
+                            <div id="live-content-teamA" class="p-3"></div>
+                            <div id="live-content-teamB" class="p-3 hidden"></div>
+                        </div>
+
+                        <!-- Commentary Tab (Bengali) -->
+                        <div id="content-commentary" class="tab-content hidden animate-pop-in p-4 font-bengali">
+                            <div id="commFeed" class="space-y-4"></div>
+                        </div>
+
+                        <!-- Analytics Tab -->
+                        <div id="content-analytics" class="tab-content hidden animate-pop-in p-4">
+                            <!-- Projected Score Card -->
+                            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl mb-4 border border-indigo-100 dark:border-indigo-500/30">
+                                 <h4 class="text-xs font-bold uppercase text-indigo-500 mb-2">Projected Score (সম্ভাব্য স্কোর)</h4>
+                                 <div class="flex justify-between items-center">
+                                     <div>
+                                         <div class="text-xs text-gray-500">Current Run Rate</div>
+                                         <div class="text-xl font-bold font-display" id="anaCRR">0.00</div>
+                                     </div>
+                                     <div class="text-right">
+                                         <div class="text-xs text-gray-500">Projected (20 ov)</div>
+                                         <div class="text-2xl font-bold font-display text-indigo-600 dark:text-indigo-400" id="anaProj">0</div>
+                                     </div>
+                                 </div>
+                            </div>
+
+                            <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl mb-4">
+                                <h4 class="text-xs font-bold uppercase text-gray-400 mb-4 text-center">Run Rate Comparison (Worm)</h4>
+                                <div class="h-48 w-full"><canvas id="wormChart"></canvas></div>
+                            </div>
+
+                            <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl mb-4">
+                                <h4 class="text-xs font-bold uppercase text-gray-400 mb-4 text-center">Runs Per Over (Bar)</h4>
+                                <div class="h-48 w-full"><canvas id="barChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar (Mobile Only) -->
+    <nav class="fixed bottom-0 left-0 w-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-800 z-50 pb-safe lg:hidden">
+        <div class="max-w-md mx-auto flex justify-around items-center h-16">
+            <button onclick="switchView('live')" class="nav-item active flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-green-500 transition-colors" data-target="live">
+                <i class="fas fa-tower-broadcast text-lg mb-1"></i>
+                <span class="text-[10px]">Matches</span>
+            </button>
+            <button onclick="switchView('tournaments')" class="nav-item flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-green-500 transition-colors" data-target="tournaments">
+                <i class="fas fa-trophy text-lg mb-1"></i>
+                <span class="text-[10px]">Leagues</span>
+            </button>
+            <button onclick="switchView('players')" class="nav-item flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-green-500 transition-colors" data-target="players">
+                <i class="fas fa-users text-lg mb-1"></i>
+                <span class="text-[10px]">Stats</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Player Profile Modal -->
+    <div id="playerModal" class="invisible fixed inset-0 z-[7000] pointer-events-none flex items-end sm:items-center justify-center sm:p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="modalOverlay" onclick="closePlayerModal()"></div>
+        <div class="bg-white dark:bg-gray-800 w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl shadow-2xl transform translate-y-full transition-transform duration-300 overflow-hidden flex flex-col max-h-[85vh]" id="modalContent">
+            
+            <!-- Modal Header -->
+            <div class="relative h-32 bg-gradient-to-r from-green-500 to-emerald-700 flex items-center justify-center">
+                <button onclick="closePlayerModal()" class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/10 hover:bg-black/20 rounded-full w-8 h-8 flex items-center justify-center transition"><i class="fas fa-times"></i></button>
+                <div class="absolute -bottom-10 left-1/2 -translate-x-1/2">
+                    <div id="modalAvatar" class="w-24 h-24 rounded-full border-4 border-white dark:border-gray-800 bg-gray-200 flex items-center justify-center text-2xl font-bold text-gray-400 shadow-md overflow-hidden"></div>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="pt-12 p-6 overflow-y-auto">
+                <div class="text-center mb-6">
+                    <h2 id="modalName" class="text-2xl font-bold font-display text-gray-800 dark:text-white">Player Name</h2>
+                    <span id="modalId" class="text-xs font-mono text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">ID: --</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Batting Card -->
+                    <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center gap-2 mb-3 text-emerald-500 font-bold text-xs uppercase tracking-wider border-b border-gray-200 dark:border-gray-600 pb-2">
+                            <i class="fas fa-baseball-bat-ball"></i> Batting
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-gray-500">Runs</span> <span id="mRuns" class="font-bold dark:text-gray-200">0</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">Balls</span> <span id="mBalls" class="font-bold dark:text-gray-200">0</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">Highest</span> <span id="mHS" class="font-bold dark:text-gray-200">0</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">SR</span> <span id="mSR" class="font-bold text-emerald-500">0.00</span></div>
+                        </div>
+                    </div>
+                    <!-- Bowling Card -->
+                    <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center gap-2 mb-3 text-indigo-500 font-bold text-xs uppercase tracking-wider border-b border-gray-200 dark:border-gray-600 pb-2">
+                            <i class="fas fa-bullseye"></i> Bowling
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-gray-500">Wickets</span> <span id="mWickets" class="font-bold dark:text-gray-200">0</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">Overs</span> <span id="mOvers" class="font-bold dark:text-gray-200">0.0</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">Economy</span> <span id="mEco" class="font-bold text-red-500">0.00</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">Best</span> <span id="mBest" class="font-bold dark:text-gray-200">0/0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Module -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, onSnapshot, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // FIREBASE CONFIG
+        const firebaseConfig = {
+          apiKey: "AIzaSyDUP-ot4yX5Bg3GNpfDrZ6NOL8c5YFdoyo",
+          authDomain: "live-score-49270.firebaseapp.com",
+          databaseURL: "https://live-score-49270-default-rtdb.firebaseio.com",
+          projectId: "live-score-49270",
+          storageBucket: "live-score-49270.firebasestorage.app",
+          messagingSenderId: "992482589674",
+          appId: "1:992482589674:web:11d1e85f7c5473ed841093"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = 'cricket-app-v1';
         
-        // Notification Click
-        if(t.hasAttribute('data-notification-msg')) {
-            const mid = t.getAttribute('data-member-id');
-            const msg = t.getAttribute('data-notification-msg');
-            closeNotif();
-            if(mid) showProfile(mid);
-            else if(msg.includes('লটারি')) { document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
-            else if(msg.includes('তহবিল')) { renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
-            return;
+        // --- SOUND EFFECTS ---
+        const batHitSound = new Audio('https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73467.mp3');
+
+        let currentMatchId = null; 
+        let currentMatchUnsubscribe = null;
+        let matchesListUnsubscribe = null; 
+        let currentMatchState = null;
+        let wormChartInstance = null;
+        let barChartInstance = null;
+        let lastProcessedBallId = 0;
+        let isViewJustOpened = false; // Flag to prevent sound on initial load
+
+        const getCollPath = (name) => `artifacts/${appId}/public/data/${name}`;
+
+        // INIT
+        async function initApp() {
+            // Check Theme Preference
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+
+            try {
+                await signInAnonymously(auth);
+                // Hide Loader
+                const loader = document.getElementById('globalLoader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+                
+                switchView('live');
+            } catch (error) {
+                console.error("Auth Error:", error);
+                document.getElementById('globalLoader').innerHTML = `<div class="text-red-500 text-center p-4">Connection Failed.<br><span class="text-xs text-gray-400">Please refresh</span></div>`;
+            }
+        }
+        initApp();
+
+        // UI HELPERS
+        window.toggleTheme = () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        };
+
+        window.switchView = (viewName) => {
+            // Cleanup when leaving match detail
+            if(viewName !== 'matchDetail') {
+                currentMatchId = null;
+                if(currentMatchUnsubscribe) {
+                    currentMatchUnsubscribe();
+                    currentMatchUnsubscribe = null;
+                }
+            }
+
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            // Show target
+            document.getElementById(`${viewName}View`).classList.remove('hidden');
+            
+            // Update Bottom Nav
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector(`.nav-item[data-target="${viewName}"]`);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            // Update Desktop Nav
+            document.querySelectorAll('.desktop-nav-item').forEach(btn => btn.classList.remove('active'));
+            const activeDesktopBtn = document.querySelector(`.desktop-nav-item[data-target="${viewName}"]`);
+            if(activeDesktopBtn) activeDesktopBtn.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Load data
+            if(viewName === 'live') loadMatches();
+            if(viewName === 'players') loadAllPlayers();
+        };
+
+        window.switchMainTab = (tab) => {
+             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+             document.getElementById(`content-${tab}`).classList.remove('hidden');
+             
+             // Update tab buttons styles
+             const tabs = ['scorecard', 'commentary', 'analytics'];
+             tabs.forEach(t => {
+                 const btn = document.getElementById(`tab-${t}`);
+                 if(t === tab) {
+                    btn.className = "flex-1 py-4 text-sm font-bold text-green-500 border-b-2 border-green-500 bg-green-50/50 dark:bg-green-900/10 transition-colors";
+                 } else {
+                    btn.className = "flex-1 py-4 text-sm font-bold text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors";
+                 }
+             });
+
+             if(tab === 'analytics' && currentMatchState) setTimeout(() => renderCharts(currentMatchState), 100);
+        };
+
+        // --- MATCHES LIST LOGIC ---
+        function formatDateHeader(timestamp) {
+            if (!timestamp) return 'Upcoming';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            const today = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+            
+            if (date.toDateString() === today.toDateString()) return 'Today';
+            if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+            return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-        // Actions
-        const id = t.id;
-        if(id === 'open-notif-btn') openNotif();
-        else if(id === 'close-notif-btn' || id === 'notif-overlay-bg') closeNotif();
-        else if(id === 'mark-read-btn') { localStorage.setItem('samiti_notif_last_read', activityLog.length?activityLog[0].ts:0); renderNotifications(); showMessage('পঠিত হিসেবে মার্ক করা হয়েছে'); }
-        else if(t.classList.contains('view-profile-btn')) showProfile(t.dataset.id);
-        else if(id === 'close-profile') closeProfileModal();
-        else if(t.classList.contains('profile-tab')) {
-            document.querySelectorAll('.profile-tab').forEach(x => { x.classList.remove('tab-active','text-indigo-600'); x.classList.add('text-slate-500'); });
-            t.classList.add('tab-active','text-indigo-600'); t.classList.remove('text-slate-500');
-            ['details','transactions','summary'].forEach(k => document.getElementById(`profile-content-${k}`).classList.add('hidden'));
-            document.getElementById(`profile-content-${id.replace('profile-tab-','')}`).classList.remove('hidden');
+        function formatTime(timestamp) {
+            if (!timestamp) return '';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
         }
-        else if(id === 'view-monthly-fund-btn') { renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
-        else if(id === 'close-fund-modal') { document.getElementById('monthly-fund-modal').classList.add('hidden'); document.getElementById('monthly-fund-modal').classList.remove('flex'); }
-        else if(id === 'view-lottery-btn') { document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
-        else if(id === 'close-lottery-btn') document.getElementById('lottery-modal').classList.add('hidden');
-    });
 
-    document.getElementById('search-member-input').addEventListener('input', e => { searchQuery = e.target.value; renderUI(); });
-  </script>
+        function loadMatches() {
+            if (matchesListUnsubscribe) matchesListUnsubscribe();
+            const list = document.getElementById('matchesList');
+            const q = query(collection(db, getCollPath('matches')), orderBy('createdAt', 'desc'));
+
+            matchesListUnsubscribe = onSnapshot(q, (snapshot) => {
+                list.innerHTML = '';
+                if(snapshot.empty) {
+                    list.innerHTML = `
+                        <div class="col-span-full text-center py-12">
+                            <div class="bg-gray-100 dark:bg-gray-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-baseball-bat-ball text-3xl text-gray-400"></i>
+                            </div>
+                            <h3 class="text-gray-500 font-medium">No matches live right now</h3>
+                        </div>`;
+                    return;
+                }
+
+                let lastDateGroup = '';
+
+                snapshot.forEach(doc => {
+                    const m = {id: doc.id, ...doc.data()};
+                    const dateGroup = formatDateHeader(m.createdAt || Date.now());
+
+                    if (dateGroup !== lastDateGroup) {
+                        list.innerHTML += `<div class="col-span-full text-xs font-bold text-gray-400 uppercase tracking-widest mt-6 mb-3 ml-1 border-b border-gray-100 dark:border-gray-700 pb-1 flex justify-between items-center">
+                            <span>${dateGroup}</span>
+                            <span class="text-[10px] font-normal opacity-50"><i class="far fa-calendar-alt"></i></span>
+                        </div>`;
+                        lastDateGroup = dateGroup;
+                    }
+
+                    list.innerHTML += renderMatchCard(m);
+                });
+            });
+        }
+
+        function renderMatchCard(match) {
+            const isLive = match.status === 'live';
+            const isFinished = !!match.result || match.status === 'completed';
+            
+            const state = calculateMatchState(match); 
+            const i1 = state.innings[1];
+            const i2 = state.innings[2];
+            
+            const scoreA = `${i1.runs}/${i1.wickets}`;
+            const oversA = `${i1.overs}.${i1.balls}`;
+            const scoreB = `${i2.runs}/${i2.wickets}`;
+            const oversB = `${i2.overs}.${i2.balls}`;
+
+            // Status Badge Logic
+            let statusBadge = '';
+            let timeBadge = '';
+
+            if (isLive) {
+                statusBadge = `<span class="text-[10px] font-bold text-white bg-red-500 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> LIVE
+                </span>`;
+            } else if (isFinished) {
+                statusBadge = `<span class="text-[10px] font-bold text-gray-500 bg-gray-200 dark:bg-gray-700 px-2.5 py-1 rounded-full">
+                    FINISHED
+                </span>`;
+            } else {
+                const timeStr = formatTime(match.createdAt || Date.now());
+                timeBadge = `<span class="ml-2 text-[10px] font-bold text-gray-500 dark:text-gray-400"><i class="far fa-clock mr-1"></i>${timeStr}</span>`;
+            }
+
+            // Footer / Result Logic
+            let footerContent = '';
+            if (isLive) {
+                footerContent = `<span class="text-green-600 dark:text-green-400 font-bold animate-pulse"><i class="fas fa-circle text-[8px] mr-1"></i> খেলা চলছে - দেখতে ট্যাপ করুন</span>`;
+            } else if (match.result) {
+                footerContent = `<span class="text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-lg w-full text-center block">${match.result}</span>`;
+            } else {
+                footerContent = `<span>ফলাফল শীঘ্রই আসছে</span>`;
+            }
+
+            // Team Initials
+            const teamAInitial = match.teamAName ? match.teamAName.charAt(0) : 'A';
+            const teamBInitial = match.teamBName ? match.teamBName.charAt(0) : 'B';
+
+            return `
+                <div class="group relative bg-white dark:bg-gray-800 rounded-3xl p-0 overflow-hidden shadow-lg border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer" onclick="openMatch('${match.id}')">
+                    <!-- Live Pulse Background (if live) -->
+                    ${isLive ? '<div class="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-3xl -mr-16 -mt-16 animate-pulse pointer-events-none"></div>' : ''}
+                    
+                    <!-- Header -->
+                    <div class="px-5 pt-4 flex justify-between items-center relative z-10">
+                        <div class="flex items-center">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 bg-gray-100 dark:bg-gray-700/50 px-2 py-1 rounded-md max-w-[120px] truncate">${match.tournamentName || 'Friendly Match'}</span>
+                            ${timeBadge}
+                        </div>
+                        ${statusBadge}
+                    </div>
+
+                    <!-- Teams & Scores -->
+                    <div class="px-5 py-5 flex items-center justify-between relative z-10">
+                         <!-- Team A -->
+                         <div class="flex flex-col items-start w-[40%]">
+                             <div class="flex items-center gap-2 mb-2 w-full">
+                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center text-white font-bold text-xs shadow-md shrink-0">
+                                    ${teamAInitial}
+                                 </div>
+                                 <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm leading-tight truncate w-full font-display">${match.teamAName}</h3>
+                             </div>
+                             <div class="pl-0">
+                                 <p class="text-2xl font-bold font-display text-gray-900 dark:text-white tracking-tight whitespace-nowrap">${scoreA}</p>
+                                 <p class="text-xs font-medium text-gray-500 mt-1.5 whitespace-nowrap pl-1">${oversA} ov</p>
+                             </div>
+                         </div>
+
+                         <!-- VS / Status Middle -->
+                         <div class="flex flex-col items-center justify-center w-[20%]">
+                             <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-[10px] font-bold text-gray-400 border-2 border-white dark:border-gray-600 shadow-sm z-10">
+                                VS
+                             </div>
+                         </div>
+
+                         <!-- Team B -->
+                         <div class="flex flex-col items-end w-[40%]">
+                             <div class="flex items-center gap-2 mb-2 flex-row-reverse w-full">
+                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-blue-600 flex items-center justify-center text-white font-bold text-xs shadow-md shrink-0">
+                                    ${teamBInitial}
+                                 </div>
+                                 <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm leading-tight truncate w-full text-right font-display">${match.teamBName}</h3>
+                             </div>
+                             <div class="pr-0 text-right">
+                                 <p class="text-2xl font-bold font-display text-gray-900 dark:text-white tracking-tight whitespace-nowrap">${scoreB}</p>
+                                 <p class="text-xs font-medium text-gray-500 mt-1.5 whitespace-nowrap pr-1">${oversB} ov</p>
+                             </div>
+                         </div>
+                    </div>
+
+                    <!-- Footer / Result -->
+                    <div class="bg-gray-50 dark:bg-gray-700/30 px-5 py-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-center">
+                         <div class="text-xs font-medium text-gray-500 dark:text-gray-400 w-full text-center">
+                            ${footerContent}
+                         </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- MATCH DETAIL LOGIC ---
+        window.openMatch = (matchId) => {
+            currentMatchId = matchId; 
+            lastProcessedBallId = 0;
+            isViewJustOpened = true; 
+
+            switchView('matchDetail');
+            
+            // --- Reset UI ---
+            document.getElementById('teamAScore').innerText = '0/0';
+            document.getElementById('teamBScore').innerText = '0/0';
+            document.getElementById('teamAOvers').innerText = '0.0 ov';
+            document.getElementById('teamBOvers').innerText = '0.0 ov';
+            document.getElementById('teamAName').innerText = 'Loading...';
+            document.getElementById('teamBName').innerText = 'Loading...';
+            document.getElementById('matchStatusBadge').innerText = 'LOADING...';
+            
+            document.getElementById('matchTargetDisplay').classList.add('hidden');
+            document.getElementById('partnershipDisplay').classList.add('hidden');
+            document.getElementById('winProbContainer').classList.add('hidden');
+            document.getElementById('matchResult').innerText = '';
+
+            document.getElementById('recentBallsContainer').innerHTML = '';
+            document.getElementById('commFeed').innerHTML = '';
+            document.getElementById('live-content-teamA').innerHTML = '<div class="text-center p-4 text-gray-400">Loading Scorecard...</div>';
+            document.getElementById('live-content-teamB').innerHTML = '';
+            
+            switchMainTab('scorecard');
+            switchLiveTab('teamA');
+
+            if(wormChartInstance) { wormChartInstance.destroy(); wormChartInstance = null; }
+            if(barChartInstance) { barChartInstance.destroy(); barChartInstance = null; }
+            
+            if(currentMatchUnsubscribe) currentMatchUnsubscribe();
+            
+            currentMatchUnsubscribe = onSnapshot(doc(db, getCollPath('matches'), matchId), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    currentMatchState = calculateMatchState(data);
+                    updateUI(data, currentMatchState);
+                    
+                    if (isViewJustOpened) isViewJustOpened = false;
+                }
+            });
+        };
+
+        function calculateMatchState(matchData) {
+            const state = {
+                innings: { 
+                    1: { runs: 0, wickets: 0, overs: 0, balls: 0, history: [{over:0, runs:0}], wicketsData: [], runPerOver: [] }, 
+                    2: { runs: 0, wickets: 0, overs: 0, balls: 0, history: [{over:0, runs:0}], wicketsData: [], runPerOver: [] } 
+                },
+                currentInnings: matchData.currentInnings || 1,
+                batsmen: {}, bowlers: {}, 
+                timeline: [],
+                currentPartnership: { runs: 0, balls: 0 },
+                totalLegalBalls: 0
+            };
+
+            let history = matchData.history || [];
+            history = history.slice().sort((a, b) => (a.id || 0) - (b.id || 0));
+
+            let lastWicketScore = 0;
+            let lastWicketBalls = 0;
+            let currentOverRuns = 0;
+            
+            history.forEach((ball, index) => {
+                const inn = ball.innings;
+                const s = state.innings[inn];
+                if (!s) return;
+
+                if(!state.batsmen[ball.strikerId]) state.batsmen[ball.strikerId] = { runs:0, balls:0, fours:0, sixes:0, out: null, name: ball.strikerName };
+                if(!state.batsmen[ball.nonStrikerId]) state.batsmen[ball.nonStrikerId] = { runs:0, balls:0, fours:0, sixes:0, out: null, name: ball.nonStrikerName };
+                if(!state.bowlers[ball.bowlerId]) state.bowlers[ball.bowlerId] = { balls:0, runs:0, wickets:0, maidens:0, name: ball.bowlerName };
+                
+                const striker = state.batsmen[ball.strikerId];
+                const bowler = state.bowlers[ball.bowlerId];
+                
+                let totalRuns = ball.runs;
+                let batRuns = ball.runs;
+                let isLegal = true;
+
+                if (ball.extrasType) {
+                    totalRuns += (ball.extrasRuns || 0);
+                    if(ball.extrasType === 'WD' || ball.extrasType === 'NB') { 
+                        isLegal = false; 
+                        batRuns = (ball.extrasType === 'NB') ? ball.runs : 0;
+                    } else { batRuns = 0; }
+                }
+
+                s.runs += totalRuns;
+                currentOverRuns += totalRuns;
+
+                if(striker) {
+                    striker.runs += batRuns;
+                    if(isLegal) striker.balls++;
+                    if(batRuns === 4) striker.fours++;
+                    if(batRuns === 6) striker.sixes++;
+                }
+                if(bowler) {
+                    bowler.runs += totalRuns;
+                    if(ball.extrasType === 'LB' || ball.extrasType === 'BY') bowler.runs -= totalRuns; 
+                    if(isLegal) bowler.balls++;
+                    if(ball.isWicket && ball.wicketType !== 'runout') bowler.wickets++;
+                }
+
+                if(isLegal) {
+                    s.balls++;
+                    state.totalLegalBalls++; 
+                    if(s.balls === 6) { 
+                        s.overs++; s.balls = 0; 
+                        s.runPerOver.push(currentOverRuns);
+                        currentOverRuns = 0;
+                    }
+                }
+
+                if(ball.isWicket) {
+                    s.wickets++;
+                    if(state.batsmen[ball.wicketVictimId || ball.strikerId]) {
+                        state.batsmen[ball.wicketVictimId || ball.strikerId].out = ball.wicketType;
+                    }
+                    
+                    const victimId = ball.wicketVictimId || ball.strikerId;
+                    const victimName = state.batsmen[victimId]?.name || "Batsman";
+                    const victimRuns = state.batsmen[victimId]?.runs || 0;
+                    const bowlerName = ball.bowlerName || "Bowler";
+
+                    s.wicketsData.push({ 
+                        x: s.overs + (s.balls/6), 
+                        y: s.runs,
+                        player: victimName,
+                        pRuns: victimRuns,
+                        wicketNo: s.wickets,
+                        bowler: bowlerName
+                    });
+
+                    lastWicketScore = s.runs;
+                    lastWicketBalls = state.totalLegalBalls;
+                }
+
+                ball.overStr = `${s.overs}.${s.balls}`;
+                state.timeline.unshift(ball);
+
+                if(isLegal && (s.balls === 0 || index === history.length -1)) {
+                    s.history.push({ over: s.overs + (s.balls/6), runs: s.runs });
+                }
+            });
+
+            const currentInnState = state.innings[state.currentInnings];
+            state.currentPartnership.runs = currentInnState.runs - lastWicketScore;
+            state.currentPartnership.balls = state.totalLegalBalls - lastWicketBalls;
+            if(state.currentPartnership.runs < 0) state.currentPartnership.runs = 0; 
+
+            if(history.length > 0 && currentMatchId === matchData.id) {
+                const lastBall = history[history.length - 1];
+                
+                if (isViewJustOpened) {
+                    lastProcessedBallId = lastBall.id;
+                } else if(lastBall.id > lastProcessedBallId) {
+                    lastProcessedBallId = lastBall.id;
+                    triggerEventEffects(lastBall);
+                    handleRunAnimation(lastBall, state.currentInnings);
+                }
+            }
+
+            return state;
+        }
+
+        // --- EFFECTS SYSTEM ---
+        function triggerEventEffects(ball) {
+            try {
+                batHitSound.currentTime = 0;
+                batHitSound.volume = 0.5;
+                batHitSound.play().catch(e => console.log("Audio autoplay blocked"));
+            } catch(e) {}
+
+            if(ball.runs === 6 || ball.runs === 4 || ball.isWicket) {
+                const overlay = document.getElementById('eventOverlay');
+                const mainTxt = document.getElementById('eventText');
+                const subTxt = document.getElementById('eventSub');
+                
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('active');
+                
+                if(ball.runs === 6) {
+                    mainTxt.innerText = "6"; mainTxt.style.background = "linear-gradient(to bottom, #4ade80, #16a34a)"; mainTxt.style.webkitBackgroundClip = "text";
+                    subTxt.innerText = "বিশাল ছক্কা!";
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#4ade80', '#22c55e'] });
+                } else if (ball.runs === 4) {
+                    mainTxt.innerText = "4"; mainTxt.style.background = "linear-gradient(to bottom, #60a5fa, #2563eb)"; mainTxt.style.webkitBackgroundClip = "text";
+                    subTxt.innerText = "বাউন্ডারি!";
+                    confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 }, colors: ['#60a5fa', '#2563eb'] });
+                } else if (ball.isWicket) {
+                    mainTxt.innerText = "Out"; mainTxt.style.background = "linear-gradient(to bottom, #f87171, #dc2626)"; mainTxt.style.webkitBackgroundClip = "text";
+                    subTxt.innerText = "উইকেট পতন";
+                }
+
+                setTimeout(() => {
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                    overlay.classList.remove('active');
+                }, 1000);
+            }
+        }
+
+        function handleRunAnimation(ball, innings) {
+            const totalRuns = ball.runs + (ball.extrasRuns || 0);
+            if(totalRuns === 0 && !ball.isWicket) return; 
+
+            const targetId = innings === 1 ? 'teamAScore' : 'teamBScore';
+            const targetEl = document.getElementById(targetId);
+            if(!targetEl) return;
+
+            const rect = targetEl.getBoundingClientRect();
+            const targetX = rect.left + rect.width / 2;
+            const targetY = rect.top + rect.height / 2;
+
+            const startX = window.innerWidth / 2;
+            const startY = window.innerHeight / 2 + 80;
+
+            const el = document.createElement('div');
+            el.className = 'flying-run-indicator text-4xl';
+            let txt = `+${totalRuns}`;
+            if(ball.isWicket && totalRuns === 0) txt = "W";
+            else if(ball.isWicket) txt = `W+${totalRuns}`;
+            
+            el.innerHTML = txt;
+            
+            if(ball.isWicket) el.classList.add('text-red-500');
+            else if(totalRuns >= 4) el.classList.add('text-green-500');
+            else el.classList.add('text-gray-800', 'dark:text-white');
+            
+            el.style.left = `${startX}px`;
+            el.style.top = `${startY}px`;
+            el.style.transform = 'translate(-50%, -50%) scale(0)';
+            
+            document.body.appendChild(el);
+
+            const animation = el.animate([
+                { transform: 'translate(-50%, -50%) scale(0.5)', opacity: 0, offset: 0 },
+                { transform: 'translate(-50%, -50%) scale(2.5)', opacity: 1, offset: 0.2 }, 
+                { transform: `translate(${targetX - startX}px, ${targetY - startY}px) scale(0.5)`, opacity: 1, offset: 0.8 }, 
+                { transform: `translate(${targetX - startX}px, ${targetY - startY}px) scale(0.2)`, opacity: 0, offset: 1 } 
+            ], {
+                duration: 900,
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+                fill: 'forwards'
+            });
+
+            animation.onfinish = () => {
+                el.remove();
+                targetEl.classList.remove('score-impact-anim');
+                void targetEl.offsetWidth; 
+                targetEl.classList.add('score-impact-anim');
+            };
+        }
+
+        function getBengaliComm(ball) {
+            const bowler = ball.bowlerName;
+            const batter = ball.strikerName;
+            
+            if (ball.isWicket) return `<span class="text-red-600 font-bold">আউট!</span> ${bowler} এর বলে ${batter} ফিরে গেলেন প্যাভিলিয়নে। (${ball.wicketType})`;
+            if (ball.runs === 6) return `<span class="text-green-600 font-bold">বিশাল ছক্কা!</span> ${batter} বলটি উড়িয়ে মারলেন সীমানার বাইরে!`;
+            if (ball.runs === 4) return `<span class="text-blue-600 font-bold">চার!</span> ${batter} এর ব্যাটে দুর্দান্ত শট।`;
+            if (ball.runs === 1) return `এক রান নিলেন ${batter}।`;
+            if (ball.runs === 2) return `দুই রান নিলেন ${batter}।`;
+            if (ball.runs === 0) return `ডট বল। সুন্দর ডেলিভারি ${bowler} এর।`;
+            if (ball.extrasType) return `অতিরিক্ত রান (${ball.extrasType})।`;
+            return `${ball.runs} রান।`;
+        }
+
+        // --- UI UPDATE ---
+        function updateUI(match, state) {
+            const i1 = state.innings[1]; const i2 = state.innings[2];
+            document.getElementById('teamAName').innerText = match.teamAName;
+            document.getElementById('teamBName').innerText = match.teamBName;
+            document.getElementById('matchTournamentName').innerText = match.tournamentName || 'Match Center';
+            document.getElementById('matchResult').innerText = match.result || (match.status === 'live' ? 'খেলা চলছে' : 'ফলাফল বাকি');
+            
+            const badge = document.getElementById('matchStatusBadge');
+            if(match.status === 'live') {
+                badge.className = "bg-red-500 text-white text-[10px] px-2.5 py-1 rounded-md uppercase font-bold tracking-wider shadow-sm animate-pulse";
+                badge.innerText = "সরাসরি";
+            } else {
+                badge.className = "bg-gray-500 text-white text-[10px] px-2.5 py-1 rounded-md uppercase font-bold tracking-wider shadow-sm";
+                badge.innerText = "সমাপ্ত";
+            }
+
+            document.getElementById('teamAScore').innerText = `${i1.runs}/${i1.wickets}`;
+            document.getElementById('teamAOvers').innerText = `${i1.overs}.${i1.balls} ov`;
+
+            const targetEl = document.getElementById('matchTargetDisplay');
+            const winProbEl = document.getElementById('winProbContainer');
+            const partEl = document.getElementById('partnershipDisplay');
+
+            if(match.status === 'live') {
+                partEl.classList.remove('hidden');
+                document.getElementById('partnerRuns').innerText = state.currentPartnership.runs;
+                document.getElementById('partnerBalls').innerText = state.currentPartnership.balls;
+            } else {
+                partEl.classList.add('hidden');
+            }
+
+            if(match.currentInnings === 2 || match.status === 'completed') {
+                document.getElementById('teamBScore').innerText = `${i2.runs}/${i2.wickets}`;
+                document.getElementById('teamBOvers').innerText = `${i2.overs}.${i2.balls} ov`;
+                
+                const target = i1.runs + 1;
+                targetEl.classList.remove('hidden');
+                targetEl.innerText = `লক্ষ্য: ${target}`;
+                
+                if(match.status === 'live') {
+                    winProbEl.classList.remove('hidden');
+                    const need = target - i2.runs;
+                    const remBalls = (match.oversLimit*6) - ((i2.overs*6)+i2.balls);
+                    const rrr = remBalls > 0 ? need/(remBalls/6) : 99;
+                    let probA = 50;
+                    if(rrr > 10) probA = 80; else if(rrr > 8) probA = 60; else if(rrr < 6) probA = 30;
+                    document.getElementById('winBarA').style.width = `${probA}%`;
+                    document.getElementById('winBarB').style.width = `${100-probA}%`;
+                } else {
+                    winProbEl.classList.add('hidden');
+                }
+            } else {
+                 document.getElementById('teamBScore').innerText = "ব্যাট করেনি";
+                 document.getElementById('teamBOvers').innerText = "";
+                 targetEl.classList.add('hidden');
+                 winProbEl.classList.add('hidden');
+            }
+
+            const ballCont = document.getElementById('recentBallsContainer');
+            ballCont.innerHTML = '';
+            state.timeline.slice(0, 15).forEach(b => {
+                let bg = "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300";
+                let txt = b.runs;
+                if(b.isWicket) { bg = "bg-red-500 text-white shadow-red-500/50"; txt = "W"; }
+                else if(b.runs === 4) { bg = "bg-blue-500 text-white shadow-blue-500/50"; }
+                else if(b.runs === 6) { bg = "bg-green-500 text-white shadow-green-500/50"; }
+                else if(b.extrasType) { bg = "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600"; txt = b.extrasType; }
+                ballCont.innerHTML += `<div class="ball-circle ${bg} flex-shrink-0 snap-start">${txt}</div>`;
+            });
+
+            renderScorecardTable(match.squadA, state, 'live-content-teamA', match);
+            renderScorecardTable(match.squadB, state, 'live-content-teamB', match);
+            
+            const commFeed = document.getElementById('commFeed');
+            commFeed.innerHTML = '';
+            state.timeline.slice(0, 20).forEach(b => {
+                let border = "border-l-2 border-gray-300 dark:border-gray-600";
+                if(b.isWicket) border = "border-l-4 border-red-500";
+                else if(b.runs === 4 || b.runs === 6) border = "border-l-4 border-green-500";
+
+                commFeed.innerHTML += `
+                    <div class="pl-4 relative ${border} py-2">
+                        <div class="flex justify-between items-center text-xs text-gray-400 mb-1">
+                            <span>ওভার ${b.overStr}</span>
+                            <span class="font-bold text-gray-600 dark:text-gray-300">${b.bowlerName} টু ${b.strikerName}</span>
+                        </div>
+                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200">
+                             ${getBengaliComm(b)}
+                        </p>
+                    </div>
+                `;
+            });
+            
+            if(match.status === 'live') {
+                const curInn = state.innings[state.currentInnings];
+                const ballsDone = (curInn.overs*6) + curInn.balls;
+                const crr = ballsDone > 0 ? (curInn.runs / ballsDone) * 6 : 0;
+                document.getElementById('anaCRR').innerText = crr.toFixed(2);
+                document.getElementById('anaProj').innerText = Math.round(crr * 20); 
+            }
+
+            if(document.getElementById('content-analytics').classList.contains('hidden') === false) {
+                 renderCharts(state);
+            }
+        }
+
+        function renderScorecardTable(squad, state, elId, match) {
+            if(!squad) return;
+            const container = document.getElementById(elId);
+            let html = `<table class="w-full text-sm border-collapse">
+                <thead><tr class="text-gray-400 text-xs border-b border-gray-200 dark:border-gray-700"><th class="text-left py-2 font-medium">ব্যাটার</th><th class="text-right py-2 font-medium">R</th><th class="text-right py-2 font-medium">B</th><th class="text-right py-2 font-medium">4s</th><th class="text-right py-2 font-medium">6s</th><th class="text-right py-2 font-medium">SR</th></tr></thead>
+                <tbody>`;
+            
+            // Filter players who have batted or are currently batting
+            let batsmenList = squad.filter(p => state.batsmen[p.id] || p.id === match.currentStrikerId || p.id === match.currentNonStrikerId);
+            
+            // SORTING LOGIC: Striker -> NonStriker -> Others
+            batsmenList.sort((a, b) => {
+                if (a.id === match.currentStrikerId) return -1;
+                if (b.id === match.currentStrikerId) return 1;
+                if (a.id === match.currentNonStrikerId) return -1;
+                if (b.id === match.currentNonStrikerId) return 1;
+                return 0; 
+            });
+
+            batsmenList.forEach(p => {
+                const s = state.batsmen[p.id];
+                // Note: The filter above ensures we only get relevant players, but double checking s exists for stats
+                const isStriker = p.id === match.currentStrikerId;
+                const isNonStriker = p.id === match.currentNonStrikerId;
+                const runs = s ? s.runs : 0;
+                const balls = s ? s.balls : 0;
+                const sr = balls > 0 ? ((runs/balls)*100).toFixed(0) : 0;
+                
+                let rowClass = "border-b border-gray-100 dark:border-gray-700/50";
+                let nameColor = "text-gray-800 dark:text-gray-200";
+                let icon = "";
+                
+                // Modified OUT styling: Removed line-through, kept red color
+                if(s && s.out) { nameColor = "text-red-500 font-medium opacity-90"; } 
+                else if (isStriker) { rowClass += " bg-green-50 dark:bg-green-900/10"; nameColor = "text-green-600 dark:text-green-400 font-bold"; icon="🏏"; }
+                else if (isNonStriker) { rowClass += " bg-green-50/50 dark:bg-green-900/5"; nameColor = "text-green-600 dark:text-green-400"; }
+
+                html += `<tr class="${rowClass}">
+                    <td class="py-3 ${nameColor}">${p.name} ${icon} <div class="text-[10px] text-gray-400 font-normal">${s && s.out ? s.out : ''}</div></td>
+                    <td class="text-right font-bold dark:text-gray-100">${runs}</td>
+                    <td class="text-right text-gray-500">${balls}</td>
+                    <td class="text-right text-gray-400">${s?.fours||0}</td>
+                    <td class="text-right text-gray-400">${s?.sixes||0}</td>
+                    <td class="text-right text-xs text-gray-500">${sr}</td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            
+            // --- NEW: Yet to Bat Section ---
+            let yetToBatList = squad.filter(p => !state.batsmen[p.id] && p.id !== match.currentStrikerId && p.id !== match.currentNonStrikerId);
+            if(yetToBatList.length > 0) {
+                 const names = yetToBatList.map(p => p.name).join(', ');
+                 html += `<div class="mt-3 px-3 py-2 bg-gray-50 dark:bg-gray-700/20 rounded-lg text-xs border border-gray-100 dark:border-gray-700/30">
+                    <span class="font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">ব্যাট করেননি:</span> 
+                    <span class="text-gray-600 dark:text-gray-300 ml-1 leading-relaxed">${names}</span>
+                </div>`;
+            }
+
+            html += `<h5 class="mt-4 mb-2 text-xs font-bold text-gray-400 uppercase">বোলার</h5>
+            <table class="w-full text-sm border-collapse">
+                <thead><tr class="text-gray-400 text-xs border-b border-gray-200 dark:border-gray-700"><th class="text-left py-2 font-medium">বোলার</th><th class="text-right py-2 font-medium">O</th><th class="text-right py-2 font-medium">M</th><th class="text-right py-2 font-medium">R</th><th class="text-right py-2 font-medium">W</th><th class="text-right py-2 font-medium">Eco</th></tr></thead>
+                <tbody>`;
+            
+            // Filter bowlers who have bowled
+            let bowlersList = squad.filter(p => state.bowlers[p.id]);
+
+            // SORTING LOGIC: Current Bowler -> Others
+            bowlersList.sort((a, b) => {
+                if (a.id === match.currentBowlerId) return -1;
+                if (b.id === match.currentBowlerId) return 1;
+                return 0;
+            });
+
+            bowlersList.forEach(p => {
+                const s = state.bowlers[p.id];
+                if(s) {
+                    const overs = Math.floor(s.balls/6) + '.' + (s.balls%6);
+                    const eco = s.balls > 0 ? ((s.runs/s.balls)*6).toFixed(1) : 0;
+                    const isCurrent = p.id === match.currentBowlerId;
+                    
+                    html += `<tr class="border-b border-gray-100 dark:border-gray-700/50 ${isCurrent ? 'bg-blue-50 dark:bg-blue-900/10' : ''}">
+                        <td class="py-2.5 ${isCurrent ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-gray-800 dark:text-gray-200'}">${p.name} ${isCurrent?'⚾':''}</td>
+                        <td class="text-right dark:text-gray-300">${overs}</td>
+                        <td class="text-right text-gray-400">${s.maidens}</td>
+                        <td class="text-right dark:text-gray-300">${s.runs}</td>
+                        <td class="text-right font-bold text-gray-800 dark:text-white">${s.wickets}</td>
+                        <td class="text-right text-xs text-gray-500">${eco}</td>
+                    </tr>`;
+                }
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        // --- CHARTS ---
+        function renderCharts(state) {
+            const ctxWorm = document.getElementById('wormChart');
+            const ctxBar = document.getElementById('barChart');
+            
+            // Prepare Data for Worm Chart
+            const d1 = state.innings[1].history.map(h => ({x: h.over, y: h.runs}));
+            const d2 = state.innings[2].history.map(h => ({x: h.over, y: h.runs}));
+            const w1 = state.innings[1].wicketsData;
+            const w2 = state.innings[2].wicketsData;
+
+            if(ctxWorm) {
+                if (wormChartInstance) {
+                    // Update existing instance data
+                    wormChartInstance.data.datasets[0].data = d1;
+                    wormChartInstance.data.datasets[1].data = d2;
+                    wormChartInstance.data.datasets[2].data = w1;
+                    wormChartInstance.data.datasets[3].data = w2;
+                    wormChartInstance.update('none'); // Efficient update without full re-render animation
+                } else {
+                    // Create new instance
+                    wormChartInstance = new Chart(ctxWorm, {
+                        type: 'line',
+                        data: {
+                            datasets: [
+                                { 
+                                    label: '১ম ইনিংস', 
+                                    data: d1, 
+                                    borderColor: '#10b981', 
+                                    tension: 0.4, 
+                                    pointRadius: 0, 
+                                    borderWidth: 2 
+                                },
+                                { 
+                                    label: '২য় ইনিংস', 
+                                    data: d2, 
+                                    borderColor: '#f59e0b', 
+                                    tension: 0.4, 
+                                    pointRadius: 0, 
+                                    borderWidth: 2 
+                                },
+                                // Wicket Scatter Points
+                                {
+                                    label: 'উইকেট (১ম)',
+                                    data: w1,
+                                    type: 'scatter',
+                                    pointStyle: 'circle',
+                                    pointRadius: 6,
+                                    pointHoverRadius: 8,
+                                    backgroundColor: 'white',
+                                    borderColor: '#10b981',
+                                    borderWidth: 2,
+                                    showLine: false
+                                },
+                                {
+                                    label: 'উইকেট (২য়)',
+                                    data: w2,
+                                    type: 'scatter',
+                                    pointStyle: 'circle',
+                                    pointRadius: 6,
+                                    pointHoverRadius: 8,
+                                    backgroundColor: 'white',
+                                    borderColor: '#f59e0b',
+                                    borderWidth: 2,
+                                    showLine: false
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { 
+                                legend: { display: true, labels: { color: '#9ca3af', font: {size: 10} } },
+                                tooltip: {
+                                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                    titleColor: '#10b981',
+                                    bodyColor: '#fff',
+                                    borderColor: 'rgba(255,255,255,0.1)',
+                                    borderWidth: 1,
+                                    padding: 10,
+                                    cornerRadius: 8,
+                                    displayColors: false,
+                                    callbacks: {
+                                        label: function(context) {
+                                            const point = context.raw;
+                                            if(point.player) { // It's a wicket point
+                                            return [
+                                                `🔴 উইকেট: ${point.wicketNo}`,
+                                                `ব্যাটসম্যান: ${point.player} (${point.pRuns})`,
+                                                `বোলার: ${point.bowler}`,
+                                                `দলীয় স্কোর: ${point.y}`
+                                            ];
+                                            }
+                                            return `ওভার: ${context.parsed.x.toFixed(1)}, রান: ${context.parsed.y}`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: { 
+                                    type: 'linear', // Required for mixing line and scatter accurately
+                                    grid: { display: false, color: '#374151' }, 
+                                    ticks: { color: '#9ca3af', stepSize: 5 } 
+                                },
+                                y: { grid: { color: '#374151', display: false }, ticks: { color: '#9ca3af' } }
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Prepare Bar Chart Data
+            const rpo1 = state.innings[1].runPerOver;
+            const labels = rpo1.map((_, i) => i + 1);
+
+            if(ctxBar) {
+                if (barChartInstance) {
+                    // Update existing instance data
+                    barChartInstance.data.labels = labels;
+                    barChartInstance.data.datasets[0].data = rpo1;
+                    barChartInstance.update('none');
+                } else {
+                    // Create new instance
+                    barChartInstance = new Chart(ctxBar, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'রান প্রতি ওভার',
+                                data: rpo1,
+                                backgroundColor: '#6366f1',
+                                borderRadius: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            scales: {
+                                y: { beginAtZero: true, grid: { color: '#374151' } },
+                                x: { grid: { display: false } }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // --- PLAYER STATS LOGIC ---
+        window.loadAllPlayers = async () => {
+             const list = document.getElementById('playersListContainer');
+             list.innerHTML = `<div class="col-span-full flex justify-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div></div>`;
+             
+             try {
+                const q = query(collection(db, getCollPath('players')), orderBy('totalRuns', 'desc'));
+                const snap = await getDocs(q);
+                list.innerHTML = '';
+                window.allPlayersData = {}; 
+
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    window.allPlayersData[doc.id] = p;
+                    const initial = p.name.charAt(0);
+                    
+                    list.innerHTML += `
+                        <div class="glass-card rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:bg-white/50 dark:hover:bg-gray-700/50 transition border border-transparent hover:border-green-500/30" onclick="openPlayerModal('${doc.id}')">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center font-bold text-gray-500 dark:text-gray-300 shadow-inner">
+                                ${p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-full rounded-full object-cover">` : initial}
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 dark:text-gray-100 font-display text-lg">${p.name}</h4>
+                                <div class="flex gap-2 text-xs mt-1">
+                                    <span class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded font-medium">Runs: ${p.totalRuns||0}</span>
+                                    <span class="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded font-medium">Wkts: ${p.totalWickets||0}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+             } catch(e) { console.log(e); }
+        };
+
+        window.filterPlayers = () => {
+            const term = document.getElementById('playerSearch').value.toLowerCase();
+            const cards = document.querySelectorAll('#playersListContainer > div');
+            cards.forEach(card => {
+                const name = card.querySelector('h4').innerText.toLowerCase();
+                card.style.display = name.includes(term) ? 'flex' : 'none';
+            });
+        };
+
+        window.openPlayerModal = (id) => {
+            const p = window.allPlayersData[id];
+            if(!p) return;
+            
+            document.getElementById('modalName').innerText = p.name;
+            document.getElementById('modalId').innerText = `ID: ${id}`;
+            const av = document.getElementById('modalAvatar');
+            if(p.imageUrl) av.innerHTML = `<img src="${p.imageUrl}" class="w-full h-full object-cover">`;
+            else av.innerText = p.name.charAt(0);
+            
+            document.getElementById('mRuns').innerText = p.totalRuns || 0;
+            document.getElementById('mBalls').innerText = p.totalBalls || 0;
+            document.getElementById('mHS').innerText = p.highScore || 0;
+            const sr = p.totalBalls > 0 ? ((p.totalRuns/p.totalBalls)*100).toFixed(2) : '0.00';
+            document.getElementById('mSR').innerText = sr;
+            
+            document.getElementById('mWickets').innerText = p.totalWickets || 0;
+            const overs = Math.floor((p.totalOversBalls||0)/6) + '.' + ((p.totalOversBalls||0)%6);
+            document.getElementById('mOvers').innerText = overs;
+            const eco = (p.totalOversBalls||0) > 0 ? ((p.totalRunsConceded||0)/(p.totalOversBalls)*6).toFixed(2) : '0.00';
+            document.getElementById('mEco').innerText = eco;
+            document.getElementById('mBest').innerText = p.bestBowling || '-/-';
+
+            const modal = document.getElementById('playerModal');
+            const content = document.getElementById('modalContent');
+            const overlay = document.getElementById('modalOverlay');
+            
+            modal.classList.remove('invisible');
+            modal.classList.remove('pointer-events-none');
+            overlay.classList.remove('opacity-0');
+            content.classList.remove('translate-y-full');
+        };
+
+        window.closePlayerModal = () => {
+            const modal = document.getElementById('playerModal');
+            const content = document.getElementById('modalContent');
+            const overlay = document.getElementById('modalOverlay');
+            
+            content.classList.add('translate-y-full');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('pointer-events-none');
+                modal.classList.add('invisible');
+            }, 300);
+        };
+
+        window.switchLiveTab = (team) => {
+            const btnA = document.getElementById('btn-teamA');
+            const btnB = document.getElementById('btn-teamB');
+            const conA = document.getElementById('live-content-teamA');
+            const conB = document.getElementById('live-content-teamB');
+            
+            if(team === 'teamA') {
+                btnA.className = "flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow-sm text-gray-800 dark:text-white transition-all";
+                btnB.className = "flex-1 py-1.5 text-xs font-bold rounded-md text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all";
+                conA.classList.remove('hidden'); conB.classList.add('hidden');
+            } else {
+                btnB.className = "flex-1 py-1.5 text-xs font-bold rounded-md bg-white dark:bg-gray-600 shadow-sm text-gray-800 dark:text-white transition-all";
+                btnA.className = "flex-1 py-1.5 text-xs font-bold rounded-md text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all";
+                conB.classList.remove('hidden'); conA.classList.add('hidden');
+            }
+        };
+
+    </script>
 </body>
 </html>
