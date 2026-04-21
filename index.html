@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>মেইন গেইট সমবায় সমিতি</title>
+  
+  <!-- Favicon -->
+  <link id="favicon" rel="icon" type="image/png" href="https://placehold.co/64x64/FFFFFF/6366f1?text=MG">
+  
   <!-- Tailwind CSS with Typography Plugin -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <!-- Google Fonts -->
@@ -14,7 +18,7 @@
   <style>
     /* --- Base Styles --- */
     body { 
-        font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; 
+        font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif; 
         background-color: #f8fafc; /* Slate 50 */
         padding-bottom: 60px;
     }
@@ -600,28 +604,6 @@
         t.currentLoan = t.totalLoanTaken - t.totalLoanRepaid; return t;
     };
 
-    // --- SOUND EFFECT UTIL ---
-    const playBeep = () => {
-        try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContext) return;
-            const ctx = new AudioContext();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine'; // Smooth tone
-            osc.frequency.setValueAtTime(880, ctx.currentTime); // High pitch start
-            osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15); // Drop pitch
-            gain.gain.setValueAtTime(0.05, ctx.currentTime); // Low volume
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15); // Fade out
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.2);
-        } catch (e) { 
-            // Silent fail if audio context not allowed
-        }
-    };
-
     // Notifications (Upgraded Logic)
     const openNotif = () => {
         const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
@@ -693,13 +675,10 @@
         if (logs.length === 0) return;
         const current = logs[0]; showAutoToast(current);
         localStorage.setItem('samiti_notif_last_read', current.ts); renderNotifications();
-        setTimeout(() => playNotificationSequence(logs.slice(1)), 3500); // Slower sequence to enjoy the sound
+        setTimeout(() => playNotificationSequence(logs.slice(1)), 2500);
     };
     
     const showAutoToast = (log) => {
-        // Play Sound
-        playBeep();
-
         const c = document.getElementById('auto-toast-container');
         c.innerHTML = ''; 
 
@@ -771,8 +750,10 @@
     // Rendering UI
     const renderHeaderLogo = () => {
         const img = document.getElementById('header-logo-img');
+        const favicon = document.getElementById('favicon');
         if (logoUrl) { 
             img.src = logoUrl; img.onerror = () => img.src = 'https://placehold.co/48x48/FFFFFF/6366f1?text=MG'; 
+            if(favicon) favicon.href = logoUrl; // Update favicon dynamically
             localStorage.setItem('cached_logo_url', logoUrl); // Cache Logo
         }
     };
@@ -819,20 +800,22 @@
                 card.className = 'bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-200 transition group flex flex-col h-full relative overflow-hidden';
                 card.innerHTML = `
                     <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition text-6xl select-none">🆔</div>
-                    <div class="flex items-center gap-4 mb-4 relative z-10">
-                        <img class="w-14 h-14 rounded-full object-cover border-2 border-slate-100 shadow-sm" src="${m.photoUrl||ph}" onerror="this.src='${ph}'">
-                        <div class="overflow-hidden">
-                            <h4 class="font-bold text-slate-800 truncate text-lg">${m.name}</h4>
-                            <p class="text-xs text-indigo-500 font-mono font-semibold">💳 ${cardNum}</p>
-                            <p class="text-xs text-slate-500 font-mono mt-0.5">ID: ${m.id}</p>
-                            <p class="text-xs text-slate-500 mt-0.5">📞 ${m.phone || 'N/A'}</p>
+                    <div class="flex items-start gap-4 mb-5 relative z-10">
+                        <img class="w-14 h-14 rounded-full object-cover border-2 border-indigo-100 shadow-sm mt-1" src="${m.photoUrl||ph}" onerror="this.src='${ph}'">
+                        <div class="overflow-hidden w-full">
+                            <h4 class="font-bold text-slate-800 truncate text-[18px] mb-1.5">${m.name}</h4>
+                            <p class="text-[13px] text-indigo-600 font-semibold flex items-center gap-1.5"><span class="text-sm">💳</span> ${cardNum}</p>
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-[13px] text-slate-600 mt-1.5">
+                                <p class="flex items-center gap-1"><span class="text-sm">🆔</span> <span class="font-medium tracking-wide">${m.id}</span></p>
+                                <p class="flex items-center gap-1"><span class="text-sm">📞</span> <span class="font-medium tracking-wide">${m.phone || 'N/A'}</span></p>
+                            </div>
                         </div>
                     </div>
                     <div class="mt-auto space-y-2 relative z-10">
-                        <div class="flex justify-between text-sm bg-green-50 px-3 py-2 rounded-lg border border-green-100"><span class="text-green-700 font-medium">মোট জমা</span><span class="font-bold text-green-700">৳ ${getBengaliNumber(t.totalDeposit)}</span></div>
-                        <div class="flex justify-between text-sm bg-red-50 px-3 py-2 rounded-lg border border-red-100"><span class="text-red-700 font-medium">ঋণ</span><span class="font-bold text-red-700">৳ ${getBengaliNumber(t.currentLoan)}</span></div>
+                        <div class="flex justify-between items-center text-[13px] bg-green-50 px-3 py-2 rounded-lg border border-green-100"><span class="text-green-700 font-semibold">মোট জমা</span><span class="font-bold text-green-700 text-sm">৳ ${getBengaliNumber(t.totalDeposit)}</span></div>
+                        <div class="flex justify-between items-center text-[13px] bg-red-50 px-3 py-2 rounded-lg border border-red-100"><span class="text-red-700 font-semibold">ঋণ</span><span class="font-bold text-red-700 text-sm">৳ ${getBengaliNumber(t.currentLoan)}</span></div>
                     </div>
-                    <button class="view-profile-btn mt-4 w-full bg-indigo-50 text-indigo-600 py-2 rounded-lg text-sm font-bold hover:bg-indigo-600 hover:text-white transition shadow-sm" data-id="${m.id}">বিস্তারিত দেখুন</button>
+                    <button class="view-profile-btn mt-4 w-full bg-slate-50 border border-indigo-100 text-indigo-600 py-2.5 rounded-lg text-[13px] font-bold hover:bg-indigo-600 hover:text-white transition-all shadow-sm" data-id="${m.id}">বিস্তারিত দেখুন</button>
                 `;
                 memberListCardContainer.appendChild(card);
             });
@@ -1110,9 +1093,11 @@
     const initFirebase = () => {
         // Initialize Cached Logo for Loader
         const cachedLogo = localStorage.getItem('cached_logo_url');
+        const favicon = document.getElementById('favicon');
         if(cachedLogo) {
             const loaderImg = document.getElementById('loader-logo-img');
             if(loaderImg) loaderImg.src = cachedLogo;
+            if(favicon) favicon.href = cachedLogo;
         }
 
         try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); } catch(e) { console.error(e); }
