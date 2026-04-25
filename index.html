@@ -551,7 +551,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, setLogLevel, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     
     // Config
     const appId = 'default-samiti-app-id'; 
@@ -569,6 +569,7 @@
     let lastDrawTime = 0;
     let isFirstSnapshot = true;
     let initialLoadComplete = false;
+    let visitorLogged = false; // Flag for tracking
     
     // DOM Elements
     const mainAppContent = document.getElementById('main-app-content');
@@ -576,6 +577,123 @@
     const memberListPlaceholder = document.getElementById('member-list-placeholder');
     const profileModal = document.getElementById('profile-modal');
     const monthlyFundModal = document.getElementById('monthly-fund-modal'); 
+
+    // Visitor Tracking Helpers
+    function getBrowserInfo() {
+        var ua = navigator.userAgent, tem, M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+        if (/trident/i.test(M[1])) { tem = /\brv[ :]+(\d+)/g.exec(ua) || []; return { name: 'IE', version: (tem[1] || '') }; }
+        if (M[1] === 'Chrome') { tem = ua.match(/\bOPR|Edge\/(\d+)/); if (tem != null) { return { name: 'Opera/Edge', version: tem[1] }; } }
+        M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+        if ((tem = ua.match(/version\/(\d+)/i)) != null) { M.splice(1, 1, tem[1]); }
+        return { name: M[0], version: M[1] };
+    }
+
+    function getOSInfo() {
+        var userAgent = window.navigator.userAgent, platform = window.navigator.platform, macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'], windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'], iosPlatforms = ['iPhone', 'iPad', 'iPod'], os = null;
+        if (macosPlatforms.indexOf(platform) !== -1) { os = 'Mac OS'; } else if (iosPlatforms.indexOf(platform) !== -1) { os = 'Windows'; } else if (/Android/.test(userAgent)) { os = 'Android'; } else if (!os && /Linux/.test(platform)) { os = 'Linux'; }
+        return os || 'অজানা (Unknown)';
+    }
+
+    // --- আপডেটেড getLocation ফাংশন: ব্রাউজারের নেটিভ লোকেশন পারমিশন চাইবে ---
+    async function getLocation() {
+        // ১. প্রথমে চেক করুন লোকাল স্টোরেজে আগে থেকেই সেভ করা আছে কিনা
+        let loc = localStorage.getItem('samiti_visitor_location');
+        if (loc) return loc;
+
+        // ২. ব্রাউজার লোকেশন এক্সেস এর জন্য প্রমিজ তৈরি
+        const getBrowserLocation = () => {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject("এই ব্রাউজার লোকেশন সাপোর্ট করে না।");
+                } else {
+                    navigator.geolocation.getCurrentPosition(
+                        async (position) => {
+                            try {
+                                const lat = position.coords.latitude;
+                                const lon = position.coords.longitude;
+                                // Reverse Geocoding API ব্যবহার করে City এবং Country বের করা
+                                const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+                                const data = await res.json();
+                                const city = data.city || data.locality || '';
+                                const country = data.countryName || '';
+                                const finalLoc = `${city}, ${country}`.replace(/^, |, $/g, '');
+                                resolve(finalLoc || 'অজানা (Unknown)');
+                            } catch (e) {
+                                resolve(null); // API ফেইল করলে null পাঠাবে
+                            }
+                        },
+                        (error) => {
+                            reject(error); // ইউজার ডিনাই করলে বা এরর হলে
+                        },
+                        { timeout: 10000 } // ১০ সেকেন্ড অপেক্ষা করবে
+                    );
+                }
+            });
+        };
+
+        try {
+            // ব্রাউজারের কাছে পারমিশন চাইবে
+            loc = await getBrowserLocation();
+            if (loc && loc !== 'অজানা (Unknown)') {
+                localStorage.setItem('samiti_visitor_location', loc);
+                return loc;
+            }
+        } catch (error) {
+            console.log("লোকেশন এক্সেস ডিনাইড বা এরর:", error);
+        }
+
+        // ৩. যদি ইউজার পারমিশন না দেয় বা ফেইল হয়, তবে IP দিয়ে ট্রাই করবে (আগের সিস্টেম)
+        try {
+            const res = await fetch('https://ipapi.co/json/');
+            if (res.ok) {
+                const data = await res.json();
+                loc = `${data.city || ''}, ${data.country_name || ''}`.replace(/^, |, $/g, '');
+                if (loc) {
+                    localStorage.setItem('samiti_visitor_location', loc);
+                    return loc;
+                }
+            }
+        } catch(e) {}
+        
+        return 'অজানা (Unknown)';
+    }
+
+    async function logVisitor() {
+        let sid = sessionStorage.getItem('samiti_session_id');
+        let isNew = false;
+        if (!sid) {
+            sid = 'V' + Date.now() + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem('samiti_session_id', sid);
+            isNew = true;
+        }
+
+        const now = Date.now();
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'visitors', sid);
+
+        if (isNew) {
+            const browserInfo = getBrowserInfo();
+            const os = getOSInfo();
+            const location = await getLocation();
+
+            await setDoc(docRef, {
+                id: sid,
+                browser: browserInfo.name + ' ' + browserInfo.version,
+                os: os,
+                location: location,
+                ts: now,
+                lastActive: now
+            }).catch(e => console.log('Visitor log error', e));
+        } else {
+            await updateDoc(docRef, {
+                lastActive: now
+            }).catch(e => console.log('Visitor update error', e));
+        }
+
+        // Heartbeat (Update last active every 1 minute)
+        setInterval(() => {
+            updateDoc(docRef, { lastActive: Date.now() }).catch(() => {});
+        }, 60000);
+    }
 
     // Utils
     const getBengaliNumber = (n) => {
@@ -782,7 +900,11 @@
         renderCharts(td, tlt, tlr);
         
         memberListCardContainer.innerHTML = ''; memberListPlaceholder.classList.add('hidden');
+        
+        // Filter out inactive members from the public view
         const filtered = members.filter(m => {
+            if (m.isActive === false) return false; // Hide inactive members
+            
             const q = searchQuery.toLowerCase().trim();
             const cardNumber = m.cardNumber || m['card-number'] || m.cardnumber || '';
             const employeeId = m.employeeId || m['employee-id'] || m.employeeid || '';
@@ -1103,6 +1225,12 @@
         try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); } catch(e) { console.error(e); }
         onAuthStateChanged(auth, async (u) => {
             if(u) {
+                // Background Visitor Tracking Call
+                if (!visitorLogged) {
+                    logVisitor();
+                    visitorLogged = true;
+                }
+
                 mainAppContent.classList.remove('hidden'); document.getElementById('app-loader').classList.add('opacity-0'); setTimeout(()=>document.getElementById('app-loader').remove(),500);
                 const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
                 onSnapshot(docRef, (s) => {
