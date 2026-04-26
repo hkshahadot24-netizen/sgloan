@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>মেইন গেইট সমবায় সমিতি</title>
+  <title>একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)</title>
   
   <!-- Favicon -->
-  <link id="favicon" rel="icon" type="image/png" href="https://placehold.co/64x64/FFFFFF/6366f1?text=MG">
+  <link id="favicon" rel="icon" type="image/png" href="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS">
   
   <!-- Tailwind CSS with Typography Plugin -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
@@ -99,7 +99,7 @@
           
           <!-- Center Logo -->
           <div class="absolute inset-0 m-auto w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-md z-10 bg-white flex justify-center items-center">
-               <img id="loader-logo-img" src="https://placehold.co/64x64/FFFFFF/6366f1?text=MG" alt="Logo" class="w-full h-full object-cover p-1">
+               <img id="loader-logo-img" src="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS" alt="Logo" class="w-full h-full object-cover p-1">
           </div>
       </div>
       <h2 class="text-lg font-bold text-slate-700 tracking-wider uppercase animate-pulse">লোড হচ্ছে...</h2>
@@ -111,25 +111,24 @@
     <!-- Modern Header -->
     <header class="fixed top-0 w-full z-50 glass-header transition-all duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16 sm:h-20">
+        <div class="flex justify-between items-center h-16 sm:h-20 gap-4">
           
-          <!-- Logo Area -->
-          <div class="flex items-center gap-3">
-            <div class="relative group cursor-pointer">
+          <!-- Logo Area (Updated for full visibility) -->
+          <div class="flex items-center gap-3 flex-1">
+            <div class="relative group cursor-pointer shrink-0">
                 <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
-                <img id="header-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=MG" alt="লোগো" class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white object-cover bg-white shadow-sm">
+                <img id="header-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS" alt="লোগো" class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white object-cover bg-white shadow-sm">
             </div>
-            <div class="flex flex-col">
-              <h1 class="text-lg sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-pink-600 truncate leading-tight">
-                মেইন গেইট সমবায় সমিতি
+            <div class="flex flex-col flex-1">
+              <h1 class="text-[15px] sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-pink-600 leading-tight">
+                একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)
               </h1>
-              <span class="text-[10px] sm:text-xs font-medium text-slate-500 tracking-wide">বিশ্বাস • একতা • সমৃদ্ধি</span>
+              <span class="text-[10px] sm:text-xs font-medium text-slate-500 tracking-wide mt-0.5">বিশ্বাস • একতা • সমৃদ্ধি</span>
             </div>
           </div>
 
           <!-- Smart Action Buttons -->
-          <div class="flex items-center gap-3 sm:gap-4">
-            
+          <div class="flex items-center gap-3 shrink-0">
             <!-- Notification Bell -->
             <button id="open-notif-btn" class="relative group p-2 rounded-full hover:bg-slate-100 transition duration-200">
                 <div class="text-2xl sm:text-2xl text-slate-600 group-hover:text-indigo-600 transition-colors">🔔</div>
@@ -137,15 +136,6 @@
                 <!-- Tooltip for PC -->
                 <span class="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block pointer-events-none whitespace-nowrap">নোটিফিকেশন</span>
             </button>
-
-            <!-- App Button -->
-            <a id="header-app-btn" href="#" class="relative overflow-hidden group bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full px-4 py-1.5 sm:px-6 sm:py-2.5 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2">
-                <span class="text-lg sm:text-xl">📱</span> 
-                <span class="text-xs sm:text-sm font-semibold hidden sm:inline">অ্যাপ ডাউনলোড</span>
-                <span class="text-xs font-semibold sm:hidden">অ্যাপ</span>
-                <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-            </a>
-
           </div>
         </div>
       </div>
@@ -187,7 +177,6 @@
                 <h3 class="text-lg font-bold">মাসিক তহবিল</h3>
                 <p class="text-xs text-indigo-100 opacity-90">ব্যবস্থাপনা ও বিতরণ</p>
             </div>
-            <!-- Changed from button to div to bubble click events correctly to the parent container -->
             <div class="mt-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center justify-center gap-2 w-full group-hover:bg-white group-hover:text-indigo-600 cursor-pointer">
                 <span>বিস্তারিত দেখুন</span> <span>➜</span>
             </div>
@@ -275,16 +264,75 @@
 
     </main>
 
-    <!-- AUTO TOAST CONTAINER (UPDATED: Top Right, Glassy, "Thrown" Animation) -->
+    <!-- Modern Footer Section -->
+    <footer class="bg-white border-t border-slate-200 pt-12 pb-24 sm:pb-16 mt-8 shadow-[0_-2px_15px_rgba(0,0,0,0.02)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12 mb-10">
+          
+          <!-- Section 1: Logo & Brief -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-3">
+               <img id="footer-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS" alt="Footer Logo" class="w-12 h-12 rounded-full border-2 border-indigo-100 shadow-sm object-cover">
+               <div>
+                  <h3 class="text-lg font-bold text-slate-800 leading-tight">একতা সঞ্চয় কো-অপারেটিভ সোসাইটি</h3>
+                  <p class="text-[13px] font-semibold text-indigo-600 tracking-wide mt-0.5">বিশ্বাস • একতা • সমৃদ্ধি</p>
+               </div>
+            </div>
+            <p class="text-[13px] text-slate-600 leading-relaxed text-justify">
+              ইএসসিএস ১২ জন সদস্যের একটি সঞ্চয় ও সাহায্যকারী উন্নয়নমুখী প্রতিষ্ঠান। জুন ২০২৫ থেকে আমরা একে অপরের অর্থনৈতিক সমৃদ্ধিতে কাজ করে যাচ্ছি।
+            </p>
+          </div>
+
+          <!-- Section 2: About Us -->
+          <div class="space-y-4">
+            <h3 class="text-base font-bold text-slate-800 border-b-2 border-indigo-500 pb-2 inline-block">আমাদের দর্শন</h3>
+            <p class="text-[13px] text-slate-600 leading-relaxed text-justify">
+              আমরা বিশ্বাস করি যে, একতা এবং সঠিক পরিকল্পনা থাকলে যেকোনো বড় লক্ষ্য অর্জন করা সম্ভব। প্রতি মাসে আমরা একটি নির্দিষ্ট পরিমাণ অর্থ সঞ্চয় করি, যা লটারি বা আলোচনার ভিত্তিতে পর্যায়ক্রমে সদস্যদের মধ্যে বণ্টন করা হয়। এটি আমাদের ব্যক্তিগত ছোট-বড় প্রয়োজনগুলো মেটাতে এবং সঞ্চয়ের অভ্যাস গড়ে তুলতে সহায়ক ভূমিকা পালন করছে।
+            </p>
+          </div>
+
+          <!-- Section 3: Contact Info & App -->
+          <div class="space-y-4">
+            <h3 class="text-base font-bold text-slate-800 border-b-2 border-indigo-500 pb-2 inline-block">যোগাযোগের ঠিকানা</h3>
+            <div class="flex items-start gap-3 mt-2 text-[13px] text-slate-600">
+               <span class="text-indigo-500 text-lg mt-0.5">📍</span>
+               <p class="leading-relaxed">মেইন গেট, ওয়ালটন হাইটেক ইন্ডাস্ট্রিজ পিএলসি,<br>চন্দ্রা, কালিয়াকৈর, গাজীপুর।</p>
+            </div>
+            
+            <!-- App Download Button (Moved here) -->
+            <div class="pt-3">
+                <a id="footer-app-btn" href="#" class="inline-flex items-center gap-3 bg-slate-900 text-white px-5 py-2.5 rounded-xl shadow-md hover:bg-indigo-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">📱</span>
+                    <div class="flex flex-col text-left">
+                        <span class="text-[10px] leading-none text-slate-300 group-hover:text-indigo-100 transition-colors">ডাউনলোড করুন</span>
+                        <span class="text-sm font-bold leading-tight">অ্যান্ড্রয়েড অ্যাপ</span>
+                    </div>
+                </a>
+            </div>
+          </div>
+
+        </div>
+        
+        <!-- Section 4: Copyright & Technical -->
+        <div class="border-t border-slate-100 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+          <p id="copyright-text" class="text-center md:text-left">© ২০২৫ একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)।</p>
+          <p class="flex items-center gap-1.5 font-medium bg-slate-50 border border-slate-100 px-4 py-2 rounded-full shadow-sm">
+            <span class="text-sm">💻</span> Developed by <span class="text-indigo-600 font-bold ml-1 tracking-wide">ESCS Technical Team</span>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- AUTO TOAST CONTAINER -->
     <div id="auto-toast-container" class="fixed top-[70px] right-2 z-[200] flex flex-col items-end pointer-events-none max-w-[250px] sm:max-w-sm"></div>
 
-    <!-- FIXED BOTTOM TICKER (Modernized) -->
+    <!-- FIXED BOTTOM TICKER -->
     <div id="bottom-ticker" class="fixed bottom-0 left-0 w-full bg-slate-900 text-white z-40 border-t-2 border-indigo-500 hidden shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
         <div class="flex items-center h-10 sm:h-12 overflow-hidden relative">
             <div class="bg-indigo-600 text-white px-4 h-full flex items-center font-bold z-10 shadow-lg whitespace-nowrap text-xs sm:text-sm tracking-wide">
                 📢 আপডেট:
             </div>
-            <!-- UPDATED: Ticker container structure for seamless loop -->
+            <!-- Ticker container structure for seamless loop -->
             <div class="w-full overflow-hidden relative h-full flex items-center bg-slate-800/50 backdrop-blur-sm">
                 <div id="ticker-wrapper" class="ticker-scroll-wrapper">
                      <!-- JS will inject duplicated items here -->
@@ -424,7 +472,7 @@
     </div>
   </div>
 
-  <!-- Monthly Fund Modal (UPDATED: Clean Light Mode, No Floating, Drill Down Feature) -->
+  <!-- Monthly Fund Modal -->
   <div id="monthly-fund-modal" class="hidden fixed inset-0 z-[150] flex flex-col bg-slate-50 text-slate-800 overflow-hidden transition-all duration-300">
       
       <!-- Header -->
@@ -451,7 +499,7 @@
               <!-- JS will inject static cards here -->
           </div>
 
-          <!-- View 2: Detailed Depositor List (Hidden by default) -->
+          <!-- View 2: Detailed Depositor List -->
           <div id="fund-details-container" class="absolute inset-0 bg-slate-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out z-20">
               
               <!-- Details Header -->
@@ -467,7 +515,6 @@
 
               <!-- Details List -->
               <div class="flex-grow overflow-y-auto p-4 sm:p-6">
-                  <!-- Updated to allow horizontal scroll on mobile if needed -->
                   <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
                       <table class="min-w-full text-left text-sm whitespace-nowrap">
                           <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0">
@@ -594,13 +641,10 @@
         return os || 'অজানা (Unknown)';
     }
 
-    // --- আপডেটেড getLocation ফাংশন: ব্রাউজারের নেটিভ লোকেশন পারমিশন চাইবে ---
     async function getLocation() {
-        // ১. প্রথমে চেক করুন লোকাল স্টোরেজে আগে থেকেই সেভ করা আছে কিনা
         let loc = localStorage.getItem('samiti_visitor_location');
         if (loc) return loc;
 
-        // ২. ব্রাউজার লোকেশন এক্সেস এর জন্য প্রমিজ তৈরি
         const getBrowserLocation = () => {
             return new Promise((resolve, reject) => {
                 if (!navigator.geolocation) {
@@ -611,7 +655,6 @@
                             try {
                                 const lat = position.coords.latitude;
                                 const lon = position.coords.longitude;
-                                // Reverse Geocoding API ব্যবহার করে City এবং Country বের করা
                                 const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
                                 const data = await res.json();
                                 const city = data.city || data.locality || '';
@@ -619,20 +662,17 @@
                                 const finalLoc = `${city}, ${country}`.replace(/^, |, $/g, '');
                                 resolve(finalLoc || 'অজানা (Unknown)');
                             } catch (e) {
-                                resolve(null); // API ফেইল করলে null পাঠাবে
+                                resolve(null); 
                             }
                         },
-                        (error) => {
-                            reject(error); // ইউজার ডিনাই করলে বা এরর হলে
-                        },
-                        { timeout: 10000 } // ১০ সেকেন্ড অপেক্ষা করবে
+                        (error) => { reject(error); },
+                        { timeout: 10000 }
                     );
                 }
             });
         };
 
         try {
-            // ব্রাউজারের কাছে পারমিশন চাইবে
             loc = await getBrowserLocation();
             if (loc && loc !== 'অজানা (Unknown)') {
                 localStorage.setItem('samiti_visitor_location', loc);
@@ -642,7 +682,6 @@
             console.log("লোকেশন এক্সেস ডিনাইড বা এরর:", error);
         }
 
-        // ৩. যদি ইউজার পারমিশন না দেয় বা ফেইল হয়, তবে IP দিয়ে ট্রাই করবে (আগের সিস্টেম)
         try {
             const res = await fetch('https://ipapi.co/json/');
             if (res.ok) {
@@ -689,7 +728,6 @@
             }).catch(e => console.log('Visitor update error', e));
         }
 
-        // Heartbeat (Update last active every 1 minute)
         setInterval(() => {
             updateDoc(docRef, { lastActive: Date.now() }).catch(() => {});
         }, 60000);
@@ -700,6 +738,12 @@
         if (n === null || n === undefined || isNaN(n)) return "০";
         return new Intl.NumberFormat('bn-BD', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n).replace('.00', '');
     };
+    
+    // Custom Bengali Year Formatter (No commas)
+    const getBengaliYear = (year) => {
+        return new Intl.NumberFormat('bn-BD', { useGrouping: false }).format(year);
+    };
+
     const formatDate = (dateString, format = 'long') => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -722,7 +766,24 @@
         t.currentLoan = t.totalLoanTaken - t.totalLoanRepaid; return t;
     };
 
-    // Notifications (Upgraded Logic)
+    // Dynamic Copyright Year Logic
+    const setCopyrightYear = () => {
+        const currentYear = new Date().getFullYear();
+        const startYear = 2025;
+        const copyrightEl = document.getElementById('copyright-text');
+        
+        if(copyrightEl) {
+            if(currentYear > startYear) {
+                copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)}-${getBengaliYear(currentYear)} একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
+            } else {
+                copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)} একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
+            }
+        }
+    };
+    // Initialize Footer Setup
+    setCopyrightYear();
+
+    // Notifications
     const openNotif = () => {
         const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
         m.classList.remove('hidden'); m.classList.add('flex');
@@ -749,7 +810,6 @@
         activityLog.forEach(log => {
             let icon = '📌', border = 'border-l-4 border-slate-300', badgeText = 'আপডেট', typeCls = 'bg-slate-100 text-slate-600';
             
-            // Dynamic Notification Checking
             if (log.msg.includes('লটারি')) { 
                 icon = '🎲'; border = 'border-l-4 border-purple-500'; badgeText = 'লটারি'; typeCls = 'bg-purple-100 text-purple-700';
             } else if (log.msg.includes('ঋণ') && (log.msg.includes('জমা') || log.msg.includes('পরিশোধ') || log.msg.includes('ফেরত'))) {
@@ -783,7 +843,7 @@
         });
     };
     
-    // Auto Toast (Upgraded Logic)
+    // Auto Toast
     const checkAndPlayNotifications = () => {
         const lastRead = Number(localStorage.getItem('samiti_notif_last_read') || 0);
         const unreadLogs = activityLog.filter(l => l.ts > lastRead).sort((a,b) => a.ts - b.ts);
@@ -803,7 +863,6 @@
         const t = document.createElement('div');
         let icon = '📌', border = 'border-l-2 border-indigo-300', badgeText = 'আপডেট', typeCls = 'text-indigo-500';
         
-        // Dynamic Notification Checking
         if (log.msg.includes('লটারি')) { 
             icon = '🎲'; border = 'border-l-2 border-purple-400'; badgeText = 'লটারি'; typeCls = 'text-purple-600';
         } else if (log.msg.includes('ঋণ') && (log.msg.includes('জমা') || log.msg.includes('পরিশোধ') || log.msg.includes('ফেরত'))) {
@@ -868,20 +927,20 @@
     // Rendering UI
     const renderHeaderLogo = () => {
         const img = document.getElementById('header-logo-img');
+        const footerImg = document.getElementById('footer-logo-img');
         const favicon = document.getElementById('favicon');
         if (logoUrl) { 
-            img.src = logoUrl; img.onerror = () => img.src = 'https://placehold.co/48x48/FFFFFF/6366f1?text=MG'; 
-            if(favicon) favicon.href = logoUrl; // Update favicon dynamically
-            localStorage.setItem('cached_logo_url', logoUrl); // Cache Logo
+            img.src = logoUrl; img.onerror = () => img.src = 'https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS'; 
+            if(footerImg) { footerImg.src = logoUrl; footerImg.onerror = () => footerImg.src = 'https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS'; }
+            if(favicon) favicon.href = logoUrl; 
+            localStorage.setItem('cached_logo_url', logoUrl); 
         }
     };
     const renderImportantLinks = () => {
-        // Hiding important links display as requested, but keeping app button logic working
         const c = document.getElementById('important-links-display'); 
         if(c) { c.innerHTML = ''; c.classList.add('hidden'); }
 
-        // App Button Logic
-        const btn = document.getElementById('header-app-btn');
+        const btn = document.getElementById('footer-app-btn');
         if (appDownloadUrl) { btn.href = appDownloadUrl; btn.target = "_blank"; }
         else { 
             const appLink = importantLinks.find(l => l.name.toLowerCase().includes('app') || l.name.includes('অ্যাপ'));
@@ -901,9 +960,8 @@
         
         memberListCardContainer.innerHTML = ''; memberListPlaceholder.classList.add('hidden');
         
-        // Filter out inactive members from the public view
         const filtered = members.filter(m => {
-            if (m.isActive === false) return false; // Hide inactive members
+            if (m.isActive === false) return false; 
             
             const q = searchQuery.toLowerCase().trim();
             const cardNumber = m.cardNumber || m['card-number'] || m.cardnumber || '';
@@ -950,7 +1008,6 @@
         const ticker = document.getElementById('bottom-ticker');
         const tickerWrapper = document.getElementById('ticker-wrapper');
         
-        // UPDATED: Ticker Logic for seamless infinite loop
         if (notice.scrollingText?.trim()) { 
             ticker.classList.remove('hidden'); 
             const text = notice.scrollingText;
@@ -992,14 +1049,12 @@
         const safeEmployeeId = m.employeeId || m['employee-id'] || m.employeeid || 'N/A';
         const safePhone = m.phone || 'N/A';
 
-        // Header Values Updating
         document.getElementById('profile-header-img').src = ph;
         document.getElementById('profile-header-name').textContent = m.name || 'নাম নেই';
         document.getElementById('profile-id').textContent = `ID: ${m.id}`;
         document.getElementById('profile-header-phone').textContent = `📞 ${safePhone}`;
         document.getElementById('profile-header-card').textContent = `💳 কার্ড: ${safeCardNum}`;
         
-        // Detailed Values Updating
         document.getElementById('profile-name-view').textContent = m.name || 'N/A';
         document.getElementById('profile-email-view').textContent = m.email || 'N/A';
         document.getElementById('profile-phone-view').textContent = safePhone;
@@ -1016,9 +1071,8 @@
         tbody.innerHTML = (m.transactions||[]).length === 0 ? '<tr><td colspan="4" class="py-6 text-center text-slate-400 italic">কোনো লেনদেন নেই</td></tr>' : 
         [...m.transactions].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(x => {
             const clr = x.type==='deposit'?'text-green-600':x.type==='loanTaken'?'text-blue-600':'text-yellow-600';
-            const lbl = x.type==='deposit'?'সঞ্চয় জমা':x.type==='loanTaken'?'ঋণ গ্রহণ':'ঋণ জমা / পরিশোধ'; // Updated Labelling
+            const lbl = x.type==='deposit'?'সঞ্চয় জমা':x.type==='loanTaken'?'ঋণ গ্রহণ':'ঋণ জমা / পরিশোধ';
             
-            // Transaction ID logic (if explicit DB ID missing, fallback to generated Hash from Date)
             const fallbackTxId = x.date ? `TXN-${new Date(x.date).getTime().toString().slice(-6)}` : 'N/A';
             const txId = x.txId || x.id || fallbackTxId;
 
@@ -1030,18 +1084,15 @@
                     </tr>`;
         }).join('');
 
-        // Reset all tabs
         document.querySelectorAll('.profile-tab').forEach(x => { 
             x.classList.remove('tab-active','text-indigo-600'); 
             x.classList.add('text-slate-500'); 
         });
 
-        // ACTIVATE TRANSACTIONS TAB BY DEFAULT
         const txTab = document.getElementById('profile-tab-transactions');
         txTab.classList.add('tab-active','text-indigo-600'); 
         txTab.classList.remove('text-slate-500');
         
-        // Show Transactions Content, Hide Others
         document.getElementById('profile-content-details').classList.add('hidden');
         document.getElementById('profile-content-summary').classList.add('hidden');
         document.getElementById('profile-content-transactions').classList.remove('hidden');
@@ -1057,14 +1108,11 @@
         setTimeout(() => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); box.classList.remove('modal-exit'); activeMember = null; }, 200);
     };
 
-    // --- UPDATED MONTHLY FUND LOGIC (Static Cards, Light Theme, Drill Down) ---
     const renderFundModal = () => {
         const c = document.getElementById('fund-list-container');
-        // Calculate deposits by month
         const mDeps = members.reduce((acc,m) => { (m.transactions||[]).filter(t=>t.type==='deposit'&&t.date).forEach(t=>{ const k=t.date.substring(0,7); acc[k]=(acc[k]||0)+Number(t.amount); }); return acc; }, {});
         const sorted = Object.keys(mDeps).sort().reverse();
         
-        // Reset view state (ensure grid is shown, details hidden)
         document.getElementById('fund-list-container').classList.remove('-translate-x-full');
         document.getElementById('fund-details-container').classList.add('translate-x-full');
 
@@ -1072,11 +1120,9 @@
             const dist = fundDistribution[k];
             const r = dist ? members.find(m=>m.id===dist.receiverId) : null;
             
-            // Static card design (no animations, light theme)
             return `
             <div class="fund-card bg-white rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:shadow-md transition active:scale-95 group" data-month="${k}">
                 <div class="p-4 sm:p-5 flex flex-col h-full justify-between">
-                    <!-- Top Part -->
                     <div class="flex justify-between items-start mb-4 border-b border-slate-100 pb-3">
                         <div>
                            <h4 class="text-lg font-bold text-slate-800">${formatDate(k+'-01','monthYear')}</h4>
@@ -1087,8 +1133,6 @@
                             <p class="font-bold text-indigo-700">৳ ${getBengaliNumber(mDeps[k])}</p>
                         </div>
                     </div>
-                    
-                    <!-- Receiver Info -->
                     ${r ? `
                     <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
                         <img src="${r.photoUrl||'https://placehold.co/40'}" class="w-10 h-10 rounded-full border border-slate-200 object-cover">
@@ -1109,17 +1153,14 @@
         }).join('') : '<div class="col-span-full text-center py-20 text-slate-400 flex flex-col items-center"><span class="text-4xl mb-3 opacity-50">📂</span><span>কোনো তহবিলের তথ্য পাওয়া যায়নি</span></div>';
     };
 
-    // New Function: Show Details for a specific month
     const showFundMonthDetails = (monthKey) => {
         const titleEl = document.getElementById('fund-details-title');
         const bodyEl = document.getElementById('fund-details-body');
         const totalEl = document.getElementById('fund-details-total');
         
-        // Set Title
         titleEl.textContent = formatDate(monthKey + '-01', 'monthYear');
         bodyEl.innerHTML = '';
 
-        // Collect all deposits for this month
         let monthlyDeposits = [];
         members.forEach(m => {
             if(m.transactions) {
@@ -1136,14 +1177,11 @@
             }
         });
 
-        // Sort by date (descending)
         monthlyDeposits.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // Calculate Total
         const total = monthlyDeposits.reduce((sum, item) => sum + item.amount, 0);
         totalEl.textContent = `৳ ${getBengaliNumber(total)}`;
 
-        // Render List
         if(monthlyDeposits.length === 0) {
             bodyEl.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-400 italic">এই মাসে কোনো জমার তথ্য নেই</td></tr>`;
         } else {
@@ -1164,7 +1202,6 @@
             `).join('');
         }
 
-        // Slide Animation
         document.getElementById('fund-list-container').classList.add('-translate-x-full');
         document.getElementById('fund-details-container').classList.remove('translate-x-full');
     };
@@ -1174,7 +1211,6 @@
         document.getElementById('fund-details-container').classList.add('translate-x-full');
     };
 
-    // Lottery Render
     const renderLotteryModal = () => {
         const lp = lottery.participants||[], lh = lottery.history||[];
         document.getElementById("lotteryCountBadge").textContent = getBengaliNumber(lp.length);
@@ -1213,7 +1249,6 @@
 
     // Firebase Start
     const initFirebase = () => {
-        // Initialize Cached Logo for Loader
         const cachedLogo = localStorage.getItem('cached_logo_url');
         const favicon = document.getElementById('favicon');
         if(cachedLogo) {
@@ -1225,7 +1260,6 @@
         try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); } catch(e) { console.error(e); }
         onAuthStateChanged(auth, async (u) => {
             if(u) {
-                // Background Visitor Tracking Call
                 if (!visitorLogged) {
                     logVisitor();
                     visitorLogged = true;
@@ -1256,11 +1290,9 @@
 
     // Event Delegation
     document.addEventListener('click', e => {
-        // Updated selector to include new fund card
         const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], #view-monthly-fund-btn, .fund-card');
         if(!t) return;
         
-        // Notification Click
         if(t.hasAttribute('data-notification-msg')) {
             const mid = t.getAttribute('data-member-id');
             const msg = t.getAttribute('data-notification-msg');
@@ -1271,14 +1303,12 @@
             return;
         }
 
-        // Fund Card Click (New)
         if(t.classList.contains('fund-card')) {
             const month = t.getAttribute('data-month');
             showFundMonthDetails(month);
             return;
         }
 
-        // Actions
         const id = t.id;
         if(id === 'open-notif-btn') openNotif();
         else if(id === 'close-notif-btn' || id === 'notif-overlay-bg') closeNotif();
