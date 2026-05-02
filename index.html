@@ -16,10 +16,12 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
-    /* --- Base Styles --- */
+    /* --- Base Styles & Texture Background --- */
     body { 
         font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif; 
         background-color: #f8fafc; /* Slate 50 */
+        /* Subtle Dot Pattern for texture */
+        background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236366f1' fill-opacity='0.02' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
         padding-bottom: 60px;
     }
     
@@ -63,10 +65,10 @@
 
     /* --- Glassmorphism Header --- */
     .glass-header {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255,255,255,0.3);
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255,255,255,0.4);
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     }
 
@@ -79,25 +81,101 @@
     .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
     
     /* --- Utility --- */
-    .tab-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; background-color: #eef2ff; }
+    .tab-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; background-color: rgba(238, 242, 255, 0.8); }
+
+    /* --- Responsive Table Styles --- */
+    @media (max-width: 640px) {
+        .responsive-table thead { display: none; }
+        .responsive-table, .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+        .responsive-table tr { 
+            margin-bottom: 1rem; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 0.75rem; 
+            background: #fff; 
+            padding: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .responsive-table td { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            text-align: right; 
+            padding: 0.75rem 0.5rem; 
+            border-bottom: 1px dashed #e2e8f0; 
+            white-space: normal;
+        }
+        .responsive-table td:last-child { border-bottom: none; justify-content: center; }
+        .responsive-table td::before { 
+            content: attr(data-label); 
+            font-weight: 600; 
+            color: #64748b; 
+            text-align: left; 
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        .responsive-table td > span, .responsive-table td > div { text-align: right; }
+    }
   </style>
 </head>
-<body class="text-slate-800 antialiased">
+<body class="text-slate-800 antialiased relative">
+
+  <!-- ================= WATERMARK LAYER ================= -->
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden flex justify-between items-center">
+      <!-- Left Watermark -->
+      <div class="absolute top-[20%] sm:top-1/2 -translate-y-1/2 -left-24 sm:-left-12 lg:left-4 xl:left-12 opacity-[0.06] text-indigo-900 drop-shadow-xl transform -rotate-12 transition-all duration-700">
+          <svg class="w-[80vw] sm:w-[45vw] max-w-[350px] xl:max-w-[450px] h-auto" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <g transform="translate(100,100)">
+                  <circle cx="0" cy="-35" r="14" fill="currentColor"/>
+                  <circle cx="-30" cy="15" r="14" fill="currentColor"/>
+                  <circle cx="30" cy="15" r="14" fill="currentColor"/>
+                  <path d="M 0 -15 C -25 -15 -40 5 -40 25 C -40 32 -25 32 -20 25 C -10 10 10 10 20 25 C 25 32 40 32 40 25 C 40 5 25 -15 0 -15 Z" fill="currentColor"/>
+                  <path d="M -30 35 C -30 55 -15 70 0 70 C 15 70 30 55 30 35 C 25 25 15 25 10 30 C 5 35 -5 35 -10 30 C -15 25 -25 25 -30 35 Z" fill="currentColor"/>
+                  <path d="M -70 40 C -95 0 -60 -70 0 -90" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                  <path d="M 70 40 C 95 0 60 -70 0 -90" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                  <path d="M -60 -55 C -45 -70 -30 -55 -30 -40 C -45 -25 -60 -40 -60 -55 Z" fill="currentColor"/>
+                  <path d="M 60 -55 C 45 -70 30 -55 30 -40 C 45 -25 60 -40 60 -55 Z" fill="currentColor"/>
+                  <path d="M -80 -10 C -65 -25 -50 -10 -50 5 C -65 20 -80 5 -80 -10 Z" fill="currentColor"/>
+                  <path d="M 80 -10 C 65 -25 50 -10 50 5 C 65 20 80 5 80 -10 Z" fill="currentColor"/>
+                  <path d="M -55 35 C -40 20 -25 35 -25 50 C -40 65 -55 50 -55 35 Z" fill="currentColor"/>
+                  <path d="M 55 35 C 40 20 25 35 25 50 C 40 65 55 50 55 35 Z" fill="currentColor"/>
+                  <ellipse cx="0" cy="80" rx="45" ry="12" fill="currentColor"/>
+                  <text x="0" y="84" font-family="sans-serif" font-weight="bold" font-size="10" fill="white" text-anchor="middle">ESCS</text>
+              </g>
+          </svg>
+      </div>
+
+      <!-- Right Watermark -->
+      <div class="absolute bottom-[10%] sm:top-1/2 sm:-translate-y-1/2 -right-24 sm:-right-12 lg:right-4 xl:right-12 opacity-[0.06] text-indigo-900 drop-shadow-xl transform rotate-12 transition-all duration-700">
+          <svg class="w-[80vw] sm:w-[45vw] max-w-[350px] xl:max-w-[450px] h-auto" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <g transform="translate(100,100)">
+                  <circle cx="0" cy="-35" r="14" fill="currentColor"/>
+                  <circle cx="-30" cy="15" r="14" fill="currentColor"/>
+                  <circle cx="30" cy="15" r="14" fill="currentColor"/>
+                  <path d="M 0 -15 C -25 -15 -40 5 -40 25 C -40 32 -25 32 -20 25 C -10 10 10 10 20 25 C 25 32 40 32 40 25 C 40 5 25 -15 0 -15 Z" fill="currentColor"/>
+                  <path d="M -30 35 C -30 55 -15 70 0 70 C 15 70 30 55 30 35 C 25 25 15 25 10 30 C 5 35 -5 35 -10 30 C -15 25 -25 25 -30 35 Z" fill="currentColor"/>
+                  <path d="M -70 40 C -95 0 -60 -70 0 -90" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                  <path d="M 70 40 C 95 0 60 -70 0 -90" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                  <path d="M -60 -55 C -45 -70 -30 -55 -30 -40 C -45 -25 -60 -40 -60 -55 Z" fill="currentColor"/>
+                  <path d="M 60 -55 C 45 -70 30 -55 30 -40 C 45 -25 60 -40 60 -55 Z" fill="currentColor"/>
+                  <path d="M -80 -10 C -65 -25 -50 -10 -50 5 C -65 20 -80 5 -80 -10 Z" fill="currentColor"/>
+                  <path d="M 80 -10 C 65 -25 50 -10 50 5 C 65 20 80 5 80 -10 Z" fill="currentColor"/>
+                  <path d="M -55 35 C -40 20 -25 35 -25 50 C -40 65 -55 50 -55 35 Z" fill="currentColor"/>
+                  <path d="M 55 35 C 40 20 25 35 25 50 C 40 65 55 50 55 35 Z" fill="currentColor"/>
+                  <ellipse cx="0" cy="80" rx="45" ry="12" fill="currentColor"/>
+                  <text x="0" y="84" font-family="sans-serif" font-weight="bold" font-size="10" fill="white" text-anchor="middle">ESCS</text>
+              </g>
+          </svg>
+      </div>
+  </div>
+  <!-- ================= END WATERMARK LAYER ================= -->
 
   <!-- APP LOADER WITH DOUBLE RING & LOGO -->
   <div id="app-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-500">
       <div class="relative w-32 h-32 mb-6 flex justify-center items-center">
-          <!-- Outer Ring Background -->
           <div class="absolute inset-0 border-[6px] border-indigo-50 rounded-full"></div>
-          <!-- Outer Ring Spinner -->
           <div class="absolute inset-0 border-[6px] border-indigo-600 border-t-transparent border-b-transparent rounded-full animate-spin-slow"></div>
-          
-          <!-- Inner Ring Background -->
           <div class="absolute inset-4 border-[4px] border-pink-50 rounded-full"></div>
-          <!-- Inner Ring Spinner (Reverse) -->
           <div class="absolute inset-4 border-[4px] border-pink-500 border-l-transparent border-r-transparent rounded-full animate-spin-reverse"></div>
-          
-          <!-- Center Logo -->
           <div class="absolute inset-0 m-auto w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-md z-10 bg-white flex justify-center items-center">
                <img id="loader-logo-img" src="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS" alt="Logo" class="w-full h-full object-cover p-1">
           </div>
@@ -106,14 +184,12 @@
   </div>
 
   <!-- Main Application Content -->
-  <div id="main-app-content" class="hidden">
+  <div id="main-app-content" class="hidden relative z-10">
     
     <!-- Modern Header -->
     <header class="fixed top-0 w-full z-50 glass-header transition-all duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16 sm:h-20 gap-4">
-          
-          <!-- Logo Area (Updated for full visibility) -->
           <div class="flex items-center gap-3 flex-1">
             <div class="relative group cursor-pointer shrink-0">
                 <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
@@ -126,14 +202,10 @@
               <span class="text-[10px] sm:text-xs font-medium text-slate-500 tracking-wide mt-0.5">বিশ্বাস • একতা • সমৃদ্ধি</span>
             </div>
           </div>
-
-          <!-- Smart Action Buttons -->
           <div class="flex items-center gap-3 shrink-0">
-            <!-- Notification Bell -->
             <button id="open-notif-btn" class="relative group p-2 rounded-full hover:bg-slate-100 transition duration-200">
                 <div class="text-2xl sm:text-2xl text-slate-600 group-hover:text-indigo-600 transition-colors">🔔</div>
                 <span id="notif-badge" class="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm hidden transform scale-0 transition-transform duration-300"></span>
-                <!-- Tooltip for PC -->
                 <span class="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block pointer-events-none whitespace-nowrap">নোটিফিকেশন</span>
             </button>
           </div>
@@ -146,29 +218,25 @@
       
       <!-- Top Section: Stats & Feature Cards -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.1s;">
-        <!-- Stat 1 -->
-        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 hover-card relative overflow-hidden group">
+        <div class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group">
             <div class="absolute right-0 top-0 w-24 h-24 bg-indigo-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
             <p class="text-sm font-medium text-slate-500 relative z-10">মোট সদস্য</p>
             <p id="total-members" class="text-2xl sm:text-4xl font-bold text-slate-800 mt-1 relative z-10">০</p>
             <div class="mt-2 text-xs text-indigo-500 font-semibold flex items-center gap-1">👥 একটিভ মেম্বার</div>
         </div>
-        <!-- Stat 2 -->
-        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 hover-card relative overflow-hidden group">
+        <div class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group">
             <div class="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
             <p class="text-sm font-medium text-slate-500 relative z-10">মোট জমা</p>
             <p id="total-paid" class="text-xl sm:text-3xl font-bold text-green-600 mt-1 relative z-10 truncate">৳ ০</p>
             <div class="mt-2 text-xs text-green-500 font-semibold">💰 সেভিংস</div>
         </div>
-        <!-- Stat 3 -->
-        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 hover-card relative overflow-hidden group">
+        <div class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group">
             <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
             <p class="text-sm font-medium text-slate-500 relative z-10">ঋণ প্রদান</p>
             <p id="total-loan-given" class="text-xl sm:text-3xl font-bold text-red-500 mt-1 relative z-10 truncate">৳ ০</p>
             <div class="mt-2 text-xs text-red-500 font-semibold">📉 বিনিয়োগ</div>
         </div>
-        <!-- Monthly Fund Feature -->
-        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-4 sm:p-6 rounded-2xl shadow-lg hover-card text-white flex flex-col justify-between relative overflow-hidden group cursor-pointer" id="view-monthly-fund-btn">
+        <div class="bg-gradient-to-br from-indigo-600/90 to-purple-700/90 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-lg hover-card text-white flex flex-col justify-between relative overflow-hidden group cursor-pointer border border-indigo-400/30" id="view-monthly-fund-btn">
             <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
             <div class="absolute bottom-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition transform group-hover:scale-110 duration-500">
                 <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" /></svg>
@@ -185,13 +253,9 @@
 
       <!-- Middle Section: Notice & Charts (Grid Layout) -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
-          
-          <!-- Left Column (Notice & Lottery) - Span 4 on Desktop -->
           <div class="lg:col-span-4 space-y-6 fade-in-up" style="animation-delay: 0.2s;">
-              
-              <!-- Interactive Notice Board -->
-              <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group hover:shadow-md transition duration-300">
-                   <div class="bg-slate-50 border-b border-slate-100 p-4 flex items-center justify-between">
+              <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden group hover:shadow-md transition duration-300">
+                   <div class="bg-slate-50/80 backdrop-blur-sm border-b border-slate-100/50 p-4 flex items-center justify-between">
                        <h3 class="font-bold text-slate-700 flex items-center gap-2">📢 নোটিশ বোর্ড</h3>
                        <span class="flex h-3 w-3 relative">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -199,16 +263,14 @@
                        </span>
                    </div>
                    <div class="p-4">
-                       <!-- Links hidden as per request -->
                        <div id="important-links-display" class="hidden mb-4"></div>
                        <div id="notice-display" class="text-slate-600 text-sm"></div>
                    </div>
               </div>
 
-              <!-- Premium Lottery Card -->
-              <div class="relative bg-slate-900 rounded-2xl p-1 overflow-hidden group hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
+              <div class="relative bg-slate-900/90 backdrop-blur-md rounded-2xl p-1 overflow-hidden group hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
                   <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 opacity-75 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                  <div class="relative bg-slate-900 rounded-xl p-5 h-full flex flex-col items-center text-center">
+                  <div class="relative bg-slate-900/95 rounded-xl p-5 h-full flex flex-col items-center text-center">
                       <div class="text-4xl mb-2 group-hover:rotate-12 transition-transform duration-300">🎲</div>
                       <h3 class="text-xl font-bold text-white mb-1">লাকি লটারি</h3>
                       <p class="text-slate-400 text-xs mb-4">ভাগ্য পরীক্ষা করুন এবং ফলাফল দেখুন</p>
@@ -217,42 +279,37 @@
                       </button>
                   </div>
               </div>
-
           </div>
 
-          <!-- Right Column (Charts) - Span 8 on Desktop -->
           <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6 fade-in-up" style="animation-delay: 0.3s;">
-             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-[350px]">
+             <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-slate-100/50 flex flex-col h-[350px]">
                 <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2"><span class="w-2 h-6 bg-green-500 rounded-full"></span>আর্থিক সারসংক্ষেপ</h3>
                 <div class="flex-grow relative w-full">
                     <canvas id="financeChart"></canvas>
                 </div>
              </div>
-             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-[350px]">
+             <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-slate-100/50 flex flex-col h-[350px]">
                 <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2"><span class="w-2 h-6 bg-indigo-500 rounded-full"></span>মাসিক জমার হার</h3>
                 <div class="flex-grow relative w-full">
                     <canvas id="trendChart"></canvas>
                 </div>
              </div>
           </div>
-
       </div>
 
       <!-- Member List Section -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden fade-in-up" style="animation-delay: 0.4s;">
-        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/50">
+      <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden fade-in-up" style="animation-delay: 0.4s;">
+        <div class="p-6 border-b border-slate-100/50 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/50">
            <div>
                <h3 class="text-2xl font-bold text-slate-800">সম্মানিত সদস্যবৃন্দ</h3>
                <p class="text-sm text-slate-500 mt-1">সকল সদস্যদের তথ্য এবং প্রোফাইল</p>
            </div>
-           <!-- Modern Search Bar -->
            <div class="relative w-full sm:w-80">
                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🔍</span>
-               <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-sm transition-all" autocomplete="off">
+               <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন..." class="w-full pl-10 pr-4 py-2.5 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-sm transition-all" autocomplete="off">
            </div>
         </div>
         
-        <!-- Grid of Members -->
         <div class="p-6">
             <div id="member-list-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             <div id="member-list-placeholder" class="hidden py-12 flex flex-col items-center justify-center text-slate-400">
@@ -265,11 +322,9 @@
     </main>
 
     <!-- Modern Footer Section -->
-    <footer class="bg-white border-t border-slate-200 pt-12 pb-24 sm:pb-16 mt-8 shadow-[0_-2px_15px_rgba(0,0,0,0.02)]">
+    <footer class="bg-white/90 backdrop-blur-md border-t border-slate-200/50 pt-12 pb-24 sm:pb-16 mt-8 shadow-[0_-2px_15px_rgba(0,0,0,0.02)] relative z-10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12 mb-10">
-          
-          <!-- Section 1: Logo & Brief -->
           <div class="space-y-4">
             <div class="flex items-center gap-3">
                <img id="footer-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS" alt="Footer Logo" class="w-12 h-12 rounded-full border-2 border-indigo-100 shadow-sm object-cover">
@@ -282,26 +337,20 @@
               ইএসসিএস ১২ জন সদস্যের একটি সঞ্চয় ও সাহায্যকারী উন্নয়নমুখী প্রতিষ্ঠান। জুন ২০২৫ থেকে আমরা একে অপরের অর্থনৈতিক সমৃদ্ধিতে কাজ করে যাচ্ছি।
             </p>
           </div>
-
-          <!-- Section 2: About Us -->
           <div class="space-y-4">
             <h3 class="text-base font-bold text-slate-800 border-b-2 border-indigo-500 pb-2 inline-block">আমাদের দর্শন</h3>
             <p class="text-[13px] text-slate-600 leading-relaxed text-justify">
               আমরা বিশ্বাস করি যে, একতা এবং সঠিক পরিকল্পনা থাকলে যেকোনো বড় লক্ষ্য অর্জন করা সম্ভব। প্রতি মাসে আমরা একটি নির্দিষ্ট পরিমাণ অর্থ সঞ্চয় করি, যা লটারি বা আলোচনার ভিত্তিতে পর্যায়ক্রমে সদস্যদের মধ্যে বণ্টন করা হয়। এটি আমাদের ব্যক্তিগত ছোট-বড় প্রয়োজনগুলো মেটাতে এবং সঞ্চয়ের অভ্যাস গড়ে তুলতে সহায়ক ভূমিকা পালন করছে।
             </p>
           </div>
-
-          <!-- Section 3: Contact Info & App -->
           <div class="space-y-4">
             <h3 class="text-base font-bold text-slate-800 border-b-2 border-indigo-500 pb-2 inline-block">যোগাযোগের ঠিকানা</h3>
             <div class="flex items-start gap-3 mt-2 text-[13px] text-slate-600">
                <span class="text-indigo-500 text-lg mt-0.5">📍</span>
                <p class="leading-relaxed">মেইন গেট, ওয়ালটন হাইটেক ইন্ডাস্ট্রিজ পিএলসি,<br>চন্দ্রা, কালিয়াকৈর, গাজীপুর।</p>
             </div>
-            
-            <!-- App Download Button (Moved here) -->
             <div class="pt-3">
-                <a id="footer-app-btn" href="#" class="inline-flex items-center gap-3 bg-slate-900 text-white px-5 py-2.5 rounded-xl shadow-md hover:bg-indigo-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group">
+                <a id="footer-app-btn" href="#" class="inline-flex items-center gap-3 bg-slate-900/90 text-white px-5 py-2.5 rounded-xl shadow-md hover:bg-indigo-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group">
                     <span class="text-2xl group-hover:scale-110 transition-transform">📱</span>
                     <div class="flex flex-col text-left">
                         <span class="text-[10px] leading-none text-slate-300 group-hover:text-indigo-100 transition-colors">ডাউনলোড করুন</span>
@@ -310,13 +359,10 @@
                 </a>
             </div>
           </div>
-
         </div>
-        
-        <!-- Section 4: Copyright & Technical -->
-        <div class="border-t border-slate-100 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+        <div class="border-t border-slate-100/50 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
           <p id="copyright-text" class="text-center md:text-left">© ২০২৫ একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)।</p>
-          <p class="flex items-center gap-1.5 font-medium bg-slate-50 border border-slate-100 px-4 py-2 rounded-full shadow-sm">
+          <p class="flex items-center gap-1.5 font-medium bg-slate-50/80 border border-slate-100/50 px-4 py-2 rounded-full shadow-sm">
             <span class="text-sm">💻</span> Developed by <span class="text-indigo-600 font-bold ml-1 tracking-wide">ESCS Technical Team</span>
           </p>
         </div>
@@ -332,11 +378,8 @@
             <div class="bg-indigo-600 text-white px-4 h-full flex items-center font-bold z-10 shadow-lg whitespace-nowrap text-xs sm:text-sm tracking-wide">
                 📢 আপডেট:
             </div>
-            <!-- Ticker container structure for seamless loop -->
             <div class="w-full overflow-hidden relative h-full flex items-center bg-slate-800/50 backdrop-blur-sm">
-                <div id="ticker-wrapper" class="ticker-scroll-wrapper">
-                     <!-- JS will inject duplicated items here -->
-                </div>
+                <div id="ticker-wrapper" class="ticker-scroll-wrapper"></div>
             </div>
         </div>
     </div>
@@ -353,14 +396,13 @@
     </div>
   </div>
   
-  <!-- Hidden Modals (Auth & Verify) -->
   <div id="verify-email-modal" class="hidden fixed inset-0 bg-slate-50 z-[150] justify-center items-center p-4"></div>
   <div id="auth-modal" class="hidden fixed inset-0 bg-slate-900/80 z-[200] justify-center items-center p-4 backdrop-blur-sm"></div>
 
-  <!-- Notification Modal (Side Panel) -->
+  <!-- Notification Modal -->
   <div id="notif-modal" class="hidden fixed inset-0 z-[80] justify-end overflow-hidden">
     <div id="notif-overlay-bg" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
-    <div id="notif-panel" class="relative bg-white w-full max-w-sm h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out z-10">
+    <div id="notif-panel" class="relative bg-white/95 backdrop-blur-xl w-full max-w-sm h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out z-10 border-l border-white/20">
         <div class="p-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex justify-between items-center shadow-md shrink-0">
             <h3 class="text-lg font-bold flex items-center gap-2">🔔 নোটিফিকেশন <span id="notif-count" class="bg-white/20 text-xs px-2 py-0.5 rounded-full border border-white/30">0</span></h3>
             <div class="flex items-center gap-1">
@@ -368,16 +410,14 @@
                 <button id="close-notif-btn" class="p-2 rounded-full hover:bg-white/20 transition text-xl leading-none">&times;</button>
             </div>
         </div>
-        <div id="notif-list" class="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50 scroll-smooth">
-            <div class="flex flex-col items-center justify-center h-full text-slate-400 gap-2"><span class="text-4xl">🔕</span><span>কোনো আপডেট নেই</span></div>
-        </div>
+        <div id="notif-list" class="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50/50 scroll-smooth"></div>
         <div class="sm:hidden w-full py-3 flex justify-center items-center text-slate-400 bg-white border-t text-xs">⟸ সোয়াইপ করে বন্ধ করুন</div>
     </div>
   </div>
 
-  <!-- Profile Modal (Modernized) -->
+  <!-- Profile Modal -->
   <div id="profile-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 justify-center items-center p-0 sm:p-4">
-    <div id="profile-modal-box" class="bg-white sm:rounded-2xl shadow-2xl w-full max-w-6xl h-full sm:h-[90vh] flex flex-col relative overflow-hidden modal-exit">
+    <div id="profile-modal-box" class="bg-white/95 backdrop-blur-xl sm:rounded-2xl shadow-2xl w-full max-w-6xl h-full sm:h-[90vh] flex flex-col relative overflow-hidden modal-exit border border-white/20">
       
       <!-- Modal Header -->
       <div class="relative bg-slate-800 text-white p-6 sm:p-8 flex flex-col items-center justify-center shrink-0 overflow-hidden">
@@ -400,14 +440,14 @@
       </div>
 
       <!-- Navigation Tabs -->
-      <div class="flex border-b border-slate-200 bg-slate-50 shrink-0 overflow-x-auto">
-          <button id="profile-tab-details" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center text-slate-500">👤 বিস্তারিত</button>
-          <button id="profile-tab-transactions" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center text-slate-500">🧾 লেনদেন</button>
-          <button id="profile-tab-summary" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white transition text-center text-slate-500">📈 সার-সংক্ষেপ</button>
+      <div class="flex border-b border-slate-200/50 bg-slate-50/50 shrink-0 overflow-x-auto">
+          <button id="profile-tab-details" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">👤 বিস্তারিত</button>
+          <button id="profile-tab-transactions" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">🧾 লেনদেন</button>
+          <button id="profile-tab-summary" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">📈 সার-সংক্ষেপ</button>
       </div>
 
       <!-- Content Area -->
-      <div id="profile-content-container" class="overflow-y-auto flex-grow bg-slate-50 p-4 sm:p-8">
+      <div id="profile-content-container" class="overflow-y-auto flex-grow bg-slate-50/30 p-4 sm:p-8">
           <!-- Details -->
           <div id="profile-content-details" class="hidden max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-sm border border-slate-100">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -430,16 +470,16 @@
           <div id="profile-content-transactions" class="hidden h-full">
               <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full flex flex-col">
                   <div class="overflow-x-auto overflow-y-auto flex-grow">
-                      <table class="min-w-full text-left text-sm whitespace-nowrap">
+                      <table class="min-w-full text-left text-sm responsive-table">
                           <thead class="bg-slate-100 text-slate-600 sticky top-0 z-10 shadow-sm">
                               <tr>
                                   <th class="py-3 px-4 font-semibold">ট্রানজ্যাকশন আইডি</th>
-                                  <th class="py-3 px-4 font-semibold">তারিখ</th>
-                                  <th class="py-3 px-4 font-semibold">বিবরণ</th>
-                                  <th class="py-3 px-4 text-right font-semibold">পরিমাণ (৳)</th>
-                              </tr>
-                          </thead>
-                          <tbody id="transactions-table-body" class="divide-y divide-slate-100"></tbody>
+                              <th class="py-3 px-4 font-semibold">তারিখ</th>
+                              <th class="py-3 px-4 font-semibold">বিবরণ</th>
+                              <th class="py-3 px-4 text-right font-semibold">পরিমাণ (৳)</th>
+                          </tr>
+                      </thead>
+                      <tbody id="transactions-table-body" class="divide-y divide-slate-100"></tbody>
                       </table>
                   </div>
               </div>
@@ -474,7 +514,6 @@
 
   <!-- Monthly Fund Modal -->
   <div id="monthly-fund-modal" class="hidden fixed inset-0 z-[150] flex flex-col bg-slate-50 text-slate-800 overflow-hidden transition-all duration-300">
-      
       <!-- Header -->
       <div class="relative z-10 flex justify-between items-center p-4 sm:p-6 border-b border-slate-200 bg-white shadow-sm">
           <div class="flex items-center gap-4">
@@ -490,19 +529,10 @@
               <span class="text-slate-600 group-hover:text-red-500 font-bold flex items-center gap-2">বন্ধ করুন <span class="text-lg leading-none">&times;</span></span>
           </button>
       </div>
-
       <!-- Main Content Container -->
       <div class="relative flex-grow overflow-hidden">
-          
-          <!-- View 1: Fund Grid List -->
-          <div id="fund-list-container" class="absolute inset-0 p-4 sm:p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 content-start pb-20 transition-transform duration-300 ease-out">
-              <!-- JS will inject static cards here -->
-          </div>
-
-          <!-- View 2: Detailed Depositor List -->
+          <div id="fund-list-container" class="absolute inset-0 p-4 sm:p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 content-start pb-20 transition-transform duration-300 ease-out"></div>
           <div id="fund-details-container" class="absolute inset-0 bg-slate-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out z-20">
-              
-              <!-- Details Header -->
               <div class="bg-white p-4 border-b border-slate-200 flex items-center gap-3 shadow-sm shrink-0">
                   <button id="fund-details-back-btn" class="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition">
                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -512,8 +542,6 @@
                       <p class="text-xs text-slate-500">জমা প্রদানকারী সদস্যদের তালিকা</p>
                   </div>
               </div>
-
-              <!-- Details List -->
               <div class="flex-grow overflow-y-auto p-4 sm:p-6">
                   <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
                       <table class="min-w-full text-left text-sm whitespace-nowrap">
@@ -525,9 +553,7 @@
                                   <th class="py-3 px-4 font-semibold text-right">ক্রমিক</th>
                               </tr>
                           </thead>
-                          <tbody id="fund-details-body" class="divide-y divide-slate-100 text-slate-700">
-                              <!-- Rows injected via JS -->
-                          </tbody>
+                          <tbody id="fund-details-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
                           <tfoot class="bg-indigo-50 font-bold text-indigo-900">
                               <tr>
                                   <td colspan="2" class="py-3 px-4 text-right">সর্বমোট:</td>
@@ -539,15 +565,12 @@
                   </div>
               </div>
           </div>
-
       </div>
   </div>
 
-  <!-- Lottery Modal (Full Screen Immersive) -->
+  <!-- Lottery Modal -->
   <div id="lottery-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-[#0f172a] text-slate-200">
     <canvas id="confetti" class="fixed inset-0 pointer-events-none z-0"></canvas>
-    
-    <!-- Lottery Header -->
     <div class="relative z-10 flex justify-between items-center p-4 lg:px-8 border-b border-slate-800 bg-[#0f172a]/80 backdrop-blur">
         <button id="close-lottery-btn" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition border border-slate-700">
             <span>⬅ ফিরে যান</span>
@@ -556,20 +579,14 @@
             <h1 class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">লাকি লটারি</h1>
         </div>
     </div>
-    
-    <!-- Lottery Content -->
     <div class="relative z-10 w-full max-w-[1600px] mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 grow overflow-y-auto">
-        <!-- Sidebar: History -->
         <div class="lg:col-span-3 flex flex-col gap-4 order-2 lg:order-1">
             <div class="glass-card p-4 rounded-xl flex-1 flex flex-col">
                 <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">📜 পূর্ববর্তী বিজয়ী</h2>
                 <ul id="lotteryHistory" class="space-y-2 overflow-y-auto flex-1 max-h-[300px] lg:max-h-none text-sm pr-1 custom-scrollbar"></ul>
             </div>
         </div>
-
-        <!-- Main: Winner & Participants -->
         <div class="lg:col-span-9 flex flex-col gap-6 order-1 lg:order-2">
-            <!-- Winner Showcase -->
             <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-700 transform scale-95 opacity-0">
                 <div class="glass-card p-8 md:p-12 rounded-2xl border border-yellow-500/30 shadow-[0_0_50px_rgba(234,179,8,0.2)] text-center relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/10 to-transparent"></div>
@@ -578,21 +595,41 @@
                     <div id="lotteryWinnerDate" class="text-slate-400 mt-4 font-mono text-sm relative z-10"></div>
                 </div>
             </div>
-
-            <!-- Participants Grid -->
             <div class="glass-card p-6 rounded-xl flex-1 flex flex-col shadow-lg">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-slate-200">অংশগ্রহণকারী</h2>
                     <span class="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-bold border border-cyan-500/20">মোট: <span id="lotteryCountBadge">0</span></span>
                 </div>
-                <ul id="lotteryParticipants" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 overflow-y-auto max-h-[500px] pr-2">
-                    <li class="col-span-full text-center text-slate-600 italic py-10">অপেক্ষা করুন...</li>
-                </ul>
+                <ul id="lotteryParticipants" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 overflow-y-auto max-h-[500px] pr-2"></ul>
             </div>
         </div>
     </div>
   </div>
 
+  <!-- Hidden Printable Receipt Template (UPDATED: PERFECT FIX FOR BLANK PDF) -->
+  <div id="receipt-container" style="position: fixed; top: 0; left: 0; width: 600px; opacity: 0; pointer-events: none; z-index: -9999;">
+    <div id="receipt-template" style="padding: 40px; font-family: 'Hind Siliguri', sans-serif; color: #1e293b; background: #ffffff; width: 100%; max-width: 600px; margin: 0 auto; box-sizing: border-box;">
+        <div style="text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 20px; margin-bottom: 25px;">
+            <h2 style="font-size: 26px; font-weight: bold; margin: 0; color: #4f46e5;">একতা সঞ্চয় কো-অপারেটিভ সোসাইটি</h2>
+            <p style="font-size: 15px; margin: 5px 0; color: #64748b;">(ইএসসিএস)</p>
+            <span style="display: inline-block; background: #f1f5f9; color: #0f172a; padding: 6px 18px; border-radius: 20px; font-size: 15px; font-weight: bold; margin-top: 15px;">লেনদেন রিসিট</span>
+        </div>
+        <div style="line-height: 2; font-size: 16px;">
+            <div style="display: flex; justify-content: space-between;"><strong>রিসিট নং:</strong> <span id="r-id" style="font-family: monospace; color: #334155;"></span></div>
+            <div style="display: flex; justify-content: space-between;"><strong>তারিখ:</strong> <span id="r-date"></span></div>
+            <div style="display: flex; justify-content: space-between;"><strong>সদস্যের নাম:</strong> <span id="r-name" style="font-weight: 600;"></span></div>
+            <div style="display: flex; justify-content: space-between;"><strong>লেনদেনের ধরণ:</strong> <span id="r-type"></span></div>
+            <div id="r-desc-container" style="display: flex; justify-content: space-between;"><strong>বিবরণ:</strong> <span id="r-desc" style="text-align: right; max-width: 250px; color: #64748b; line-height: 1.4; padding-top: 5px;"></span></div>
+            <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0; font-size: 20px; font-weight: bold; color: #0f172a;">
+                <span>পরিমাণ:</span> <span>৳ <span id="r-amount"></span></span>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #64748b;">
+            <p style="margin: 0;">এটি একটি সিস্টেম জেনারেটেড ডিজিটাল রিসিট, কোনো স্বাক্ষরের প্রয়োজন নেই।</p>
+            <p style="margin: 8px 0 0 0; font-weight: bold; color: #475569;">ডেভেলপার: ESCS Technical Team</p>
+        </div>
+    </div>
+  </div>
 
   <!-- JAVASCRIPT LOGIC -->
   <script type="module">
@@ -616,16 +653,14 @@
     let lastDrawTime = 0;
     let isFirstSnapshot = true;
     let initialLoadComplete = false;
-    let visitorLogged = false; // Flag for tracking
-    
+    let visitorLogged = false;
+
     // DOM Elements
     const mainAppContent = document.getElementById('main-app-content');
     const memberListCardContainer = document.getElementById('member-list-cards');
     const memberListPlaceholder = document.getElementById('member-list-placeholder');
     const profileModal = document.getElementById('profile-modal');
-    const monthlyFundModal = document.getElementById('monthly-fund-modal'); 
 
-    // Visitor Tracking Helpers
     function getBrowserInfo() {
         var ua = navigator.userAgent, tem, M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
         if (/trident/i.test(M[1])) { tem = /\brv[ :]+(\d+)/g.exec(ua) || []; return { name: 'IE', version: (tem[1] || '') }; }
@@ -644,12 +679,9 @@
     async function getLocation() {
         let loc = localStorage.getItem('samiti_visitor_location');
         if (loc) return loc;
-
         const getBrowserLocation = () => {
             return new Promise((resolve, reject) => {
-                if (!navigator.geolocation) {
-                    reject("এই ব্রাউজার লোকেশন সাপোর্ট করে না।");
-                } else {
+                if (!navigator.geolocation) { reject("Not supported"); } else {
                     navigator.geolocation.getCurrentPosition(
                         async (position) => {
                             try {
@@ -657,16 +689,11 @@
                                 const lon = position.coords.longitude;
                                 const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
                                 const data = await res.json();
-                                const city = data.city || data.locality || '';
-                                const country = data.countryName || '';
-                                const finalLoc = `${city}, ${country}`.replace(/^, |, $/g, '');
+                                const finalLoc = `${data.city || data.locality || ''}, ${data.countryName || ''}`.replace(/^, |, $/g, '');
                                 resolve(finalLoc || 'অজানা (Unknown)');
-                            } catch (e) {
-                                resolve(null); 
-                            }
+                            } catch (e) { resolve(null); }
                         },
-                        (error) => { reject(error); },
-                        { timeout: 10000 }
+                        (error) => { reject(error); }, { timeout: 10000 }
                     );
                 }
             });
@@ -674,26 +701,17 @@
 
         try {
             loc = await getBrowserLocation();
-            if (loc && loc !== 'অজানা (Unknown)') {
-                localStorage.setItem('samiti_visitor_location', loc);
-                return loc;
-            }
-        } catch (error) {
-            console.log("লোকেশন এক্সেস ডিনাইড বা এরর:", error);
-        }
+            if (loc && loc !== 'অজানা (Unknown)') { localStorage.setItem('samiti_visitor_location', loc); return loc; }
+        } catch (error) {}
 
         try {
             const res = await fetch('https://ipapi.co/json/');
             if (res.ok) {
                 const data = await res.json();
                 loc = `${data.city || ''}, ${data.country_name || ''}`.replace(/^, |, $/g, '');
-                if (loc) {
-                    localStorage.setItem('samiti_visitor_location', loc);
-                    return loc;
-                }
+                if (loc) { localStorage.setItem('samiti_visitor_location', loc); return loc; }
             }
         } catch(e) {}
-        
         return 'অজানা (Unknown)';
     }
 
@@ -713,24 +731,11 @@
             const browserInfo = getBrowserInfo();
             const os = getOSInfo();
             const location = await getLocation();
-
-            await setDoc(docRef, {
-                id: sid,
-                browser: browserInfo.name + ' ' + browserInfo.version,
-                os: os,
-                location: location,
-                ts: now,
-                lastActive: now
-            }).catch(e => console.log('Visitor log error', e));
+            await setDoc(docRef, { id: sid, browser: browserInfo.name + ' ' + browserInfo.version, os: os, location: location, ts: now, lastActive: now }).catch(()=>{});
         } else {
-            await updateDoc(docRef, {
-                lastActive: now
-            }).catch(e => console.log('Visitor update error', e));
+            await updateDoc(docRef, { lastActive: now }).catch(()=>{});
         }
-
-        setInterval(() => {
-            updateDoc(docRef, { lastActive: Date.now() }).catch(() => {});
-        }, 60000);
+        setInterval(() => { updateDoc(docRef, { lastActive: Date.now() }).catch(() => {}); }, 60000);
     }
 
     // Utils
@@ -739,10 +744,7 @@
         return new Intl.NumberFormat('bn-BD', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n).replace('.00', '');
     };
     
-    // Custom Bengali Year Formatter (No commas)
-    const getBengaliYear = (year) => {
-        return new Intl.NumberFormat('bn-BD', { useGrouping: false }).format(year);
-    };
+    const getBengaliYear = (year) => { return new Intl.NumberFormat('bn-BD', { useGrouping: false }).format(year); };
 
     const formatDate = (dateString, format = 'long') => {
         if (!dateString) return '';
@@ -752,38 +754,33 @@
         if (format === 'short') return `${new Intl.NumberFormat('bn-BD').format(date.getDate())} ${date.toLocaleString('bn-BD', { month: 'short' })}`;
         return '';
     };
+
     const showMessage = (msg, type = 'success') => {
       const box = document.getElementById('message-box');
       const content = document.getElementById('message-content');
       let color = type === 'error' ? 'bg-red-500' : type === 'info' ? 'bg-blue-600' : 'bg-green-600';
       content.className = `shadow-2xl rounded-xl p-4 font-semibold text-white flex items-center gap-3 backdrop-blur-md ${color}`;
-      content.innerHTML = `<span>${type === 'error' ? '⚠️' : '✅'}</span><span>${msg}</span>`;
+      content.innerHTML = `<span>${type === 'error' ? '⚠️' : type === 'info' ? 'ℹ️' : '✅'}</span><span>${msg}</span>`;
       box.classList.remove('opacity-0'); setTimeout(() => box.classList.add('opacity-0'), 3000);
     };
+
     const calculateMemberTotals = (m) => {
         const t = { totalDeposit: 0, totalLoanTaken: 0, totalLoanRepaid: 0, currentLoan: 0 };
         if(m?.transactions) m.transactions.forEach(x => { const a = Number(x.amount)||0; if(x.type === 'deposit') t.totalDeposit+=a; else if(x.type === 'loanTaken') t.totalLoanTaken+=a; else if(x.type === 'loanRepayment') t.totalLoanRepaid+=a; });
         t.currentLoan = t.totalLoanTaken - t.totalLoanRepaid; return t;
     };
 
-    // Dynamic Copyright Year Logic
     const setCopyrightYear = () => {
         const currentYear = new Date().getFullYear();
         const startYear = 2025;
         const copyrightEl = document.getElementById('copyright-text');
-        
         if(copyrightEl) {
-            if(currentYear > startYear) {
-                copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)}-${getBengaliYear(currentYear)} একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
-            } else {
-                copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)} একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
-            }
+            if(currentYear > startYear) copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)}-${getBengaliYear(currentYear)} একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
+            else copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)} একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
         }
     };
-    // Initialize Footer Setup
     setCopyrightYear();
 
-    // Notifications
     const openNotif = () => {
         const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
         m.classList.remove('hidden'); m.classList.add('flex');
@@ -810,15 +807,10 @@
         activityLog.forEach(log => {
             let icon = '📌', border = 'border-l-4 border-slate-300', badgeText = 'আপডেট', typeCls = 'bg-slate-100 text-slate-600';
             
-            if (log.msg.includes('লটারি')) { 
-                icon = '🎲'; border = 'border-l-4 border-purple-500'; badgeText = 'লটারি'; typeCls = 'bg-purple-100 text-purple-700';
-            } else if (log.msg.includes('ঋণ') && (log.msg.includes('জমা') || log.msg.includes('পরিশোধ') || log.msg.includes('ফেরত'))) {
-                icon = '💳'; border = 'border-l-4 border-yellow-500'; badgeText = 'ঋণ জমা / পরিশোধ'; typeCls = 'bg-yellow-100 text-yellow-700';
-            } else if (log.msg.includes('ঋণ')) {
-                icon = '💸'; border = 'border-l-4 border-red-500'; badgeText = 'ঋণ প্রদান'; typeCls = 'bg-red-100 text-red-700';
-            } else if (log.msg.includes('সঞ্চয়') || log.msg.includes('জমা') || log.msg.includes('টাকা') || log.msg.includes('কিস্তি')) {
-                icon = '💰'; border = 'border-l-4 border-green-500'; badgeText = 'সঞ্চয় জমা'; typeCls = 'bg-green-100 text-green-700';
-            }
+            if (log.msg.includes('লটারি')) { icon = '🎲'; border = 'border-l-4 border-purple-500'; badgeText = 'লটারি'; typeCls = 'bg-purple-100 text-purple-700'; }
+            else if (log.msg.includes('ঋণ') && (log.msg.includes('জমা') || log.msg.includes('পরিশোধ') || log.msg.includes('ফেরত'))) { icon = '💳'; border = 'border-l-4 border-yellow-500'; badgeText = 'ঋণ জমা / পরিশোধ'; typeCls = 'bg-yellow-100 text-yellow-700'; }
+            else if (log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-4 border-red-500'; badgeText = 'ঋণ প্রদান'; typeCls = 'bg-red-100 text-red-700'; }
+            else if (log.msg.includes('সঞ্চয়') || log.msg.includes('জমা') || log.msg.includes('টাকা') || log.msg.includes('কিস্তি')) { icon = '💰'; border = 'border-l-4 border-green-500'; badgeText = 'সঞ্চয় জমা'; typeCls = 'bg-green-100 text-green-700'; }
             
             const isUnread = log.ts > lastRead;
             const bg = isUnread ? 'bg-indigo-50/50' : 'bg-white';
@@ -843,7 +835,6 @@
         });
     };
     
-    // Auto Toast
     const checkAndPlayNotifications = () => {
         const lastRead = Number(localStorage.getItem('samiti_notif_last_read') || 0);
         const unreadLogs = activityLog.filter(l => l.ts > lastRead).sort((a,b) => a.ts - b.ts);
@@ -859,49 +850,29 @@
     const showAutoToast = (log) => {
         const c = document.getElementById('auto-toast-container');
         c.innerHTML = ''; 
-
         const t = document.createElement('div');
         let icon = '📌', border = 'border-l-2 border-indigo-300', badgeText = 'আপডেট', typeCls = 'text-indigo-500';
         
-        if (log.msg.includes('লটারি')) { 
-            icon = '🎲'; border = 'border-l-2 border-purple-400'; badgeText = 'লটারি'; typeCls = 'text-purple-600';
-        } else if (log.msg.includes('ঋণ') && (log.msg.includes('জমা') || log.msg.includes('পরিশোধ') || log.msg.includes('ফেরত'))) {
-            icon = '💳'; border = 'border-l-2 border-yellow-400'; badgeText = 'ঋণ জমা'; typeCls = 'text-yellow-600';
-        } else if (log.msg.includes('ঋণ')) {
-            icon = '💸'; border = 'border-l-2 border-red-400'; badgeText = 'ঋণ প্রদান'; typeCls = 'text-red-500';
-        } else if (log.msg.includes('সঞ্চয়') || log.msg.includes('জমা') || log.msg.includes('টাকা') || log.msg.includes('কিস্তি')) {
-            icon = '💰'; border = 'border-l-2 border-green-400'; badgeText = 'সঞ্চয় জমা'; typeCls = 'text-green-600';
-        }
+        if (log.msg.includes('লটারি')) { icon = '🎲'; border = 'border-l-2 border-purple-400'; badgeText = 'লটারি'; typeCls = 'text-purple-600'; }
+        else if (log.msg.includes('ঋণ') && (log.msg.includes('জমা') || log.msg.includes('পরিশোধ') || log.msg.includes('ফেরত'))) { icon = '💳'; border = 'border-l-2 border-yellow-400'; badgeText = 'ঋণ জমা'; typeCls = 'text-yellow-600'; }
+        else if (log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-2 border-red-400'; badgeText = 'ঋণ প্রদান'; typeCls = 'text-red-500'; }
+        else if (log.msg.includes('সঞ্চয়') || log.msg.includes('জমা') || log.msg.includes('টাকা') || log.msg.includes('কিস্তি')) { icon = '💰'; border = 'border-l-4 border-green-400'; badgeText = 'সঞ্চয় জমা'; typeCls = 'text-green-600'; }
         
         const memberMatch = members.find(m => log.msg.includes(m.name));
-        
         t.className = `bg-white/80 backdrop-blur-xl p-3 rounded-2xl shadow-xl ${border} w-auto max-w-[280px] flex items-center gap-3 transform transition-all duration-500 ease-out origin-top-right scale-0 opacity-0 translate-x-[20px] -translate-y-[20px] cursor-pointer pointer-events-auto border border-white/50 ring-1 ring-white/60`;
         t.setAttribute('data-notification-msg', log.msg);
         if (memberMatch) t.setAttribute('data-member-id', memberMatch.id);
-
         t.innerHTML = `<div class="text-2xl">${icon}</div><div class="flex-1 min-w-0"><p class="font-bold ${typeCls} text-[10px] uppercase tracking-wider mb-0.5">${badgeText}</p><p class="font-bold text-slate-800 text-xs line-clamp-2 leading-tight">${log.msg}</p><p class="text-[9px] text-slate-500 mt-1">এখনই</p></div>`;
-        
         c.appendChild(t);
-        
-        requestAnimationFrame(() => { 
-            t.classList.remove('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]');
-            t.classList.add('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0');
-        });
-        
-        setTimeout(() => { 
-            t.classList.remove('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0');
-            t.classList.add('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]'); 
-            setTimeout(() => t.remove(), 500); 
-        }, 3000);
+        requestAnimationFrame(() => { t.classList.remove('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]'); t.classList.add('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0'); });
+        setTimeout(() => { t.classList.remove('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0'); t.classList.add('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]'); setTimeout(() => t.remove(), 500); }, 3000);
     };
 
-    // Swipe Notification
     let touchStartX = 0;
     const np = document.getElementById('notif-panel');
     np.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, {passive: true});
     np.addEventListener('touchend', e => { if(e.changedTouches[0].screenX > touchStartX + 50) closeNotif(); });
 
-    // Charts
     const renderCharts = (td, tlt, tlr) => {
         const ctxF = document.getElementById('financeChart').getContext('2d');
         if (financeChartInstance) financeChartInstance.destroy();
@@ -924,7 +895,6 @@
         });
     };
 
-    // Rendering UI
     const renderHeaderLogo = () => {
         const img = document.getElementById('header-logo-img');
         const footerImg = document.getElementById('footer-logo-img');
@@ -939,7 +909,6 @@
     const renderImportantLinks = () => {
         const c = document.getElementById('important-links-display'); 
         if(c) { c.innerHTML = ''; c.classList.add('hidden'); }
-
         const btn = document.getElementById('footer-app-btn');
         if (appDownloadUrl) { btn.href = appDownloadUrl; btn.target = "_blank"; }
         else { 
@@ -962,7 +931,6 @@
         
         const filtered = members.filter(m => {
             if (m.isActive === false) return false; 
-            
             const q = searchQuery.toLowerCase().trim();
             const cardNumber = m.cardNumber || m['card-number'] || m.cardnumber || '';
             const employeeId = m.employeeId || m['employee-id'] || m.employeeid || '';
@@ -977,7 +945,7 @@
                 const cardNum = m.cardNumber || m['card-number'] || m.cardnumber || 'N/A';
                 
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-200 transition group flex flex-col h-full relative overflow-hidden';
+                card.className = 'bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-200 transition group flex flex-col h-full relative overflow-hidden';
                 card.innerHTML = `
                     <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition text-6xl select-none">🆔</div>
                     <div class="flex items-start gap-4 mb-5 relative z-10">
@@ -992,10 +960,10 @@
                         </div>
                     </div>
                     <div class="mt-auto space-y-2 relative z-10">
-                        <div class="flex justify-between items-center text-[13px] bg-green-50 px-3 py-2 rounded-lg border border-green-100"><span class="text-green-700 font-semibold">মোট জমা</span><span class="font-bold text-green-700 text-sm">৳ ${getBengaliNumber(t.totalDeposit)}</span></div>
-                        <div class="flex justify-between items-center text-[13px] bg-red-50 px-3 py-2 rounded-lg border border-red-100"><span class="text-red-700 font-semibold">ঋণ</span><span class="font-bold text-red-700 text-sm">৳ ${getBengaliNumber(t.currentLoan)}</span></div>
+                        <div class="flex justify-between items-center text-[13px] bg-green-50/80 px-3 py-2 rounded-lg border border-green-100"><span class="text-green-700 font-semibold">মোট জমা</span><span class="font-bold text-green-700 text-sm">৳ ${getBengaliNumber(t.totalDeposit)}</span></div>
+                        <div class="flex justify-between items-center text-[13px] bg-red-50/80 px-3 py-2 rounded-lg border border-red-100"><span class="text-red-700 font-semibold">ঋণ</span><span class="font-bold text-red-700 text-sm">৳ ${getBengaliNumber(t.currentLoan)}</span></div>
                     </div>
-                    <button class="view-profile-btn mt-4 w-full bg-slate-50 border border-indigo-100 text-indigo-600 py-2.5 rounded-lg text-[13px] font-bold hover:bg-indigo-600 hover:text-white transition-all shadow-sm" data-id="${m.id}">বিস্তারিত দেখুন</button>
+                    <button class="view-profile-btn mt-4 w-full bg-slate-50/80 border border-indigo-100 text-indigo-600 py-2.5 rounded-lg text-[13px] font-bold hover:bg-indigo-600 hover:text-white transition-all shadow-sm" data-id="${m.id}">বিস্তারিত দেখুন</button>
                 `;
                 memberListCardContainer.appendChild(card);
             });
@@ -1013,13 +981,8 @@
             const text = notice.scrollingText;
             const separator = '<span class="mx-8 text-indigo-400">❖</span>';
             const fullText = (text + separator).repeat(Math.max(1, Math.ceil(window.innerWidth / (text.length * 10))));
-            
-            tickerWrapper.innerHTML = `
-                <div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>
-                <div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>
-            `;
-        } 
-        else ticker.classList.add('hidden');
+            tickerWrapper.innerHTML = `<div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div><div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>`;
+        } else ticker.classList.add('hidden');
 
         if (noticeSlideInterval) clearInterval(noticeSlideInterval);
         const images = (Array.isArray(notice.imageUrls) ? notice.imageUrls : [notice.imageUrl]).filter(u => u);
@@ -1039,7 +1002,7 @@
         if (!images.length && !notice.text) display.innerHTML = `<div class="text-center text-slate-400 py-6 italic">কোনো নোটিশ নেই</div>`;
     };
 
-    // Profile & Modal Logic
+    // --- Profile Display & Table Generation ---
     const showProfile = (id, animate = true) => {
         const m = members.find(x => x.id === id); activeMember = m; if(!m) return;
         const t = calculateMemberTotals(m);
@@ -1068,30 +1031,29 @@
         document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(t.totalLoanRepaid)}`;
 
         const tbody = document.getElementById('transactions-table-body');
-        tbody.innerHTML = (m.transactions||[]).length === 0 ? '<tr><td colspan="4" class="py-6 text-center text-slate-400 italic">কোনো লেনদেন নেই</td></tr>' : 
+        
+        // Populate Table with Responsive Data Labels and Download Button
+        tbody.innerHTML = (m.transactions||[]).length === 0 ? '<tr><td colspan="5" class="py-6 text-center text-slate-400 italic">কোনো লেনদেন নেই</td></tr>' : 
         [...m.transactions].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(x => {
             const clr = x.type==='deposit'?'text-green-600':x.type==='loanTaken'?'text-blue-600':'text-yellow-600';
             const lbl = x.type==='deposit'?'সঞ্চয় জমা':x.type==='loanTaken'?'ঋণ গ্রহণ':'ঋণ জমা / পরিশোধ';
             
             const fallbackTxId = x.date ? `TXN-${new Date(x.date).getTime().toString().slice(-6)}` : 'N/A';
             const txId = x.txId || x.id || fallbackTxId;
+            const amountText = getBengaliNumber(x.amount);
+            const dateText = formatDate(x.date);
 
             return `<tr class="hover:bg-slate-50 transition duration-150">
-                        <td class="py-3 px-4 text-xs font-mono text-slate-500 uppercase tracking-wider">${txId}</td>
-                        <td class="py-3 px-4 text-slate-600 whitespace-nowrap">${formatDate(x.date)}</td>
-                        <td class="py-3 px-4"><span class="font-medium text-slate-700">${lbl}</span>${x.description?`<br><span class="text-xs text-slate-400">${x.description}</span>`:''}</td>
-                        <td class="py-3 px-4 text-right font-mono font-bold ${clr} whitespace-nowrap">${getBengaliNumber(x.amount)}</td>
+                        <td data-label="ট্রানজ্যাকশন আইডি" class="py-3 px-4 text-xs font-mono text-slate-500 uppercase tracking-wider">${txId}</td>
+                        <td data-label="তারিখ" class="py-3 px-4 text-slate-600">${dateText}</td>
+                        <td data-label="বিবরণ" class="py-3 px-4"><span class="font-medium text-slate-700">${lbl}</span>${x.description?`<br><span class="text-xs text-slate-400">${x.description}</span>`:''}</td>
+                        <td data-label="পরিমাণ" class="py-3 px-4 text-right font-mono font-bold ${clr}">৳ ${amountText}</td>
                     </tr>`;
         }).join('');
 
-        document.querySelectorAll('.profile-tab').forEach(x => { 
-            x.classList.remove('tab-active','text-indigo-600'); 
-            x.classList.add('text-slate-500'); 
-        });
-
+        document.querySelectorAll('.profile-tab').forEach(x => { x.classList.remove('tab-active','text-indigo-600'); x.classList.add('text-slate-500'); });
         const txTab = document.getElementById('profile-tab-transactions');
-        txTab.classList.add('tab-active','text-indigo-600'); 
-        txTab.classList.remove('text-slate-500');
+        txTab.classList.add('tab-active','text-indigo-600'); txTab.classList.remove('text-slate-500');
         
         document.getElementById('profile-content-details').classList.add('hidden');
         document.getElementById('profile-content-summary').classList.add('hidden');
@@ -1102,6 +1064,7 @@
             document.getElementById('profile-modal-box').classList.remove('modal-exit');
         }
     };
+
     const closeProfileModal = () => {
         const box = document.getElementById('profile-modal-box');
         box.classList.add('modal-exit');
@@ -1112,14 +1075,12 @@
         const c = document.getElementById('fund-list-container');
         const mDeps = members.reduce((acc,m) => { (m.transactions||[]).filter(t=>t.type==='deposit'&&t.date).forEach(t=>{ const k=t.date.substring(0,7); acc[k]=(acc[k]||0)+Number(t.amount); }); return acc; }, {});
         const sorted = Object.keys(mDeps).sort().reverse();
-        
         document.getElementById('fund-list-container').classList.remove('-translate-x-full');
         document.getElementById('fund-details-container').classList.add('translate-x-full');
 
         c.innerHTML = sorted.length ? sorted.map((k) => {
             const dist = fundDistribution[k];
             const r = dist ? members.find(m=>m.id===dist.receiverId) : null;
-            
             return `
             <div class="fund-card bg-white rounded-xl shadow-sm border border-slate-200 cursor-pointer hover:shadow-md transition active:scale-95 group" data-month="${k}">
                 <div class="p-4 sm:p-5 flex flex-col h-full justify-between">
@@ -1157,81 +1118,46 @@
         const titleEl = document.getElementById('fund-details-title');
         const bodyEl = document.getElementById('fund-details-body');
         const totalEl = document.getElementById('fund-details-total');
-        
         titleEl.textContent = formatDate(monthKey + '-01', 'monthYear');
         bodyEl.innerHTML = '';
-
         let monthlyDeposits = [];
         members.forEach(m => {
             if(m.transactions) {
-                m.transactions.forEach(t => {
-                    if(t.type === 'deposit' && t.date.startsWith(monthKey)) {
-                        monthlyDeposits.push({
-                            name: m.name,
-                            photo: m.photoUrl,
-                            date: t.date,
-                            amount: Number(t.amount) || 0
-                        });
-                    }
-                });
+                m.transactions.forEach(t => { if(t.type === 'deposit' && t.date.startsWith(monthKey)) { monthlyDeposits.push({ name: m.name, photo: m.photoUrl, date: t.date, amount: Number(t.amount) || 0 }); } });
             }
         });
-
         monthlyDeposits.sort((a, b) => new Date(b.date) - new Date(a.date));
-
         const total = monthlyDeposits.reduce((sum, item) => sum + item.amount, 0);
         totalEl.textContent = `৳ ${getBengaliNumber(total)}`;
-
-        if(monthlyDeposits.length === 0) {
-            bodyEl.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-400 italic">এই মাসে কোনো জমার তথ্য নেই</td></tr>`;
-        } else {
+        if(monthlyDeposits.length === 0) { bodyEl.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-400 italic">এই মাসে কোনো জমার তথ্য নেই</td></tr>`; } 
+        else {
             bodyEl.innerHTML = monthlyDeposits.map((d, index) => `
                 <tr class="hover:bg-indigo-50/50 transition">
-                    <td class="py-3 px-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden shrink-0">
-                                <img src="${d.photo || 'https://placehold.co/32'}" class="w-full h-full object-cover">
-                            </div>
-                            <span class="font-medium text-slate-700 line-clamp-1">${d.name}</span>
-                        </div>
-                    </td>
+                    <td class="py-3 px-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden shrink-0"><img src="${d.photo || 'https://placehold.co/32'}" class="w-full h-full object-cover"></div><span class="font-medium text-slate-700 line-clamp-1">${d.name}</span></div></td>
                     <td class="py-3 px-4 text-center text-xs text-slate-500 whitespace-nowrap">${formatDate(d.date, 'short')}</td>
                     <td class="py-3 px-4 text-right font-mono font-bold text-slate-700">৳ ${getBengaliNumber(d.amount)}</td>
                     <td class="py-3 px-4 text-right font-mono text-slate-400 text-xs">#${getBengaliNumber(index + 1)}</td>
-                </tr>
-            `).join('');
+                </tr>`).join('');
         }
-
         document.getElementById('fund-list-container').classList.add('-translate-x-full');
         document.getElementById('fund-details-container').classList.remove('translate-x-full');
     };
 
-    const closeFundDetails = () => {
-        document.getElementById('fund-list-container').classList.remove('-translate-x-full');
-        document.getElementById('fund-details-container').classList.add('translate-x-full');
-    };
+    const closeFundDetails = () => { document.getElementById('fund-list-container').classList.remove('-translate-x-full'); document.getElementById('fund-details-container').classList.add('translate-x-full'); };
 
     const renderLotteryModal = () => {
         const lp = lottery.participants||[], lh = lottery.history||[];
         document.getElementById("lotteryCountBadge").textContent = getBengaliNumber(lp.length);
         const list = document.getElementById("lotteryParticipants");
         list.innerHTML = lp.length ? lp.map((n,i)=>`<li class="bg-slate-800/50 border border-slate-700 rounded-lg p-2 text-center text-slate-300 text-sm font-medium relative overflow-hidden group hover:bg-cyan-900/20 hover:border-cyan-500/50 transition"><span class="absolute top-1 left-1 text-[10px] text-slate-600">#${i+1}</span>${n}</li>`).join('') : `<li class="col-span-full text-center text-slate-500 py-8">অংশগ্রহণকারী নেই</li>`;
-        
         const hist = document.getElementById("lotteryHistory");
         hist.innerHTML = lh.length ? [...lh].reverse().map(h=>`<li class="flex justify-between items-center bg-slate-800/40 p-2 rounded border-l-2 border-cyan-500 mb-2"><span class="text-cyan-200 font-medium text-xs">${h.winner}</span><span class="text-slate-500 text-[10px]">${h.date}</span></li>`).join('') : `<li class="text-center text-slate-600 text-xs py-2">ইতিহাস নেই</li>`;
-
         const winSec = document.getElementById("lotteryWinnerSection");
         const latest = lh[lh.length-1];
-        if(latest) {
-            document.getElementById("lotteryWinnerText").textContent = latest.winner;
-            document.getElementById("lotteryWinnerDate").textContent = latest.date;
-            winSec.classList.remove('hidden', 'scale-95', 'opacity-0');
-        } else {
-            winSec.classList.add('hidden', 'scale-95', 'opacity-0');
-        }
+        if(latest) { document.getElementById("lotteryWinnerText").textContent = latest.winner; document.getElementById("lotteryWinnerDate").textContent = latest.date; winSec.classList.remove('hidden', 'scale-95', 'opacity-0'); } 
+        else { winSec.classList.add('hidden', 'scale-95', 'opacity-0'); }
     };
     
-    // Confetti
     const canvas = document.getElementById("confetti"), ctx = canvas.getContext("2d");
     let parts = [];
     const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
@@ -1242,29 +1168,16 @@
         parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.2; p.vx*=0.95; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,6,6); if(p.y<canvas.height) act=true; });
         if(act) requestAnimationFrame(updateConfetti);
     };
-    const startConfetti = () => {
-        parts=[]; for(let i=0;i<100;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*20, vy:(Math.random()-.5)*20, c:`hsl(${Math.random()*360},70%,50%)`});
-        updateConfetti();
-    };
+    const startConfetti = () => { parts=[]; for(let i=0;i<100;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*20, vy:(Math.random()-.5)*20, c:`hsl(${Math.random()*360},70%,50%)`}); updateConfetti(); };
 
-    // Firebase Start
     const initFirebase = () => {
         const cachedLogo = localStorage.getItem('cached_logo_url');
         const favicon = document.getElementById('favicon');
-        if(cachedLogo) {
-            const loaderImg = document.getElementById('loader-logo-img');
-            if(loaderImg) loaderImg.src = cachedLogo;
-            if(favicon) favicon.href = cachedLogo;
-        }
-
+        if(cachedLogo) { const loaderImg = document.getElementById('loader-logo-img'); if(loaderImg) loaderImg.src = cachedLogo; if(favicon) favicon.href = cachedLogo; }
         try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); } catch(e) { console.error(e); }
         onAuthStateChanged(auth, async (u) => {
             if(u) {
-                if (!visitorLogged) {
-                    logVisitor();
-                    visitorLogged = true;
-                }
-
+                if (!visitorLogged) { logVisitor(); visitorLogged = true; }
                 mainAppContent.classList.remove('hidden'); document.getElementById('app-loader').classList.add('opacity-0'); setTimeout(()=>document.getElementById('app-loader').remove(),500);
                 const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
                 onSnapshot(docRef, (s) => {
@@ -1276,8 +1189,7 @@
                     lottery = { participants: d.lottery?.participants||[], history: d.lottery?.history||[], liveDraw: d.lottery?.liveDraw };
                     
                     if(d.lottery?.liveDraw?.ts > lastDrawTime && !isFirstSnapshot) {
-                         lastDrawTime = d.lottery.liveDraw.ts;
-                         document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); startConfetti();
+                         lastDrawTime = d.lottery.liveDraw.ts; document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); startConfetti();
                     }
                     isFirstSnapshot = false;
                     renderUI(); renderHeaderLogo(); renderImportantLinks(); renderNoticeBoard(); renderNotifications();
@@ -1288,14 +1200,12 @@
     };
     initFirebase();
 
-    // Event Delegation
     document.addEventListener('click', e => {
         const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], #view-monthly-fund-btn, .fund-card');
         if(!t) return;
         
         if(t.hasAttribute('data-notification-msg')) {
-            const mid = t.getAttribute('data-member-id');
-            const msg = t.getAttribute('data-notification-msg');
+            const mid = t.getAttribute('data-member-id'); const msg = t.getAttribute('data-notification-msg');
             closeNotif();
             if(mid) showProfile(mid);
             else if(msg.includes('লটারি')) { document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
@@ -1303,11 +1213,7 @@
             return;
         }
 
-        if(t.classList.contains('fund-card')) {
-            const month = t.getAttribute('data-month');
-            showFundMonthDetails(month);
-            return;
-        }
+        if(t.classList.contains('fund-card')) { showFundMonthDetails(t.getAttribute('data-month')); return; }
 
         const id = t.id;
         if(id === 'open-notif-btn') openNotif();
