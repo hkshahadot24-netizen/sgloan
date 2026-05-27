@@ -233,7 +233,7 @@
         <div class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group">
             <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
             <p class="text-sm font-medium text-slate-500 relative z-10">ঋণ প্রদান</p>
-            <p id="total-loan-given" class="text-xl sm:text-3xl font-bold text-red-500 mt-1 relative z-10 truncate">৳ ০</p>
+            <p id="total-loan-given" class="text-xl sm:text-3xl font-bold text-red-50 mt-1 relative z-10 truncate text-red-500">৳ ০</p>
             <div class="mt-2 text-xs text-red-500 font-semibold">📉 বিনিয়োগ</div>
         </div>
         <div class="bg-gradient-to-br from-indigo-600/90 to-purple-700/90 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-lg hover-card text-white flex flex-col justify-between relative overflow-hidden group cursor-pointer border border-indigo-400/30" id="view-monthly-fund-btn">
@@ -606,7 +606,7 @@
     </div>
   </div>
 
-  <!-- Hidden Printable Receipt Template (UPDATED: PERFECT FIX FOR BLANK PDF) -->
+  <!-- Hidden Printable Receipt Template -->
   <div id="receipt-container" style="position: fixed; top: 0; left: 0; width: 600px; opacity: 0; pointer-events: none; z-index: -9999;">
     <div id="receipt-template" style="padding: 40px; font-family: 'Hind Siliguri', sans-serif; color: #1e293b; background: #ffffff; width: 100%; max-width: 600px; margin: 0 auto; box-sizing: border-box;">
         <div style="text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 20px; margin-bottom: 25px;">
@@ -782,10 +782,12 @@
     setCopyrightYear();
 
     const openNotif = () => {
+        window.location.hash = 'notif'; // Added Hash for Back Button
         const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
         m.classList.remove('hidden'); m.classList.add('flex');
         setTimeout(() => { p.classList.remove('translate-x-full'); o.classList.remove('opacity-0'); }, 10);
     };
+    
     const closeNotif = () => {
         const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
         p.classList.add('translate-x-full'); o.classList.add('opacity-0');
@@ -871,7 +873,11 @@
     let touchStartX = 0;
     const np = document.getElementById('notif-panel');
     np.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, {passive: true});
-    np.addEventListener('touchend', e => { if(e.changedTouches[0].screenX > touchStartX + 50) closeNotif(); });
+    np.addEventListener('touchend', e => { 
+        if(e.changedTouches[0].screenX > touchStartX + 50) {
+            if(window.location.hash) history.back(); else closeNotif(); 
+        } 
+    });
 
     const renderCharts = (td, tlt, tlr) => {
         const ctxF = document.getElementById('financeChart').getContext('2d');
@@ -1004,6 +1010,7 @@
 
     // --- Profile Display & Table Generation ---
     const showProfile = (id, animate = true) => {
+        if(animate) window.location.hash = 'profile'; // Added Hash for Back Button
         const m = members.find(x => x.id === id); activeMember = m; if(!m) return;
         const t = calculateMemberTotals(m);
         const ph = m.photoUrl || `https://placehold.co/96x96/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
@@ -1115,6 +1122,7 @@
     };
 
     const showFundMonthDetails = (monthKey) => {
+        window.location.hash = 'fund-details'; // Added Hash for Back Button
         const titleEl = document.getElementById('fund-details-title');
         const bodyEl = document.getElementById('fund-details-body');
         const totalEl = document.getElementById('fund-details-total');
@@ -1170,6 +1178,23 @@
     };
     const startConfetti = () => { parts=[]; for(let i=0;i<100;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*20, vy:(Math.random()-.5)*20, c:`hsl(${Math.random()*360},70%,50%)`}); updateConfetti(); };
 
+    // --- History Control (Hash Routing for Back Button) ---
+    window.addEventListener('hashchange', () => {
+        const h = window.location.hash;
+        if (!h) {
+            // যদি হ্যাশ ফাঁকা হয় (ইউজার মেইন পেজে ব্যাক করেছে), সব মোডাল বন্ধ করে দিন
+            closeProfileModal();
+            closeNotif();
+            document.getElementById('monthly-fund-modal').classList.add('hidden');
+            document.getElementById('monthly-fund-modal').classList.remove('flex');
+            document.getElementById('lottery-modal').classList.add('hidden');
+            closeFundDetails();
+        } else if (h === '#fund') {
+            // যদি ফান্ড ডিটেলস থেকে ফান্ড লিস্টে ব্যাক করে
+            closeFundDetails();
+        }
+    });
+
     const initFirebase = () => {
         const cachedLogo = localStorage.getItem('cached_logo_url');
         const favicon = document.getElementById('favicon');
@@ -1189,7 +1214,9 @@
                     lottery = { participants: d.lottery?.participants||[], history: d.lottery?.history||[], liveDraw: d.lottery?.liveDraw };
                     
                     if(d.lottery?.liveDraw?.ts > lastDrawTime && !isFirstSnapshot) {
-                         lastDrawTime = d.lottery.liveDraw.ts; document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); startConfetti();
+                         lastDrawTime = d.lottery.liveDraw.ts; 
+                         window.location.hash = 'lottery'; // Hash for automatic popup
+                         document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); startConfetti();
                     }
                     isFirstSnapshot = false;
                     renderUI(); renderHeaderLogo(); renderImportantLinks(); renderNoticeBoard(); renderNotifications();
@@ -1207,9 +1234,11 @@
         if(t.hasAttribute('data-notification-msg')) {
             const mid = t.getAttribute('data-member-id'); const msg = t.getAttribute('data-notification-msg');
             closeNotif();
-            if(mid) showProfile(mid);
-            else if(msg.includes('লটারি')) { document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
-            else if(msg.includes('তহবিল')) { renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
+            if(mid) { 
+                showProfile(mid); 
+            }
+            else if(msg.includes('লটারি')) { window.location.hash = 'lottery'; document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
+            else if(msg.includes('তহবিল')) { window.location.hash = 'fund'; renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
             return;
         }
 
@@ -1217,21 +1246,24 @@
 
         const id = t.id;
         if(id === 'open-notif-btn') openNotif();
-        else if(id === 'close-notif-btn' || id === 'notif-overlay-bg') closeNotif();
+        else if(id === 'close-notif-btn' || id === 'notif-overlay-bg') { if(window.location.hash) history.back(); else closeNotif(); }
         else if(id === 'mark-read-btn') { localStorage.setItem('samiti_notif_last_read', activityLog.length?activityLog[0].ts:0); renderNotifications(); showMessage('পঠিত হিসেবে মার্ক করা হয়েছে'); }
         else if(t.classList.contains('view-profile-btn')) showProfile(t.dataset.id);
-        else if(id === 'close-profile') closeProfileModal();
+        else if(id === 'close-profile') { if(window.location.hash) history.back(); else closeProfileModal(); }
         else if(t.classList.contains('profile-tab')) {
             document.querySelectorAll('.profile-tab').forEach(x => { x.classList.remove('tab-active','text-indigo-600'); x.classList.add('text-slate-500'); });
             t.classList.add('tab-active','text-indigo-600'); t.classList.remove('text-slate-500');
             ['details','transactions','summary'].forEach(k => document.getElementById(`profile-content-${k}`).classList.add('hidden'));
             document.getElementById(`profile-content-${id.replace('profile-tab-','')}`).classList.remove('hidden');
         }
-        else if(id === 'view-monthly-fund-btn') { renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
-        else if(id === 'close-fund-modal') { document.getElementById('monthly-fund-modal').classList.add('hidden'); document.getElementById('monthly-fund-modal').classList.remove('flex'); }
-        else if(id === 'fund-details-back-btn') { closeFundDetails(); }
-        else if(id === 'view-lottery-btn') { document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
-        else if(id === 'close-lottery-btn') document.getElementById('lottery-modal').classList.add('hidden');
+        else if(id === 'view-monthly-fund-btn') { window.location.hash = 'fund'; renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
+        else if(id === 'close-fund-modal') { 
+            if(window.location.hash) history.back(); 
+            else { document.getElementById('monthly-fund-modal').classList.add('hidden'); document.getElementById('monthly-fund-modal').classList.remove('flex'); }
+        }
+        else if(id === 'fund-details-back-btn') { if(window.location.hash === '#fund-details') history.back(); else closeFundDetails(); }
+        else if(id === 'view-lottery-btn') { window.location.hash = 'lottery'; document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
+        else if(id === 'close-lottery-btn') { if(window.location.hash) history.back(); else document.getElementById('lottery-modal').classList.add('hidden'); }
     });
 
     document.getElementById('search-member-input').addEventListener('input', e => { searchQuery = e.target.value; renderUI(); });
