@@ -60,7 +60,7 @@
         animation-play-state: paused;
     }
 
-    .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; transform: translateY(20px); }
+    .fade-in-up { animation: fadeInUp 0.4s ease-out forwards; opacity: 0; transform: translateY(15px); }
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
     /* --- Glassmorphism Header --- */
@@ -121,7 +121,6 @@
 
   <!-- ================= WATERMARK LAYER ================= -->
   <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden flex justify-between items-center">
-      <!-- Left Watermark -->
       <div class="absolute top-[20%] sm:top-1/2 -translate-y-1/2 -left-24 sm:-left-12 lg:left-4 xl:left-12 opacity-[0.06] text-indigo-900 drop-shadow-xl transform -rotate-12 transition-all duration-700">
           <svg class="w-[80vw] sm:w-[45vw] max-w-[350px] xl:max-w-[450px] h-auto" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
               <g transform="translate(100,100)">
@@ -143,8 +142,6 @@
               </g>
           </svg>
       </div>
-
-      <!-- Right Watermark -->
       <div class="absolute bottom-[10%] sm:top-1/2 sm:-translate-y-1/2 -right-24 sm:-right-12 lg:right-4 xl:right-12 opacity-[0.06] text-indigo-900 drop-shadow-xl transform rotate-12 transition-all duration-700">
           <svg class="w-[80vw] sm:w-[45vw] max-w-[350px] xl:max-w-[450px] h-auto" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
               <g transform="translate(100,100)">
@@ -167,7 +164,6 @@
           </svg>
       </div>
   </div>
-  <!-- ================= END WATERMARK LAYER ================= -->
 
   <!-- APP LOADER WITH DOUBLE RING & LOGO -->
   <div id="app-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-500">
@@ -184,20 +180,20 @@
   </div>
 
   <!-- Main Application Content -->
-  <div id="main-app-content" class="hidden relative z-10">
+  <div id="main-app-content" class="hidden relative z-10 flex flex-col min-h-screen">
     
     <!-- Modern Header -->
     <header class="fixed top-0 w-full z-50 glass-header transition-all duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16 sm:h-20 gap-4">
           <div class="flex items-center gap-3 flex-1">
-            <div class="relative group cursor-pointer shrink-0">
+            <a href="#" class="relative group cursor-pointer shrink-0">
                 <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
                 <img id="header-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS" alt="লোগো" class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white object-cover bg-white shadow-sm">
-            </div>
+            </a>
             <div class="flex flex-col flex-1">
               <h1 class="text-[15px] sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-pink-600 leading-tight">
-                একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)
+                একতা সঞ্চয় কো-অপারেটিভ সোসাইটি
               </h1>
               <span class="text-[10px] sm:text-xs font-medium text-slate-500 tracking-wide mt-0.5">বিশ্বাস • একতা • সমৃদ্ধি</span>
             </div>
@@ -206,89 +202,182 @@
             <button id="open-notif-btn" class="relative group p-2 rounded-full hover:bg-slate-100 transition duration-200">
                 <div class="text-2xl sm:text-2xl text-slate-600 group-hover:text-indigo-600 transition-colors">🔔</div>
                 <span id="notif-badge" class="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm hidden transform scale-0 transition-transform duration-300"></span>
-                <span class="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block pointer-events-none whitespace-nowrap">নোটিফিকেশন</span>
             </button>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- Main Layout Grid -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8 space-y-6 sm:space-y-8">
+    <!-- Main Layout Grid / View Containers -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-12 relative">
       
-      <!-- Top Section: Stats & Feature Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 fade-in-up" style="animation-delay: 0.1s;">
-        <div class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-indigo-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-            <p class="text-sm font-medium text-slate-500 relative z-10">মোট সদস্য</p>
-            <p id="total-members" class="text-2xl sm:text-4xl font-bold text-slate-800 mt-1 relative z-10">০</p>
-            <div class="mt-2 text-xs text-indigo-500 font-semibold flex items-center gap-1">👥 একটিভ মেম্বার</div>
-        </div>
-        <div class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-            <p class="text-sm font-medium text-slate-500 relative z-10">মোট জমা</p>
-            <p id="total-paid" class="text-xl sm:text-3xl font-bold text-green-600 mt-1 relative z-10 truncate">৳ ০</p>
-            <div class="mt-2 text-xs text-green-500 font-semibold">💰 সেভিংস</div>
-        </div>
-        <div class="bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group">
-            <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-            <p class="text-sm font-medium text-slate-500 relative z-10">ঋণ প্রদান</p>
-            <p id="total-loan-given" class="text-xl sm:text-3xl font-bold text-red-50 mt-1 relative z-10 truncate text-red-500">৳ ০</p>
-            <div class="mt-2 text-xs text-red-500 font-semibold">📉 বিনিয়োগ</div>
-        </div>
-        <div class="bg-gradient-to-br from-indigo-600/90 to-purple-700/90 backdrop-blur-md p-4 sm:p-6 rounded-2xl shadow-lg hover-card text-white flex flex-col justify-between relative overflow-hidden group cursor-pointer border border-indigo-400/30" id="view-monthly-fund-btn">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-            <div class="absolute bottom-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition transform group-hover:scale-110 duration-500">
-                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" /></svg>
+      <!-- ================= HOME VIEW (Dashboard) ================= -->
+      <div id="view-home" class="space-y-6 sm:space-y-8 fade-in-up">
+          
+          <!-- Top Section: Stats Cards (3 Columns) -->
+          <div class="grid grid-cols-3 gap-3 sm:gap-6">
+            <div class="bg-white/80 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-indigo-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+                <p class="text-[10px] sm:text-sm font-medium text-slate-500 relative z-10">মোট সদস্য</p>
+                <p id="total-members" class="text-lg sm:text-4xl font-bold text-slate-800 mt-0.5 sm:mt-1 relative z-10">০</p>
+                <div class="mt-1 sm:mt-2 text-[9px] sm:text-xs text-indigo-500 font-semibold flex items-center justify-center sm:justify-start gap-1">👥 একটিভ</div>
             </div>
-            <div>
-                <h3 class="text-lg font-bold">মাসিক তহবিল</h3>
-                <p class="text-xs text-indigo-100 opacity-90">ব্যবস্থাপনা ও বিতরণ</p>
+            <div class="bg-white/80 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+                <p class="text-[10px] sm:text-sm font-medium text-slate-500 relative z-10">মোট জমা</p>
+                <p id="total-paid" class="text-[15px] sm:text-3xl font-bold text-green-600 mt-0.5 sm:mt-1 relative z-10 truncate w-full">৳ ০</p>
+                <div class="mt-1 sm:mt-2 text-[9px] sm:text-xs text-green-500 font-semibold">💰 সেভিংস</div>
             </div>
-            <div class="mt-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/40 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center justify-center gap-2 w-full group-hover:bg-white group-hover:text-indigo-600 cursor-pointer">
-                <span>বিস্তারিত দেখুন</span> <span>➜</span>
+            <div class="bg-white/80 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+                <p class="text-[10px] sm:text-sm font-medium text-slate-500 relative z-10">ঋণ প্রদান</p>
+                <p id="total-loan-given" class="text-[15px] sm:text-3xl font-bold mt-0.5 sm:mt-1 relative z-10 truncate text-red-500 w-full">৳ ০</p>
+                <div class="mt-1 sm:mt-2 text-[9px] sm:text-xs text-red-500 font-semibold">📉 বিনিয়োগ</div>
             </div>
+          </div>
+
+          <!-- Middle Section: Notice Board -->
+          <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden group hover:shadow-md transition duration-300">
+               <div class="bg-slate-50/80 backdrop-blur-sm border-b border-slate-100/50 p-4 flex items-center justify-between">
+                   <h3 class="font-bold text-slate-700 flex items-center gap-2">📢 নোটিশ বোর্ড</h3>
+                   <span class="flex h-3 w-3 relative">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                   </span>
+               </div>
+               <div class="p-4">
+                   <div id="important-links-display" class="hidden mb-4"></div>
+                   <div id="notice-display" class="text-slate-600 text-sm"></div>
+               </div>
+          </div>
+
+          <!-- App Drawer / Icon Navigation Grid -->
+          <div class="pt-2">
+              <h3 class="text-sm sm:text-base font-bold text-slate-700 flex items-center gap-2 mb-4 px-1">
+                  <span class="w-1.5 h-5 bg-indigo-500 rounded-full"></span> 
+                  অ্যাপস মেনু
+              </h3>
+              
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
+                  
+                  <!-- Member List Icon (Directory) -->
+                  <a href="#members" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-indigo-200 hover:-translate-y-1 transition-all group">
+                      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
+                          <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                          </svg>
+                      </div>
+                      <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">সদস্য তালিকা</span>
+                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">প্রোফাইল ও বিস্তারিত</span>
+                  </a>
+
+                  <!-- Financial Stats Icon (Stats) -->
+                  <a href="#finance" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-emerald-200 hover:-translate-y-1 transition-all group">
+                      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
+                          <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                          </svg>
+                      </div>
+                      <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">হিসাব-নিকাশ</span>
+                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">ফান্ড বিশ্লেষণ</span>
+                  </a>
+
+                  <!-- Monthly Fund Icon (Treasury) -->
+                  <a href="#fund" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-purple-200 hover:-translate-y-1 transition-all group">
+                      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
+                          <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                          </svg>
+                      </div>
+                      <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">মাসিক তহবিল</span>
+                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">জমার স্বচ্ছ হিসাব</span>
+                  </a>
+
+                  <!-- Lucky Lottery Icon (Dices) -->
+                  <a href="#lottery" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-orange-200 hover:-translate-y-1 transition-all group">
+                      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
+                          <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                          </svg>
+                      </div>
+                      <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">লাকি লটারি</span>
+                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">পরীক্ষা করুন ভাগ্য</span>
+                  </a>
+
+                  <!-- Leaderboard Icon (Gold Trophy for Ranking) -->
+                  <a href="#ranking" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-amber-200 hover:-translate-y-1 transition-all group col-span-2 sm:col-span-1">
+                      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
+                          <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 2a4 4 0 014 4c0 3-4 6-4 6s-4-3-4-6a4 4 0 014-4z"/>
+                          </svg>
+                      </div>
+                      <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">সদস্য র‍্যাংকিং</span>
+                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">জমার গতির তালিকা</span>
+                  </a>
+
+              </div>
+          </div>
+      </div>
+      <!-- ================= END HOME VIEW ================= -->
+
+
+      <!-- ================= MEMBERS LIST VIEW ================= -->
+      <div id="view-members" class="hidden space-y-4 fade-in-up">
+        
+        <!-- View Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-slate-100/50">
+            <div class="flex items-center gap-3">
+                <a href="#" class="w-10 h-10 flex shrink-0 items-center justify-center bg-slate-100 hover:bg-indigo-100 hover:text-indigo-600 rounded-full transition-colors text-slate-600">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+                <div>
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-800 leading-tight">সম্মানিত সদস্যবৃন্দ</h2>
+                    <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">র‍্যাংকিং ও গড় জমার সময়কাল সহ মেম্বার প্রোফাইল</p>
+                </div>
+            </div>
+            
+            <div class="relative w-full sm:w-80">
+               <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🔍</span>
+               <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন..." class="w-full pl-10 pr-4 py-2.5 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-sm transition-all" autocomplete="off">
+            </div>
+        </div>
+        
+        <!-- Members Grid -->
+        <div id="member-list-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
+        
+        <!-- Empty Placeholder -->
+        <div id="member-list-placeholder" class="hidden py-16 bg-white/50 rounded-2xl border border-slate-100 flex flex-col items-center justify-center text-slate-400">
+            <span class="text-4xl mb-3">🕵️‍♂️</span>
+            <p class="font-medium text-slate-500">কোনো সদস্য পাওয়া যায়নি</p>
         </div>
       </div>
+      <!-- ================= END MEMBERS VIEW ================= -->
 
-      <!-- Middle Section: Notice & Charts (Grid Layout) -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
-          <div class="lg:col-span-4 space-y-6 fade-in-up" style="animation-delay: 0.2s;">
-              <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden group hover:shadow-md transition duration-300">
-                   <div class="bg-slate-50/80 backdrop-blur-sm border-b border-slate-100/50 p-4 flex items-center justify-between">
-                       <h3 class="font-bold text-slate-700 flex items-center gap-2">📢 নোটিশ বোর্ড</h3>
-                       <span class="flex h-3 w-3 relative">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                       </span>
-                   </div>
-                   <div class="p-4">
-                       <div id="important-links-display" class="hidden mb-4"></div>
-                       <div id="notice-display" class="text-slate-600 text-sm"></div>
-                   </div>
-              </div>
 
-              <div class="relative bg-slate-900/90 backdrop-blur-md rounded-2xl p-1 overflow-hidden group hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-                  <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 opacity-75 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                  <div class="relative bg-slate-900/95 rounded-xl p-5 h-full flex flex-col items-center text-center">
-                      <div class="text-4xl mb-2 group-hover:rotate-12 transition-transform duration-300">🎲</div>
-                      <h3 class="text-xl font-bold text-white mb-1">লাকি লটারি</h3>
-                      <p class="text-slate-400 text-xs mb-4">ভাগ্য পরীক্ষা করুন এবং ফলাফল দেখুন</p>
-                      <button id="view-lottery-btn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold py-2 rounded-lg shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 border border-white/10">
-                          ফলাফল দেখুন
-                      </button>
-                  </div>
+      <!-- ================= FINANCE CHARTS VIEW ================= -->
+      <div id="view-finance" class="hidden space-y-4 fade-in-up">
+          <!-- View Header -->
+          <div class="flex items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-slate-100/50">
+              <a href="#" class="w-10 h-10 flex shrink-0 items-center justify-center bg-slate-100 hover:bg-emerald-100 hover:text-emerald-600 rounded-full transition-colors text-slate-600">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+              </a>
+              <div>
+                  <h2 class="text-lg sm:text-xl font-bold text-slate-800 leading-tight">আর্থিক হিসাব-নিকাশ</h2>
+                  <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">ফান্ডের ওভারভিউ এবং জমার হার</p>
               </div>
           </div>
 
-          <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6 fade-in-up" style="animation-delay: 0.3s;">
-             <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-slate-100/50 flex flex-col h-[350px]">
+          <!-- Charts Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+             <div class="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100/50 flex flex-col h-[350px]">
                 <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2"><span class="w-2 h-6 bg-green-500 rounded-full"></span>আর্থিক সারসংক্ষেপ</h3>
                 <div class="flex-grow relative w-full">
                     <canvas id="financeChart"></canvas>
                 </div>
              </div>
-             <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-slate-100/50 flex flex-col h-[350px]">
+             <div class="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100/50 flex flex-col h-[350px]">
                 <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2"><span class="w-2 h-6 bg-indigo-500 rounded-full"></span>মাসিক জমার হার</h3>
                 <div class="flex-grow relative w-full">
                     <canvas id="trendChart"></canvas>
@@ -296,33 +385,93 @@
              </div>
           </div>
       </div>
+      <!-- ================= END FINANCE VIEW ================= -->
 
-      <!-- Member List Section -->
-      <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden fade-in-up" style="animation-delay: 0.4s;">
-        <div class="p-6 border-b border-slate-100/50 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/50">
-           <div>
-               <h3 class="text-2xl font-bold text-slate-800">সম্মানিত সদস্যবৃন্দ</h3>
-               <p class="text-sm text-slate-500 mt-1">সকল সদস্যদের তথ্য এবং প্রোফাইল</p>
-           </div>
-           <div class="relative w-full sm:w-80">
-               <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🔍</span>
-               <input id="search-member-input" type="search" placeholder="সদস্য খুঁজুন..." class="w-full pl-10 pr-4 py-2.5 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-sm transition-all" autocomplete="off">
-           </div>
-        </div>
-        
-        <div class="p-6">
-            <div id="member-list-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <div id="member-list-placeholder" class="hidden py-12 flex flex-col items-center justify-center text-slate-400">
-                <span class="text-4xl mb-2">🕵️‍♂️</span>
-                <p>কোনো সদস্য পাওয়া যায়নি</p>
-            </div>
-        </div>
+
+      <!-- ================= MEMBER LEADERBOARD VIEW ================= -->
+      <div id="view-ranking" class="hidden space-y-6 fade-in-up">
+          
+          <!-- View Header -->
+          <div class="flex items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-slate-100/50">
+              <a href="#" class="w-10 h-10 flex shrink-0 items-center justify-center bg-slate-100 hover:bg-amber-100 hover:text-amber-600 rounded-full transition-colors text-slate-600">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+              </a>
+              <div>
+                  <h2 class="text-lg sm:text-xl font-bold text-slate-800 leading-tight">জমা স্পিড লিডারবোর্ড</h2>
+                  <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">লটারির ড্র হবার পর সবচেয়ে দ্রুততম সময়ে সঞ্চয় জমাকারীদের র‌্যাংক</p>
+              </div>
+          </div>
+
+          <!-- Podium Area for Top 3 -->
+          <div class="bg-gradient-to-b from-indigo-900 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+              <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-25"></div>
+              <h3 class="text-center text-amber-400 font-bold text-lg mb-6 tracking-wider flex items-center justify-center gap-2">
+                  🏆 চলতি মাসের সেরা ৩ সঞ্চয়ী চ্যাম্পিয়ন
+              </h3>
+              
+              <div class="grid grid-cols-3 gap-2 max-w-lg mx-auto items-end pt-8 pb-4 relative z-10">
+                  
+                  <!-- 2nd Place -->
+                  <div class="flex flex-col items-center">
+                      <div class="relative mb-2">
+                          <img id="podium-2-img" src="https://placehold.co/64x64" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-4 border-slate-300 shadow-md bg-slate-700">
+                          <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-xl">🥈</span>
+                      </div>
+                      <p id="podium-2-name" class="text-xs font-bold text-slate-200 text-center truncate w-full">---</p>
+                      <p id="podium-2-days" class="text-[10px] text-slate-300">-- দিন</p>
+                      <div class="bg-gradient-to-t from-slate-500 to-slate-400 w-full h-24 rounded-t-xl mt-2 flex flex-col justify-center items-center shadow-lg border border-slate-300/30">
+                          <span class="text-2xl font-extrabold text-white">২</span>
+                          <span class="text-[9px] uppercase tracking-widest text-slate-100">সিলভার</span>
+                      </div>
+                  </div>
+
+                  <!-- 1st Place (Center Big Podium) -->
+                  <div class="flex flex-col items-center transform -translate-y-4">
+                      <div class="relative mb-2">
+                          <div class="absolute -inset-1 rounded-full bg-amber-400 animate-pulse blur opacity-40"></div>
+                          <img id="podium-1-img" src="https://placehold.co/64x64" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-amber-400 shadow-xl bg-slate-700 relative z-10">
+                          <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-2xl z-10 animate-bounce">👑</span>
+                      </div>
+                      <p id="podium-1-name" class="text-xs sm:text-sm font-extrabold text-amber-300 text-center truncate w-full relative z-10">---</p>
+                      <p id="podium-1-days" class="text-xs text-amber-200 relative z-10 font-bold">-- দিন</p>
+                      <div class="bg-gradient-to-t from-amber-600 to-yellow-400 w-full h-32 rounded-t-xl mt-2 flex flex-col justify-center items-center shadow-2xl border border-amber-300/30 relative z-10">
+                          <span class="text-3xl font-black text-slate-900">১</span>
+                          <span class="text-[10px] uppercase tracking-wider font-extrabold text-slate-900">গোল্ড</span>
+                      </div>
+                  </div>
+
+                  <!-- 3rd Place -->
+                  <div class="flex flex-col items-center">
+                      <div class="relative mb-2">
+                          <img id="podium-3-img" src="https://placehold.co/64x64" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-4 border-amber-700 shadow-md bg-slate-700">
+                          <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-xl">🥉</span>
+                      </div>
+                      <p id="podium-3-name" class="text-xs font-bold text-orange-200 text-center truncate w-full">---</p>
+                      <p id="podium-3-days" class="text-[10px] text-orange-300">-- দিন</p>
+                      <div class="bg-gradient-to-t from-amber-800 to-amber-700 w-full h-20 rounded-t-xl mt-2 flex flex-col justify-center items-center shadow-lg border border-amber-800/30">
+                          <span class="text-2xl font-extrabold text-white">৩</span>
+                          <span class="text-[9px] uppercase tracking-widest text-orange-100">ব্রোঞ্জ</span>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+
+          <!-- Rest of the Ranks List -->
+          <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100">
+              <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><span class="w-1.5 h-5 bg-indigo-500 rounded-full"></span> সকল সদস্যের গতি তালিকা</h4>
+              <div id="leaderboard-list" class="space-y-3">
+                  <!-- Dynamically populated rows -->
+              </div>
+          </div>
+
       </div>
+      <!-- ================= END LEADERBOARD VIEW ================= -->
 
     </main>
 
     <!-- Modern Footer Section -->
-    <footer class="bg-white/90 backdrop-blur-md border-t border-slate-200/50 pt-12 pb-24 sm:pb-16 mt-8 shadow-[0_-2px_15px_rgba(0,0,0,0.02)] relative z-10">
+    <footer class="bg-white/90 backdrop-blur-md border-t border-slate-200/50 pt-12 pb-24 sm:pb-16 mt-auto shadow-[0_-2px_15px_rgba(0,0,0,0.02)] relative z-10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12 mb-10">
           <div class="space-y-4">
@@ -517,26 +666,23 @@
       <!-- Header -->
       <div class="relative z-10 flex justify-between items-center p-4 sm:p-6 border-b border-slate-200 bg-white shadow-sm">
           <div class="flex items-center gap-4">
-              <div class="p-3 bg-indigo-50 rounded-full text-indigo-600">
-                  <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              </div>
+              <a href="#" class="w-10 h-10 flex shrink-0 items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors text-slate-600">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+              </a>
               <div>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-800">মাসিক তহবিল</h3>
                   <p class="text-xs sm:text-sm text-slate-500">স্বচ্ছ ও সুন্দর ব্যবস্থাপনা</p>
               </div>
           </div>
-          <button id="close-fund-modal" class="group relative px-4 py-2 rounded-lg bg-slate-100 hover:bg-red-50 transition-colors duration-200 border border-slate-200">
-              <span class="text-slate-600 group-hover:text-red-500 font-bold flex items-center gap-2">বন্ধ করুন <span class="text-lg leading-none">&times;</span></span>
-          </button>
       </div>
       <!-- Main Content Container -->
       <div class="relative flex-grow overflow-hidden">
           <div id="fund-list-container" class="absolute inset-0 p-4 sm:p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 content-start pb-20 transition-transform duration-300 ease-out"></div>
           <div id="fund-details-container" class="absolute inset-0 bg-slate-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out z-20">
               <div class="bg-white p-4 border-b border-slate-200 flex items-center gap-3 shadow-sm shrink-0">
-                  <button id="fund-details-back-btn" class="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition">
+                  <a href="#fund" id="fund-details-back-btn" class="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition">
                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                  </button>
+                  </a>
                   <div>
                       <h4 id="fund-details-title" class="text-lg font-bold text-slate-800">---</h4>
                       <p class="text-xs text-slate-500">জমা প্রদানকারী সদস্যদের তালিকা</p>
@@ -572,9 +718,9 @@
   <div id="lottery-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-[#0f172a] text-slate-200">
     <canvas id="confetti" class="fixed inset-0 pointer-events-none z-0"></canvas>
     <div class="relative z-10 flex justify-between items-center p-4 lg:px-8 border-b border-slate-800 bg-[#0f172a]/80 backdrop-blur">
-        <button id="close-lottery-btn" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition border border-slate-700">
+        <a href="#" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition border border-slate-700">
             <span>⬅ ফিরে যান</span>
-        </button>
+        </a>
         <div class="text-right">
             <h1 class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">লাকি লটারি</h1>
         </div>
@@ -602,31 +748,6 @@
                 </div>
                 <ul id="lotteryParticipants" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 overflow-y-auto max-h-[500px] pr-2"></ul>
             </div>
-        </div>
-    </div>
-  </div>
-
-  <!-- Hidden Printable Receipt Template -->
-  <div id="receipt-container" style="position: fixed; top: 0; left: 0; width: 600px; opacity: 0; pointer-events: none; z-index: -9999;">
-    <div id="receipt-template" style="padding: 40px; font-family: 'Hind Siliguri', sans-serif; color: #1e293b; background: #ffffff; width: 100%; max-width: 600px; margin: 0 auto; box-sizing: border-box;">
-        <div style="text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 20px; margin-bottom: 25px;">
-            <h2 style="font-size: 26px; font-weight: bold; margin: 0; color: #4f46e5;">একতা সঞ্চয় কো-অপারেটিভ সোসাইটি</h2>
-            <p style="font-size: 15px; margin: 5px 0; color: #64748b;">(ইএসসিএস)</p>
-            <span style="display: inline-block; background: #f1f5f9; color: #0f172a; padding: 6px 18px; border-radius: 20px; font-size: 15px; font-weight: bold; margin-top: 15px;">লেনদেন রিসিট</span>
-        </div>
-        <div style="line-height: 2; font-size: 16px;">
-            <div style="display: flex; justify-content: space-between;"><strong>রিসিট নং:</strong> <span id="r-id" style="font-family: monospace; color: #334155;"></span></div>
-            <div style="display: flex; justify-content: space-between;"><strong>তারিখ:</strong> <span id="r-date"></span></div>
-            <div style="display: flex; justify-content: space-between;"><strong>সদস্যের নাম:</strong> <span id="r-name" style="font-weight: 600;"></span></div>
-            <div style="display: flex; justify-content: space-between;"><strong>লেনদেনের ধরণ:</strong> <span id="r-type"></span></div>
-            <div id="r-desc-container" style="display: flex; justify-content: space-between;"><strong>বিবরণ:</strong> <span id="r-desc" style="text-align: right; max-width: 250px; color: #64748b; line-height: 1.4; padding-top: 5px;"></span></div>
-            <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0; font-size: 20px; font-weight: bold; color: #0f172a;">
-                <span>পরিমাণ:</span> <span>৳ <span id="r-amount"></span></span>
-            </div>
-        </div>
-        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #64748b;">
-            <p style="margin: 0;">এটি একটি সিস্টেম জেনারেটেড ডিজিটাল রিসিট, কোনো স্বাক্ষরের প্রয়োজন নেই।</p>
-            <p style="margin: 8px 0 0 0; font-weight: bold; color: #475569;">ডেভেলপার: ESCS Technical Team</p>
         </div>
     </div>
   </div>
@@ -661,6 +782,83 @@
     const memberListPlaceholder = document.getElementById('member-list-placeholder');
     const profileModal = document.getElementById('profile-modal');
 
+    // --- Core Router Logic (Hash Navigation) ---
+    const appViews = ['view-home', 'view-members', 'view-finance', 'view-ranking'];
+    
+    function closeAllModals() {
+        closeProfileModal(false);
+        closeNotif();
+        document.getElementById('monthly-fund-modal').classList.add('hidden');
+        document.getElementById('monthly-fund-modal').classList.remove('flex');
+        document.getElementById('lottery-modal').classList.add('hidden');
+        closeFundDetails();
+    }
+
+    function switchView(viewId) {
+        appViews.forEach(v => {
+            const el = document.getElementById(v);
+            if(el) {
+                if(v === viewId) { el.classList.remove('hidden'); el.classList.add('fade-in-up'); }
+                else { el.classList.add('hidden'); el.classList.remove('fade-in-up'); }
+            }
+        });
+    }
+
+    window.addEventListener('hashchange', () => {
+        const h = window.location.hash;
+        
+        // Handle Main Views
+        if (!h || h === '' || h === '#') {
+            closeAllModals();
+            switchView('view-home');
+        } 
+        else if (h === '#members') {
+            closeAllModals();
+            switchView('view-members');
+            window.scrollTo(0, 0);
+        } 
+        else if (h === '#finance') {
+            closeAllModals();
+            switchView('view-finance');
+            window.scrollTo(0, 0);
+            // Fix Chart.js rendering issue when unhidden
+            setTimeout(() => {
+                if (financeChartInstance) financeChartInstance.resize();
+                if (trendChartInstance) trendChartInstance.resize();
+            }, 50);
+        } 
+        else if (h === '#ranking') {
+            closeAllModals();
+            switchView('view-ranking');
+            renderLeaderboard();
+            window.scrollTo(0, 0);
+        }
+        // Handle Modals
+        else if (h === '#fund') {
+            closeFundDetails();
+            renderFundModal();
+            document.getElementById('monthly-fund-modal').classList.remove('hidden');
+            document.getElementById('monthly-fund-modal').classList.add('flex');
+        } 
+        else if (h === '#fund-details') {
+            // Internal state triggered by JS
+        } 
+        else if (h === '#lottery') {
+            document.getElementById('lottery-modal').classList.remove('hidden');
+            renderLotteryModal();
+            resizeCanvas();
+            if (lottery.history && lottery.history.length) startConfetti();
+        } 
+        else if (h === '#notif') {
+            const m = document.getElementById('notif-modal');
+            if (m.classList.contains('hidden')) openNotif();
+        } 
+        else if (h === '#profile') {
+            // Ensure profile is visible, usually opened via script
+        }
+    });
+
+    // Device / Visitor Logging
     function getBrowserInfo() {
         var ua = navigator.userAgent, tem, M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
         if (/trident/i.test(M[1])) { tem = /\brv[ :]+(\d+)/g.exec(ua) || []; return { name: 'IE', version: (tem[1] || '') }; }
@@ -770,6 +968,57 @@
         t.currentLoan = t.totalLoanTaken - t.totalLoanRepaid; return t;
     };
 
+    // --- STREAMING_CHUNK: Computing deposit speed ranking system... ---
+    // Calculate how quickly members pay their installment after the lottery is completed or the start of the month
+    const calculateMemberSpeedRankings = () => {
+        const rankings = members.map(m => {
+            let totalDaysDiff = 0;
+            let paymentsAnalyzed = 0;
+            const deposits = (m.transactions || []).filter(t => t.type === 'deposit' && t.date);
+
+            deposits.forEach(deposit => {
+                const monthKey = deposit.date.substring(0, 7); // Format: "YYYY-MM"
+                let lotteryDate = null;
+
+                // Check if we have lottery distribution date in fundDistribution for this month
+                if (fundDistribution[monthKey] && fundDistribution[monthKey].date) {
+                    lotteryDate = new Date(fundDistribution[monthKey].date);
+                } else if (fundDistribution[monthKey] && fundDistribution[monthKey].ts) {
+                    lotteryDate = new Date(fundDistribution[monthKey].ts);
+                } else {
+                    // Fallback to the 1st day of the deposit's month
+                    lotteryDate = new Date(monthKey + "-01");
+                }
+
+                const payDate = new Date(deposit.date);
+                const diffTime = payDate - lotteryDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                // Keep values logic-bound (0 or positive days)
+                const speed = diffDays < 0 ? 0 : diffDays;
+                totalDaysDiff += speed;
+                paymentsAnalyzed++;
+            });
+
+            // Fallback for members with no payments
+            const avgSpeed = paymentsAnalyzed > 0 ? (totalDaysDiff / paymentsAnalyzed) : 999;
+
+            return {
+                member: m,
+                avgDays: parseFloat(avgSpeed.toFixed(1)),
+                totalPayments: paymentsAnalyzed
+            };
+        });
+
+        // Sort rankings: Lower average days = higher priority
+        rankings.sort((a, b) => {
+            if (a.avgDays === b.avgDays) return (b.totalPayments - a.totalPayments);
+            return a.avgDays - b.avgDays;
+        });
+
+        return rankings;
+    };
+
     const setCopyrightYear = () => {
         const currentYear = new Date().getFullYear();
         const startYear = 2025;
@@ -782,7 +1031,7 @@
     setCopyrightYear();
 
     const openNotif = () => {
-        window.location.hash = 'notif'; // Added Hash for Back Button
+        window.location.hash = 'notif'; 
         const m = document.getElementById('notif-modal'), p = document.getElementById('notif-panel'), o = document.getElementById('notif-overlay-bg');
         m.classList.remove('hidden'); m.classList.add('flex');
         setTimeout(() => { p.classList.remove('translate-x-full'); o.classList.remove('opacity-0'); }, 10);
@@ -923,6 +1172,16 @@
         }
     };
 
+    // --- STREAMING_CHUNK: Formatting user badges based on computed speed rankings... ---
+    // Helper to get speed label & style
+    const getSpeedLabel = (avgDays) => {
+        if (avgDays === 999) return { text: 'কোনো তথ্য নেই', cls: 'bg-slate-100 text-slate-500' };
+        if (avgDays <= 3) return { text: '⚡ বিদ্যুৎ গতি', cls: 'bg-green-100 text-green-700' };
+        if (avgDays <= 7) return { text: '🏃 দ্রুত গতি', cls: 'bg-emerald-100 text-emerald-700' };
+        if (avgDays <= 12) return { text: '🚶 সাধারণ গতি', cls: 'bg-yellow-100 text-yellow-700 border border-yellow-200' };
+        return { text: '🐢 ধীর গতি', cls: 'bg-orange-100 text-orange-700' };
+    };
+
     const renderUI = () => {
         let td = 0, tlt = 0, tlr = 0;
         members.forEach(m => { const t = calculateMemberTotals(m); td+=t.totalDeposit; tlt+=t.totalLoanTaken; tlr+=t.totalLoanRepaid; });
@@ -943,6 +1202,9 @@
             return !q || (m.name||'').toLowerCase().includes(q) || (m.id||'').includes(q) || (m.phone||'').includes(q) || cardNumber.includes(q) || employeeId.includes(q);
         });
 
+        // Compute rankings beforehand to showcase speed on cards
+        const speedRankings = calculateMemberSpeedRankings();
+
         if (filtered.length === 0) memberListPlaceholder.classList.remove('hidden');
         else {
             filtered.sort((a,b) => (a.name||'').localeCompare(b.name||'','bn')).forEach(m => {
@@ -950,21 +1212,34 @@
                 const ph = `https://placehold.co/64x64/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
                 const cardNum = m.cardNumber || m['card-number'] || m.cardnumber || 'N/A';
                 
+                // Get member speed ranking
+                const rankIndex = speedRankings.findIndex(r => r.member.id === m.id);
+                const rankInfo = speedRankings[rankIndex];
+                const speed = rankInfo ? rankInfo.avgDays : 999;
+                const badge = getSpeedLabel(speed);
+                const positionText = speed !== 999 ? `🏅 পজিশন: ${getBengaliNumber(rankIndex + 1)} তম` : '🏅 কোনো র‍্যাংক নেই';
+
                 const card = document.createElement('div');
                 card.className = 'bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-200 transition group flex flex-col h-full relative overflow-hidden';
                 card.innerHTML = `
-                    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition text-6xl select-none">🆔</div>
+                    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition text-6xl select-none">💳</div>
                     <div class="flex items-start gap-4 mb-5 relative z-10">
                         <img class="w-14 h-14 rounded-full object-cover border-2 border-indigo-100 shadow-sm mt-1" src="${m.photoUrl||ph}" onerror="this.src='${ph}'">
                         <div class="overflow-hidden w-full">
                             <h4 class="font-bold text-slate-800 truncate text-[18px] mb-1.5">${m.name}</h4>
                             <p class="text-[13px] text-indigo-600 font-semibold flex items-center gap-1.5"><span class="text-sm">💳</span> ${cardNum}</p>
                             <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-[13px] text-slate-600 mt-1.5">
-                                <p class="flex items-center gap-1"><span class="text-sm">🆔</span> <span class="font-medium tracking-wide">${m.id}</span></p>
                                 <p class="flex items-center gap-1"><span class="text-sm">📞</span> <span class="font-medium tracking-wide">${m.phone || 'N/A'}</span></p>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Ranking & Promptness Score Section -->
+                    <div class="bg-slate-50/70 rounded-lg p-2.5 mb-3 text-xs flex justify-between items-center relative z-10">
+                        <span class="font-medium text-slate-500">${positionText}</span>
+                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${badge.cls}">${badge.text} ${speed !== 999 ? `(${getBengaliNumber(speed)} দিন)` : ''}</span>
+                    </div>
+
                     <div class="mt-auto space-y-2 relative z-10">
                         <div class="flex justify-between items-center text-[13px] bg-green-50/80 px-3 py-2 rounded-lg border border-green-100"><span class="text-green-700 font-semibold">মোট জমা</span><span class="font-bold text-green-700 text-sm">৳ ${getBengaliNumber(t.totalDeposit)}</span></div>
                         <div class="flex justify-between items-center text-[13px] bg-red-50/80 px-3 py-2 rounded-lg border border-red-100"><span class="text-red-700 font-semibold">ঋণ</span><span class="font-bold text-red-700 text-sm">৳ ${getBengaliNumber(t.currentLoan)}</span></div>
@@ -974,7 +1249,102 @@
                 memberListCardContainer.appendChild(card);
             });
         }
-        if(activeMember) { const fresh = members.find(m=>m.id===activeMember.id); if(fresh && filtered.includes(fresh)) showProfile(fresh.id, false); else closeProfileModal(); }
+        if(activeMember) { const fresh = members.find(m=>m.id===activeMember.id); if(fresh && filtered.includes(fresh)) showProfile(fresh.id, false); else closeProfileModal(false); }
+    };
+
+    // --- STREAMING_CHUNK: Populating the interactive Leaderboard View... ---
+    // Render the beautiful leaderboards podiums and full stats
+    const renderLeaderboard = () => {
+        const rankings = calculateMemberSpeedRankings();
+        const fallbackPic = 'https://placehold.co/128x128/e2e8f0/64748b?text=M';
+
+        // 1st Place Podium
+        const top1 = rankings[0];
+        if (top1 && top1.avgDays !== 999) {
+            document.getElementById('podium-1-name').textContent = top1.member.name;
+            document.getElementById('podium-1-days').textContent = `গড় ${getBengaliNumber(top1.avgDays)} দিন`;
+            document.getElementById('podium-1-img').src = top1.member.photoUrl || fallbackPic;
+        } else {
+            document.getElementById('podium-1-name').textContent = 'খালি';
+            document.getElementById('podium-1-days').textContent = '-- দিন';
+            document.getElementById('podium-1-img').src = fallbackPic;
+        }
+
+        // 2nd Place Podium
+        const top2 = rankings[1];
+        if (top2 && top2.avgDays !== 999) {
+            document.getElementById('podium-2-name').textContent = top2.member.name;
+            document.getElementById('podium-2-days').textContent = `গড় ${getBengaliNumber(top2.avgDays)} দিন`;
+            document.getElementById('podium-2-img').src = top2.member.photoUrl || fallbackPic;
+        } else {
+            document.getElementById('podium-2-name').textContent = 'খালি';
+            document.getElementById('podium-2-days').textContent = '-- দিন';
+            document.getElementById('podium-2-img').src = fallbackPic;
+        }
+
+        // 3rd Place Podium
+        const top3 = rankings[2];
+        if (top3 && top3.avgDays !== 999) {
+            document.getElementById('podium-3-name').textContent = top3.member.name;
+            document.getElementById('podium-3-days').textContent = `গড় ${getBengaliNumber(top3.avgDays)} দিন`;
+            document.getElementById('podium-3-img').src = top3.member.photoUrl || fallbackPic;
+        } else {
+            document.getElementById('podium-3-name').textContent = 'খালি';
+            document.getElementById('podium-3-days').textContent = '-- দিন';
+            document.getElementById('podium-3-img').src = fallbackPic;
+        }
+
+        // Remainder of the lists
+        const listContainer = document.getElementById('leaderboard-list');
+        listContainer.innerHTML = '';
+
+        rankings.forEach((rank, index) => {
+            const m = rank.member;
+            const avgSpeed = rank.avgDays;
+            const totalPays = rank.totalPayments;
+            const badge = getSpeedLabel(avgSpeed);
+            const ph = `https://placehold.co/48x48/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
+
+            // Calculate progress promptness percentage for progress bars (best is 0 days, standard max is 30 days)
+            let progressPct = 0;
+            if (avgSpeed !== 999) {
+                progressPct = Math.max(5, 100 - (avgSpeed * 3));
+            }
+
+            let rankBadge = '';
+            if (index === 0) rankBadge = '🥇';
+            else if (index === 1) rankBadge = '🥈';
+            else if (index === 2) rankBadge = '🥉';
+            else rankBadge = `<span class="font-bold text-xs text-slate-500 font-mono">#${index+1}</span>`;
+
+            listContainer.innerHTML += `
+            <div class="flex flex-col sm:flex-row items-center gap-3 bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100 hover:border-indigo-100 hover:bg-slate-100/50 transition">
+                <div class="flex items-center gap-3 w-full sm:w-1/3">
+                    <div class="w-8 h-8 flex items-center justify-center shrink-0">${rankBadge}</div>
+                    <img class="w-10 h-10 rounded-full object-cover border border-slate-200" src="${m.photoUrl || ph}" onerror="this.src='${ph}'">
+                    <div class="min-w-0">
+                        <p class="font-bold text-slate-800 text-sm truncate">${m.name}</p>
+                        <p class="text-[10px] text-slate-400">মোট জমা: ${getBengaliNumber(totalPays)} বার</p>
+                    </div>
+                </div>
+                
+                <!-- Speed Progress Indicator -->
+                <div class="w-full sm:w-1/3 mt-2 sm:mt-0">
+                    <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                        <span>জমা দেওয়ার সময়কাল</span>
+                        <span class="font-bold text-slate-600">${avgSpeed !== 999 ? `${getBengaliNumber(avgSpeed)} দিন` : 'তথ্য নেই'}</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-indigo-600 h-1.5 rounded-full transition-all" style="width: ${progressPct}%"></div>
+                    </div>
+                </div>
+
+                <!-- Badge Class -->
+                <div class="w-full sm:w-1/3 flex justify-end mt-2 sm:mt-0">
+                    <span class="px-3 py-1 rounded-full font-bold text-[10px] sm:text-xs ${badge.cls}">${badge.text}</span>
+                </div>
+            </div>`;
+        });
     };
 
     const renderNoticeBoard = () => {
@@ -1010,7 +1380,7 @@
 
     // --- Profile Display & Table Generation ---
     const showProfile = (id, animate = true) => {
-        if(animate) window.location.hash = 'profile'; // Added Hash for Back Button
+        if(animate) window.location.hash = 'profile'; 
         const m = members.find(x => x.id === id); activeMember = m; if(!m) return;
         const t = calculateMemberTotals(m);
         const ph = m.photoUrl || `https://placehold.co/96x96/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
@@ -1039,7 +1409,6 @@
 
         const tbody = document.getElementById('transactions-table-body');
         
-        // Populate Table with Responsive Data Labels and Download Button
         tbody.innerHTML = (m.transactions||[]).length === 0 ? '<tr><td colspan="5" class="py-6 text-center text-slate-400 italic">কোনো লেনদেন নেই</td></tr>' : 
         [...m.transactions].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(x => {
             const clr = x.type==='deposit'?'text-green-600':x.type==='loanTaken'?'text-blue-600':'text-yellow-600';
@@ -1072,7 +1441,11 @@
         }
     };
 
-    const closeProfileModal = () => {
+    const closeProfileModal = (checkHash = true) => {
+        if(checkHash && window.location.hash === '#profile') {
+            history.back();
+            return;
+        }
         const box = document.getElementById('profile-modal-box');
         box.classList.add('modal-exit');
         setTimeout(() => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); box.classList.remove('modal-exit'); activeMember = null; }, 200);
@@ -1122,7 +1495,7 @@
     };
 
     const showFundMonthDetails = (monthKey) => {
-        window.location.hash = 'fund-details'; // Added Hash for Back Button
+        window.location.hash = 'fund-details'; 
         const titleEl = document.getElementById('fund-details-title');
         const bodyEl = document.getElementById('fund-details-body');
         const totalEl = document.getElementById('fund-details-total');
@@ -1178,23 +1551,7 @@
     };
     const startConfetti = () => { parts=[]; for(let i=0;i<100;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*20, vy:(Math.random()-.5)*20, c:`hsl(${Math.random()*360},70%,50%)`}); updateConfetti(); };
 
-    // --- History Control (Hash Routing for Back Button) ---
-    window.addEventListener('hashchange', () => {
-        const h = window.location.hash;
-        if (!h) {
-            // যদি হ্যাশ ফাঁকা হয় (ইউজার মেইন পেজে ব্যাক করেছে), সব মোডাল বন্ধ করে দিন
-            closeProfileModal();
-            closeNotif();
-            document.getElementById('monthly-fund-modal').classList.add('hidden');
-            document.getElementById('monthly-fund-modal').classList.remove('flex');
-            document.getElementById('lottery-modal').classList.add('hidden');
-            closeFundDetails();
-        } else if (h === '#fund') {
-            // যদি ফান্ড ডিটেলস থেকে ফান্ড লিস্টে ব্যাক করে
-            closeFundDetails();
-        }
-    });
-
+    // --- STREAMING_CHUNK: Bootstrapping Firebase Authentication and Sync Listeners... ---
     const initFirebase = () => {
         const cachedLogo = localStorage.getItem('cached_logo_url');
         const favicon = document.getElementById('favicon');
@@ -1204,6 +1561,14 @@
             if(u) {
                 if (!visitorLogged) { logVisitor(); visitorLogged = true; }
                 mainAppContent.classList.remove('hidden'); document.getElementById('app-loader').classList.add('opacity-0'); setTimeout(()=>document.getElementById('app-loader').remove(),500);
+                
+                // Show home page on initial load if no hash
+                if(!window.location.hash) {
+                    switchView('view-home');
+                } else {
+                    window.dispatchEvent(new Event('hashchange'));
+                }
+
                 const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
                 onSnapshot(docRef, (s) => {
                     const d = s.data(); if(!d) return;
@@ -1215,11 +1580,16 @@
                     
                     if(d.lottery?.liveDraw?.ts > lastDrawTime && !isFirstSnapshot) {
                          lastDrawTime = d.lottery.liveDraw.ts; 
-                         window.location.hash = 'lottery'; // Hash for automatic popup
-                         document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); startConfetti();
+                         window.location.hash = 'lottery'; 
                     }
                     isFirstSnapshot = false;
                     renderUI(); renderHeaderLogo(); renderImportantLinks(); renderNoticeBoard(); renderNotifications();
+                    
+                    // If ranking board is currently open, re-render it
+                    if (window.location.hash === '#ranking') {
+                        renderLeaderboard();
+                    }
+
                     if(!initialLoadComplete) { checkAndPlayNotifications(); initialLoadComplete=true; }
                 });
             } else { try { await signInAnonymously(auth); } catch(e){console.error(e);} }
@@ -1227,8 +1597,9 @@
     };
     initFirebase();
 
+    // --- STREAMING_CHUNK: Binding general click and touch interactions... ---
     document.addEventListener('click', e => {
-        const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], #view-monthly-fund-btn, .fund-card');
+        const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], .fund-card');
         if(!t) return;
         
         if(t.hasAttribute('data-notification-msg')) {
@@ -1237,8 +1608,8 @@
             if(mid) { 
                 showProfile(mid); 
             }
-            else if(msg.includes('লটারি')) { window.location.hash = 'lottery'; document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
-            else if(msg.includes('তহবিল')) { window.location.hash = 'fund'; renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
+            else if(msg.includes('লটারি')) { window.location.hash = 'lottery'; }
+            else if(msg.includes('তহবিল')) { window.location.hash = 'fund'; }
             return;
         }
 
@@ -1249,21 +1620,13 @@
         else if(id === 'close-notif-btn' || id === 'notif-overlay-bg') { if(window.location.hash) history.back(); else closeNotif(); }
         else if(id === 'mark-read-btn') { localStorage.setItem('samiti_notif_last_read', activityLog.length?activityLog[0].ts:0); renderNotifications(); showMessage('পঠিত হিসেবে মার্ক করা হয়েছে'); }
         else if(t.classList.contains('view-profile-btn')) showProfile(t.dataset.id);
-        else if(id === 'close-profile') { if(window.location.hash) history.back(); else closeProfileModal(); }
+        else if(id === 'close-profile') { closeProfileModal(true); }
         else if(t.classList.contains('profile-tab')) {
             document.querySelectorAll('.profile-tab').forEach(x => { x.classList.remove('tab-active','text-indigo-600'); x.classList.add('text-slate-500'); });
             t.classList.add('tab-active','text-indigo-600'); t.classList.remove('text-slate-500');
             ['details','transactions','summary'].forEach(k => document.getElementById(`profile-content-${k}`).classList.add('hidden'));
             document.getElementById(`profile-content-${id.replace('profile-tab-','')}`).classList.remove('hidden');
         }
-        else if(id === 'view-monthly-fund-btn') { window.location.hash = 'fund'; renderFundModal(); document.getElementById('monthly-fund-modal').classList.remove('hidden'); document.getElementById('monthly-fund-modal').classList.add('flex'); }
-        else if(id === 'close-fund-modal') { 
-            if(window.location.hash) history.back(); 
-            else { document.getElementById('monthly-fund-modal').classList.add('hidden'); document.getElementById('monthly-fund-modal').classList.remove('flex'); }
-        }
-        else if(id === 'fund-details-back-btn') { if(window.location.hash === '#fund-details') history.back(); else closeFundDetails(); }
-        else if(id === 'view-lottery-btn') { window.location.hash = 'lottery'; document.getElementById('lottery-modal').classList.remove('hidden'); renderLotteryModal(); resizeCanvas(); if(lottery.history.length) startConfetti(); }
-        else if(id === 'close-lottery-btn') { if(window.location.hash) history.back(); else document.getElementById('lottery-modal').classList.add('hidden'); }
     });
 
     document.getElementById('search-member-input').addEventListener('input', e => { searchQuery = e.target.value; renderUI(); });
