@@ -8,6 +8,13 @@
   <!-- Favicon -->
   <link id="favicon" rel="icon" type="image/png" href="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS">
   
+  <!-- PWA Web App Manifest (Data URI for Single File Compliance) -->
+  <link rel="manifest" href='data:application/json,{"name":"একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)","short_name":"ESCS","description":"ESCS সমবায় সমিতি ম্যানেজমেন্ট অ্যাপ","start_url":".","display":"standalone","background_color":"#f8fafc","theme_color":"#6366f1","icons":[{"src":"https://placehold.co/192x192/6366f1/FFFFFF?text=ESCS","sizes":"192x192","type":"image/png"},{"src":"https://placehold.co/512x512/6366f1/FFFFFF?text=ESCS","sizes":"512x512","type":"image/png"}]}' />
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ESCS">
+
   <!-- Tailwind CSS with Typography Plugin -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <!-- Google Fonts -->
@@ -193,7 +200,7 @@
             </a>
             <div class="flex flex-col flex-1">
               <h1 class="text-[15px] sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-pink-600 leading-tight">
-                একতা সঞ্চয় কো-অপারেটিভ সোসাইটি
+                একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)
               </h1>
               <span class="text-[10px] sm:text-xs font-medium text-slate-500 tracking-wide mt-0.5">বিশ্বাস • একতা • সমৃদ্ধি</span>
             </div>
@@ -383,6 +390,18 @@
                     <canvas id="trendChart"></canvas>
                 </div>
              </div>
+             <!-- Interactive Member Savings & Loan Chart -->
+             <div class="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100/50 flex flex-col h-[400px] lg:col-span-2">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-slate-700 font-bold flex items-center gap-2">
+                        <span class="w-2 h-6 bg-indigo-600 rounded-full"></span>সদস্যভিত্তিক জমা ও ঋণ বিশ্লেষণ
+                    </h3>
+                    <span class="text-[10px] sm:text-xs text-slate-400 font-medium">💡 যেকোনো মেম্বারের বারে ক্লিক করে প্রোফাইল দেখুন</span>
+                </div>
+                <div class="flex-grow relative w-full">
+                    <canvas id="memberInteractiveChart"></canvas>
+                </div>
+             </div>
           </div>
       </div>
       <!-- ================= END FINANCE VIEW ================= -->
@@ -478,7 +497,7 @@
             <div class="flex items-center gap-3">
                <img id="footer-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS" alt="Footer Logo" class="w-12 h-12 rounded-full border-2 border-indigo-100 shadow-sm object-cover">
                <div>
-                  <h3 class="text-lg font-bold text-slate-800 leading-tight">একতা সঞ্চয় কো-অপারেটিভ সোসাইটি</h3>
+                  <h3 class="text-lg font-bold text-slate-800 leading-tight">একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)</h3>
                   <p class="text-[13px] font-semibold text-indigo-600 tracking-wide mt-0.5">বিশ্বাস • একতা • সমৃদ্ধি</p>
                </div>
             </div>
@@ -671,7 +690,7 @@
               </a>
               <div>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-800">মাসিক তহবিল</h3>
-                  <p class="text-xs sm:text-sm text-slate-500">স্বচ্ছ ও সুন্দর ব্যবস্থাপনা</p>
+                  <p class="text-xs sm:text-sm text-slate-500">লেনদেন ব্যবস্থাপনা</p>
               </div>
           </div>
       </div>
@@ -722,7 +741,7 @@
             <span>⬅ ফিরে যান</span>
         </a>
         <div class="text-right">
-            <h1 class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">লাকি লটারি</h1>
+            <h1 class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">মাসিক লটারি</h1>
         </div>
     </div>
     <div class="relative z-10 w-full max-w-[1600px] mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 grow overflow-y-auto">
@@ -736,7 +755,7 @@
             <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-700 transform scale-95 opacity-0">
                 <div class="glass-card p-8 md:p-12 rounded-2xl border border-yellow-500/30 shadow-[0_0_50px_rgba(234,179,8,0.2)] text-center relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/10 to-transparent"></div>
-                    <h3 class="text-2xl md:text-3xl text-yellow-400 mb-4 font-bold animate-pulse relative z-10">🎉 আজকের বিজয়ী 🎉</h3>
+                    <h3 class="text-2xl md:text-3xl text-yellow-400 mb-4 font-bold animate-pulse relative z-10">🎉 চলতি মাসের বিজয়ী 🎉</h3>
                     <div id="lotteryWinnerText" class="text-5xl md:text-7xl font-extrabold text-white break-words drop-shadow-xl tracking-wide relative z-10"></div>
                     <div id="lotteryWinnerDate" class="text-slate-400 mt-4 font-mono text-sm relative z-10"></div>
                 </div>
@@ -756,7 +775,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, onSnapshot, setLogLevel, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, setLogLevel, setDoc, updateDoc, enableMultiTabIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     
     // Config
     const appId = 'default-samiti-app-id'; 
@@ -771,16 +790,41 @@
     let noticeSlideInterval = null;
     let financeChartInstance = null;
     let trendChartInstance = null;
+    let memberChartInstance = null; // New Member Interactive Chart
     let lastDrawTime = 0;
     let isFirstSnapshot = true;
     let initialLoadComplete = false;
     let visitorLogged = false;
+
+    // --- State Cache for Memoized Rendering Optimization ---
+    let cachedMembersState = null;
+    let cachedNoticeState = null;
+    let cachedLeaderboardState = null;
+
+    // Avatar image pre-loading cache for custom canvas rendering
+    const avatarCache = {};
 
     // DOM Elements
     const mainAppContent = document.getElementById('main-app-content');
     const memberListCardContainer = document.getElementById('member-list-cards');
     const memberListPlaceholder = document.getElementById('member-list-placeholder');
     const profileModal = document.getElementById('profile-modal');
+
+    // --- Progressive Web App (PWA) Service Worker Registration ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+            const isSecureProtocol = location.protocol === 'https:';
+
+            if (isSecureProtocol || isLocalhost) {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('সার্ভিস ওয়ার্কার সফলভাবে নিবন্ধিত হয়েছে!'))
+                    .catch(err => {
+                        console.log('সার্ভিস ওয়ার্কার স্কিপ করা হয়েছে (স্যান্ডবক্স প্রিভিউয়ের জন্য নিরাপদ):', err.message);
+                    });
+            }
+        });
+    }
 
     // --- Core Router Logic (Hash Navigation) ---
     const appViews = ['view-home', 'view-members', 'view-finance', 'view-ranking'];
@@ -825,6 +869,7 @@
             setTimeout(() => {
                 if (financeChartInstance) financeChartInstance.resize();
                 if (trendChartInstance) trendChartInstance.resize();
+                if (memberChartInstance) memberChartInstance.resize();
             }, 50);
         } 
         else if (h === '#ranking') {
@@ -968,8 +1013,22 @@
         t.currentLoan = t.totalLoanTaken - t.totalLoanRepaid; return t;
     };
 
-    // --- STREAMING_CHUNK: Computing deposit speed ranking system... ---
-    // Calculate how quickly members pay their installment after the lottery is completed or the start of the month
+    // --- Helper to shorten name strictly based on your specified rules ---
+    const getShortenedName = (fullName) => {
+        if (!fullName) return '';
+        const parts = fullName.trim().split(/\s+/);
+        // ১ শব্দের নামের ক্ষেত্রে প্রথম শব্দ
+        if (parts.length === 1) return parts[0];
+        // ২ শব্দের নামের ক্ষেত্রে প্রথম শব্দ
+        if (parts.length === 2) return parts[0];
+        // ৩ শব্দের নামের ক্ষেত্রে মিডেল নেম (দ্বিতীয় শব্দ)
+        if (parts.length === 3) return parts[1];
+        // ৩ এর অধিক শব্দের নামের ক্ষেত্রে সেকেন্ড শব্দ
+        if (parts.length > 3) return parts[1];
+        return fullName;
+    };
+
+    // Computing deposit speed ranking system...
     const calculateMemberSpeedRankings = () => {
         const rankings = members.map(m => {
             let totalDaysDiff = 0;
@@ -1128,6 +1187,7 @@
         } 
     });
 
+    // --- Interactive Chart rendering with detailed actions ---
     const renderCharts = (td, tlt, tlr) => {
         const ctxF = document.getElementById('financeChart').getContext('2d');
         if (financeChartInstance) financeChartInstance.destroy();
@@ -1147,6 +1207,152 @@
             type: 'line', 
             data: { labels: labels, datasets: [{ label: 'জমা', data: data, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', borderWidth: 3, tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#ffffff', pointBorderColor: '#6366f1', pointBorderWidth: 2 }] }, 
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9', borderDash: [5, 5] } }, x: { grid: { display: false } } } } 
+        });
+
+        // --- Highly Interactive Member-wise Savings & Loan Chart ---
+        const ctxM = document.getElementById('memberInteractiveChart').getContext('2d');
+        if (memberChartInstance) memberChartInstance.destroy();
+
+        const activeMembersList = members.filter(m => m.isActive !== false);
+        
+        // এক্স-অক্ষে দেখানোর জন্য নামের সুনির্দিষ্ট শর্ট ফর্ম বা ছাঁটাই করা নামের রূপান্তর
+        const memberNames = activeMembersList.map(m => getShortenedName(m.name));
+        const memberDeposits = activeMembersList.map(m => calculateMemberTotals(m).totalDeposit);
+        const memberLoans = activeMembersList.map(m => calculateMemberTotals(m).currentLoan);
+
+        // ফায়ারবেস প্রোফাইল ছবিগুলো ক্যানভাসে ড্রয়িংয়ের জন্য প্রিলোড করা হচ্ছে
+        activeMembersList.forEach(m => {
+            if (m.photoUrl && !avatarCache[m.photoUrl]) {
+                const img = new Image();
+                img.src = m.photoUrl;
+                img.onload = () => {
+                    avatarCache[m.photoUrl] = img;
+                    // একটি ছবি লোড শেষ হলে ক্যানভাস আপডেট করে রি-ড্র করা হবে
+                    if (memberChartInstance) {
+                        memberChartInstance.update();
+                    }
+                };
+                img.onerror = () => {
+                    avatarCache[m.photoUrl] = 'FAILED';
+                };
+            }
+        });
+
+        // ক্যানভাসে সদস্যদের গোলাকার প্রোফাইল ছবি যুক্ত করার জন্য কাস্টম প্লাগইন
+        const memberAvatarsPlugin = {
+            id: 'memberAvatars',
+            afterDraw: (chart) => {
+                const ctx = chart.ctx;
+                const xAxis = chart.scales.x;
+                if (!xAxis) return;
+                
+                activeMembersList.forEach((m, index) => {
+                    const x = xAxis.getPixelForTick(index);
+                    const y = xAxis.top + 16; // এক্সিস লাইনের নিচে ঠিক মাঝখানে পজিশন
+                    
+                    ctx.save();
+                    // বৃত্তাকার ক্লিপিং মাস্ক তৈরি
+                    ctx.beginPath();
+                    ctx.arc(x, y, 12, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.clip();
+                    
+                    const img = m.photoUrl ? avatarCache[m.photoUrl] : null;
+                    if (img && img !== 'FAILED') {
+                        // ছবি সফলভাবে লোড হলে সেটি আঁকা হবে
+                        ctx.drawImage(img, x - 12, y - 12, 24, 24);
+                    } else {
+                        // ছবি না থাকলে বা ফেল করলে নামের প্রথম অক্ষর দিয়ে বাবল তৈরি
+                        ctx.fillStyle = '#6366f1';
+                        ctx.fill();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = 'bold 10px "Hind Siliguri", sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(m.name ? m.name.charAt(0) : '?', x, y);
+                    }
+                    ctx.restore();
+                    
+                    // প্রিমিয়াম বর্ডার যোগ করা হচ্ছে
+                    ctx.save();
+                    ctx.strokeStyle = '#e2e8f0';
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 12, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.restore();
+                });
+            }
+        };
+
+        memberChartInstance = new Chart(ctxM, {
+            type: 'bar',
+            data: {
+                labels: memberNames,
+                datasets: [
+                    {
+                        label: 'মোট জমা',
+                        data: memberDeposits,
+                        backgroundColor: '#22c55e',
+                        borderRadius: 4,
+                    },
+                    {
+                        label: 'চলতি ঋণ',
+                        data: memberLoans,
+                        backgroundColor: '#ef4444',
+                        borderRadius: 4,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { font: { family: "'Hind Siliguri'", size: 12 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            // মাউস হোভার বা টাচ করলে মেম্বারের সম্পূর্ণ আসল নামটি দেখতে পাওয়ার লজিক
+                            title: (tooltipItems) => {
+                                const index = tooltipItems[0].dataIndex;
+                                const matchedMember = activeMembersList[index];
+                                return matchedMember ? matchedMember.name : '';
+                            },
+                            label: context => ` ${context.dataset.label}: ৳ ${getBengaliNumber(context.raw)}`
+                        }
+                    }
+                },
+                onHover: (event, chartElement) => {
+                    event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const clickedElement = elements[0];
+                        const index = clickedElement.index;
+                        const matchedMember = activeMembersList[index];
+                        if (matchedMember) {
+                            showProfile(matchedMember.id);
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#e2e8f0', borderDash: [3, 3] },
+                        ticks: { font: { family: "'Hind Siliguri'", size: 11 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { 
+                            padding: 35, // প্রোফাইল ছবিগুলো দেখানোর জন্য অক্ষের নিচে প্রয়োজনীয় জায়গা খালি করা হলো
+                            font: { family: "'Hind Siliguri'", size: 10, weight: 'bold' } 
+                        }
+                    }
+                }
+            },
+            plugins: [memberAvatarsPlugin] // গোলাকার ছবি আঁকার কাস্টম প্লাগইন অ্যাক্টিভেট করা হলো
         });
     };
 
@@ -1172,7 +1378,6 @@
         }
     };
 
-    // --- STREAMING_CHUNK: Formatting user badges based on computed speed rankings... ---
     // Helper to get speed label & style
     const getSpeedLabel = (avgDays) => {
         if (avgDays === 999) return { text: 'কোনো তথ্য নেই', cls: 'bg-slate-100 text-slate-500' };
@@ -1252,7 +1457,6 @@
         if(activeMember) { const fresh = members.find(m=>m.id===activeMember.id); if(fresh && filtered.includes(fresh)) showProfile(fresh.id, false); else closeProfileModal(false); }
     };
 
-    // --- STREAMING_CHUNK: Populating the interactive Leaderboard View... ---
     // Render the beautiful leaderboards podiums and full stats
     const renderLeaderboard = () => {
         const rankings = calculateMemberSpeedRankings();
@@ -1305,7 +1509,7 @@
             const badge = getSpeedLabel(avgSpeed);
             const ph = `https://placehold.co/48x48/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
 
-            // Calculate progress promptness percentage for progress bars (best is 0 days, standard max is 30 days)
+            // Calculate progress promptness percentage for progress bars
             let progressPct = 0;
             if (avgSpeed !== 999) {
                 progressPct = Math.max(5, 100 - (avgSpeed * 3));
@@ -1551,12 +1755,33 @@
     };
     const startConfetti = () => { parts=[]; for(let i=0;i<100;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*20, vy:(Math.random()-.5)*20, c:`hsl(${Math.random()*360},70%,50%)`}); updateConfetti(); };
 
-    // --- STREAMING_CHUNK: Bootstrapping Firebase Authentication and Sync Listeners... ---
-    const initFirebase = () => {
+    // --- Firebase Initialization with Caching and State Memoization ---
+    const initFirebase = async () => {
         const cachedLogo = localStorage.getItem('cached_logo_url');
         const favicon = document.getElementById('favicon');
         if(cachedLogo) { const loaderImg = document.getElementById('loader-logo-img'); if(loaderImg) loaderImg.src = cachedLogo; if(favicon) favicon.href = cachedLogo; }
-        try { app = initializeApp(firebaseConfig); db = getFirestore(app); auth = getAuth(app); } catch(e) { console.error(e); }
+        
+        try { 
+            app = initializeApp(firebaseConfig); 
+            db = getFirestore(app); 
+            auth = getAuth(app); 
+
+            // --- Enable Offline Data Persistence (Caching) ---
+            try {
+                await enableMultiTabIndexedDbPersistence(db);
+                console.log("অফলাইন!");
+            } catch (err) {
+                if (err.code == 'failed-precondition') {
+                    console.warn("অফলাইন পারসিস্টেন্স ব্যর্থ হয়েছে: একাধিক ট্যাব খোলা আছে।");
+                } else if (err.code == 'unimplemented') {
+                    console.warn("অফলাইন পারসিস্টেন্স ব্যর্থ হয়েছে: ব্রাউজার সাপোর্ট করে না।");
+                }
+            }
+
+        } catch(e) { 
+            console.error("Firebase Initialization Error:", e); 
+        }
+
         onAuthStateChanged(auth, async (u) => {
             if(u) {
                 if (!visitorLogged) { logVisitor(); visitorLogged = true; }
@@ -1572,6 +1797,12 @@
                 const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
                 onSnapshot(docRef, (s) => {
                     const d = s.data(); if(!d) return;
+                    
+                    // Memoized State Diffing to prevent useless UI calculations
+                    const newMembersState = JSON.stringify(d.members || []);
+                    const newNoticeState = JSON.stringify(d.notice || {});
+                    const newLeaderboardState = JSON.stringify(d.lottery || {});
+
                     members = d.members||[]; fundDistribution = d.fundDistribution||{};
                     notice = typeof d.notice==='string' ? {text:d.notice} : (d.notice||{});
                     logoUrl = d.logoUrl||''; importantLinks = d.importantLinks||[]; appDownloadUrl = d.appDownloadUrl||'';
@@ -1583,12 +1814,26 @@
                          window.location.hash = 'lottery'; 
                     }
                     isFirstSnapshot = false;
-                    renderUI(); renderHeaderLogo(); renderImportantLinks(); renderNoticeBoard(); renderNotifications();
-                    
-                    // If ranking board is currently open, re-render it
-                    if (window.location.hash === '#ranking') {
-                        renderLeaderboard();
+
+                    // Execute UI updates only if state has actually changed
+                    if (newMembersState !== cachedMembersState) {
+                        cachedMembersState = newMembersState;
+                        renderUI();
                     }
+                    if (newNoticeState !== cachedNoticeState) {
+                        cachedNoticeState = newNoticeState;
+                        renderNoticeBoard();
+                    }
+                    if (newLeaderboardState !== cachedLeaderboardState) {
+                        cachedLeaderboardState = newLeaderboardState;
+                        if (window.location.hash === '#ranking') {
+                            renderLeaderboard();
+                        }
+                    }
+
+                    renderHeaderLogo(); 
+                    renderImportantLinks(); 
+                    renderNotifications();
 
                     if(!initialLoadComplete) { checkAndPlayNotifications(); initialLoadComplete=true; }
                 });
@@ -1597,7 +1842,7 @@
     };
     initFirebase();
 
-    // --- STREAMING_CHUNK: Binding general click and touch interactions... ---
+    // --- Binding click, touch, and navigation interactions ---
     document.addEventListener('click', e => {
         const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], .fund-card');
         if(!t) return;
