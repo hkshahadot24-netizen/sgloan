@@ -262,7 +262,7 @@
           <div class="pt-2">
               <h3 class="text-sm sm:text-base font-bold text-slate-700 flex items-center gap-2 mb-4 px-1">
                   <span class="w-1.5 h-5 bg-indigo-500 rounded-full"></span> 
-                  অ্যাপস মেনু
+                  মেনু
               </h3>
               
               <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
@@ -297,7 +297,7 @@
                           </svg>
                       </div>
                       <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">মাসিক তহবিল</span>
-                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">জমার স্বচ্ছ হিসাব</span>
+                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">জমার হিসাব</span>
                   </a>
 
                   <!-- Lucky Lottery Icon (Dices) -->
@@ -308,8 +308,8 @@
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                           </svg>
                       </div>
-                      <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">লাকি লটারি</span>
-                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">পরীক্ষা করুন ভাগ্য</span>
+                      <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">লটারি</span>
+                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">লটারি দেখুন</span>
                   </a>
 
                   <!-- Leaderboard Icon (Gold Trophy for Ranking) -->
@@ -425,7 +425,7 @@
           <div class="bg-gradient-to-b from-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
               <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-25"></div>
               <h3 class="text-center text-amber-400 font-bold text-lg mb-6 tracking-wider flex items-center justify-center gap-2">
-                  🏆 চলতি মাসের সেরা ৩ সঞ্চয়ী চ্যাম্পিয়ন
+                   চলতি মাসের সেরা ৩ সঞ্চয়ী 
               </h3>
               
               <!-- Updated podium grid: medals removed from face overlay, beautiful podium names below -->
@@ -601,7 +601,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
             <h3 class="text-center text-amber-400 font-extrabold text-sm sm:text-base mb-4 flex items-center justify-center gap-2 drop-shadow-md tracking-wider">
-                🏆 চ্যাম্পিয়ন সঞ্চয়ী চ্যাম্পিয়নবৃন্দ 🏆
+                🏆 সেরা সঞ্চয়ী  🏆
             </h3>
             <div id="top3-highlight-content" class="flex flex-col gap-3 relative z-10">
                 <!-- Populated by JS dynamically based on Top 3 rankings -->
@@ -609,7 +609,7 @@
         </div>
     </div>
 
-    <!-- NEW LOTTERY WINNER POPUP (MATCHING DESIGNS & CAPABILITY WITH HIGHLIGHT POPUP) -->
+    <!-- NEW LOTTERY WINNER POPUP -->
     <div id="lottery-winner-popup" class="fixed inset-x-4 bottom-14 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:w-[480px] z-[9997] bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl shadow-[0_15px_45px_rgba(0,0,0,0.5)] border border-indigo-500/35 p-1 transform translate-y-[250%] transition-transform duration-700">
         <div class="relative bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-5">
             <!-- Close Button -->
@@ -631,20 +631,22 @@
                             <h4 id="lottery-winner-name" class="text-sm font-extrabold text-white truncate">---</h4>
                             <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-500 to-amber-400 text-slate-950 shrink-0">১ম বিজয়ী 🏆</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-1.5 mt-2 text-[11px]">
-                            <div class="bg-white/5 px-2 py-1 rounded border border-white/5">
+                        
+                        <!-- FIX 1: Mobile responsive grid to prevent overlap issues and handle long numbers -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-2 text-[11px]">
+                            <div class="bg-white/5 px-2 py-1.5 rounded border border-white/5">
                                 <span class="text-slate-400 block text-[9px] font-semibold leading-none">কার্ড নম্বর</span>
-                                <span id="lottery-winner-card" class="text-indigo-300 font-bold font-mono tracking-wider block mt-0.5">---</span>
+                                <span id="lottery-winner-card" class="text-indigo-300 font-bold font-mono tracking-wider block mt-0.5 break-all">---</span>
                             </div>
-                            <div class="bg-white/5 px-2 py-1 rounded border border-white/5">
+                            <div class="bg-white/5 px-2 py-1.5 rounded border border-white/5">
                                 <span class="text-slate-400 block text-[9px] font-semibold leading-none">এমপ্লয়ী আইডি</span>
-                                <span id="lottery-winner-empid" class="text-indigo-300 font-bold font-mono tracking-wider block mt-0.5">---</span>
+                                <span id="lottery-winner-empid" class="text-indigo-300 font-bold font-mono tracking-wider block mt-0.5 break-all">---</span>
                             </div>
-                            <div class="bg-white/5 px-2 py-1 rounded border border-white/5">
+                            <div class="bg-white/5 px-2 py-1.5 rounded border border-white/5">
                                 <span class="text-slate-400 block text-[9px] font-semibold leading-none">ফোন নম্বর</span>
-                                <span id="lottery-winner-phone" class="text-slate-200 font-bold font-mono block mt-0.5">---</span>
+                                <span id="lottery-winner-phone" class="text-slate-200 font-bold font-mono block mt-0.5 break-all">---</span>
                             </div>
-                            <div class="bg-white/5 px-2 py-1 rounded border border-white/5">
+                            <div class="bg-white/5 px-2 py-1.5 rounded border border-white/5">
                                 <span class="text-slate-400 block text-[9px] font-semibold leading-none">মোট সঞ্চয় জমা</span>
                                 <span id="lottery-winner-deposit" class="text-green-400 font-extrabold block mt-0.5">৳ ০</span>
                             </div>
@@ -705,12 +707,12 @@
            </div>
       </div>
 
-      <!-- Navigation Tabs -->
-      <div class="flex border-b border-slate-200/50 bg-slate-50/50 shrink-0 overflow-x-auto custom-scrollbar">
-          <button id="profile-tab-details" class="profile-tab flex-1 min-w-[100px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">👤 বিস্তারিত</button>
-          <button id="profile-tab-transactions" class="profile-tab flex-1 min-w-[100px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">🧾 লেনদেন</button>
-          <button id="profile-tab-summary" class="profile-tab flex-1 min-w-[100px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">📈 সার-সংক্ষেপ</button>
-          <button id="profile-tab-achievements" class="profile-tab flex-1 min-w-[100px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">🏆 অর্জন</button>
+      <!-- FIX 2: Profile Navigation Tabs - Adjusted width and text size so they fit without horizontal scroll -->
+      <div class="flex border-b border-slate-200/50 bg-slate-50/50 shrink-0 overflow-x-hidden w-full justify-between">
+          <button id="profile-tab-details" class="profile-tab flex-1 py-3 sm:py-4 px-1 sm:px-2 text-[11px] sm:text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500 whitespace-nowrap">👤 বিস্তারিত</button>
+          <button id="profile-tab-transactions" class="profile-tab flex-1 py-3 sm:py-4 px-1 sm:px-2 text-[11px] sm:text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500 whitespace-nowrap">🧾 লেনদেন</button>
+          <button id="profile-tab-summary" class="profile-tab flex-1 py-3 sm:py-4 px-1 sm:px-2 text-[11px] sm:text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500 whitespace-nowrap">📈 সার-সংক্ষেপ</button>
+          <button id="profile-tab-achievements" class="profile-tab flex-1 py-3 sm:py-4 px-1 sm:px-2 text-[11px] sm:text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500 whitespace-nowrap">🏆 অর্জন</button>
       </div>
 
       <!-- Content Area -->
@@ -885,28 +887,30 @@
                       <p class="text-xs text-slate-500">জমা প্রদানকারী সদস্যদের তালিকা</p>
                   </div>
               </div>
-              <div class="flex-grow overflow-y-auto p-4 sm:p-6">
-                  <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-                      <table class="min-w-full text-left text-sm whitespace-nowrap">
-                          <thead class="bg-slate-50 text-slate-600 border-b border-slate-100 sticky top-0">
-                              <tr>
-                                  <th class="py-3 px-4 font-semibold">সদস্যের নাম</th>
-                                  <th class="py-3 px-4 font-semibold text-center">তারিখ</th>
-                                  <th class="py-3 px-4 font-semibold text-right">পরিমাণ</th>
-                                  <th class="py-3 px-4 font-semibold text-right">ক্রমিক</th>
-                              </tr>
-                          </thead>
-                          <tbody id="fund-details-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
-                          <tfoot class="bg-indigo-50 font-bold text-indigo-900">
-                              <tr>
-                                  <td colspan="2" class="py-3 px-4 text-right">সর্বমোট:</td>
-                                  <td id="fund-details-total" class="py-3 px-4 text-right">৳ ০</td>
-                                  <td class="py-3 px-4"></td>
-                              </tr>
-                          </tfoot>
-                      </table>
+              
+              <!-- FIX 3: Fully Native Responsive List/Table View for mobile (No horizontal scrolling) -->
+              <div class="flex-grow overflow-hidden flex flex-col p-4 sm:p-6">
+                  <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-full max-h-full">
+                      <!-- Desktop Header -->
+                      <div class="hidden sm:grid grid-cols-12 gap-4 bg-slate-50 text-slate-600 border-b border-slate-100 py-3 px-4 font-semibold sticky top-0 rounded-t-xl shrink-0">
+                          <div class="col-span-5">সদস্যের নাম</div>
+                          <div class="col-span-3 text-center">তারিখ</div>
+                          <div class="col-span-3 text-right">পরিমাণ</div>
+                          <div class="col-span-1 text-right">ক্রমিক</div>
+                      </div>
+                      
+                      <!-- Scrollable List Body -->
+                      <div id="fund-details-body" class="divide-y divide-slate-100 text-slate-700 overflow-y-auto flex-grow custom-scrollbar"></div>
+                      
+                      <!-- Sticky Footer -->
+                      <div class="bg-indigo-50 font-bold text-indigo-900 border-t border-indigo-100 py-4 px-4 flex justify-between items-center sm:grid sm:grid-cols-12 sm:gap-4 shrink-0 rounded-b-xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 relative">
+                          <div class="sm:col-span-8 text-left sm:text-right text-sm sm:text-base">সর্বমোট জমা:</div>
+                          <div id="fund-details-total" class="sm:col-span-3 text-right text-lg sm:text-base text-indigo-700">৳ ০</div>
+                          <div class="hidden sm:block sm:col-span-1"></div>
+                      </div>
                   </div>
               </div>
+
           </div>
       </div>
   </div>
@@ -1281,10 +1285,6 @@
             if(arr.length > 2 && globalAchievements[arr[2].id]) globalAchievements[arr[2].id].bronze.push(mk);
         });
     };
-
-    // =========================================================
-    // --- UPDATED: PWA SEQUENCE & CELEBRATION POPUPS (DAILY LOGIC) ---
-    // =========================================================
     
     const showTop3Highlight = () => {
         const today = new Date().toDateString();
@@ -2140,16 +2140,34 @@
         monthlyDeposits.sort((a, b) => new Date(b.date) - new Date(a.date));
         const total = monthlyDeposits.reduce((sum, item) => sum + item.amount, 0);
         totalEl.textContent = `৳ ${getBengaliNumber(total)}`;
-        if(monthlyDeposits.length === 0) { bodyEl.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-400 italic">এই মাসে কোনো জমার তথ্য নেই</td></tr>`; } 
-        else {
+        
+        // FIX 3 (JS Update): Rendering List view instead of strict table to prevent horizontal scrolling
+        if(monthlyDeposits.length === 0) { 
+            bodyEl.innerHTML = `<div class="py-8 text-center text-slate-400 italic">এই মাসে কোনো জমার তথ্য নেই</div>`; 
+        } else {
             bodyEl.innerHTML = monthlyDeposits.map((d, index) => `
-                <tr class="hover:bg-indigo-50/50 transition">
-                    <td class="py-3 px-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden shrink-0"><img src="${d.photo || 'https://placehold.co/32'}" class="w-full h-full object-cover"></div><span class="font-medium text-slate-700 line-clamp-1">${d.name}</span></div></td>
-                    <td class="py-3 px-4 text-center text-xs text-slate-500 whitespace-nowrap">${formatDate(d.date, 'short')}</td>
-                    <td class="py-3 px-4 text-right font-mono font-bold text-slate-700">৳ ${getBengaliNumber(d.amount)}</td>
-                    <td class="py-3 px-4 text-right font-mono text-slate-400 text-xs">#${getBengaliNumber(index + 1)}</td>
-                </tr>`).join('');
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 p-4 sm:p-3 hover:bg-indigo-50/50 transition items-center border-b border-slate-100 sm:border-none">
+                    <div class="col-span-1 sm:col-span-5 flex items-center justify-between sm:justify-start gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-slate-200 overflow-hidden shrink-0 shadow-sm border border-slate-100">
+                                <img src="${d.photo || 'https://placehold.co/32'}" class="w-full h-full object-cover">
+                            </div>
+                            <span class="font-bold sm:font-medium text-slate-800 sm:text-slate-700 text-base sm:text-sm">${d.name}</span>
+                        </div>
+                        <span class="sm:hidden text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">#${getBengaliNumber(index + 1)}</span>
+                    </div>
+                    <div class="col-span-1 sm:col-span-3 flex justify-between sm:justify-center items-center text-sm sm:text-xs text-slate-500 mt-1 sm:mt-0 border-t border-slate-50 sm:border-none pt-2 sm:pt-0">
+                        <span class="sm:hidden font-medium text-slate-400">তারিখ:</span>
+                        <span>${formatDate(d.date, 'short')}</span>
+                    </div>
+                    <div class="col-span-1 sm:col-span-3 flex justify-between sm:justify-end items-center font-mono font-bold text-slate-700 text-base sm:text-sm mt-1 sm:mt-0">
+                        <span class="sm:hidden font-medium text-slate-400">পরিমাণ:</span>
+                        <span class="text-indigo-600 sm:text-slate-700">৳ ${getBengaliNumber(d.amount)}</span>
+                    </div>
+                    <div class="hidden sm:block col-span-1 text-right font-mono text-slate-400 text-xs">#${getBengaliNumber(index + 1)}</div>
+                </div>`).join('');
         }
+        
         document.getElementById('fund-list-container').classList.add('-translate-x-full');
         document.getElementById('fund-details-container').classList.remove('translate-x-full');
     };
