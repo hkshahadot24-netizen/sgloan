@@ -320,7 +320,7 @@
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 2a4 4 0 014 4c0 3-4 6-4 6s-4-3-4-6a4 4 0 014-4z"/>
                           </svg>
                       </div>
-                      <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">সদস্য র‍্যাংকিং</span>
+                      <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">সদস্য র‌্যাংক</span>
                       <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">জমার গতির তালিকা</span>
                   </a>
 
@@ -341,7 +341,7 @@
                 </a>
                 <div>
                     <h2 class="text-lg sm:text-xl font-bold text-slate-800 leading-tight">সম্মানিত সদস্যবৃন্দ</h2>
-                    <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">র‍্যাংকিং ও গড় জমার সময়কাল সহ মেম্বার প্রোফাইল</p>
+                    <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">র‌্যাংকিং ও গড় জমার সময়কাল সহ মেম্বার প্রোফাইল</p>
                 </div>
             </div>
             
@@ -416,31 +416,31 @@
                   <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
               </a>
               <div>
-                  <h2 class="text-lg sm:text-xl font-bold text-slate-800 leading-tight">জমা স্পিড লিডারবোর্ড</h2>
+                  <h2 class="text-lg sm:text-xl font-bold text-slate-800 leading-tight">সঞ্চয় স্পিড লিডারবোর্ড</h2>
                   <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">লটারির ড্র হবার পর সবচেয়ে দ্রুততম সময়ে সঞ্চয় জমাকারীদের র‌্যাংক</p>
               </div>
           </div>
 
           <!-- Podium Area for Top 3 -->
-          <div class="bg-gradient-to-b from-indigo-900 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+          <div class="bg-gradient-to-b from-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
               <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-25"></div>
               <h3 class="text-center text-amber-400 font-bold text-lg mb-6 tracking-wider flex items-center justify-center gap-2">
                   🏆 চলতি মাসের সেরা ৩ সঞ্চয়ী চ্যাম্পিয়ন
               </h3>
               
+              <!-- Updated podium grid: medals removed from face overlay, beautiful podium names below -->
               <div class="grid grid-cols-3 gap-2 max-w-lg mx-auto items-end pt-8 pb-4 relative z-10">
                   
                   <!-- 2nd Place -->
                   <div class="flex flex-col items-center">
                       <div class="relative mb-2">
                           <img id="podium-2-img" src="https://placehold.co/64x64" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-4 border-slate-300 shadow-md bg-slate-700">
-                          <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-xl">🥈</span>
                       </div>
                       <p id="podium-2-name" class="text-xs font-bold text-slate-200 text-center truncate w-full">---</p>
                       <p id="podium-2-days" class="text-[10px] text-slate-300">-- দিন</p>
                       <div class="bg-gradient-to-t from-slate-500 to-slate-400 w-full h-24 rounded-t-xl mt-2 flex flex-col justify-center items-center shadow-lg border border-slate-300/30">
                           <span class="text-2xl font-extrabold text-white">২</span>
-                          <span class="text-[9px] uppercase tracking-widest text-slate-100">সিলভার</span>
+                          <span class="text-[9px] font-bold uppercase tracking-widest text-slate-100 flex items-center gap-1">সিলভার🥈</span>
                       </div>
                   </div>
 
@@ -449,13 +449,12 @@
                       <div class="relative mb-2">
                           <div class="absolute -inset-1 rounded-full bg-amber-400 animate-pulse blur opacity-40"></div>
                           <img id="podium-1-img" src="https://placehold.co/64x64" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-amber-400 shadow-xl bg-slate-700 relative z-10">
-                          <span class="absolute -top-4 left-1/2 -translate-x-1/2 text-2xl z-10 animate-bounce">👑</span>
                       </div>
                       <p id="podium-1-name" class="text-xs sm:text-sm font-extrabold text-amber-300 text-center truncate w-full relative z-10">---</p>
                       <p id="podium-1-days" class="text-xs text-amber-200 relative z-10 font-bold">-- দিন</p>
                       <div class="bg-gradient-to-t from-amber-600 to-yellow-400 w-full h-32 rounded-t-xl mt-2 flex flex-col justify-center items-center shadow-2xl border border-amber-300/30 relative z-10">
                           <span class="text-3xl font-black text-slate-900">১</span>
-                          <span class="text-[10px] uppercase tracking-wider font-extrabold text-slate-900">গোল্ড</span>
+                          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1">গোল্ড👑</span>
                       </div>
                   </div>
 
@@ -463,16 +462,32 @@
                   <div class="flex flex-col items-center">
                       <div class="relative mb-2">
                           <img id="podium-3-img" src="https://placehold.co/64x64" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-4 border-amber-700 shadow-md bg-slate-700">
-                          <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-xl">🥉</span>
                       </div>
                       <p id="podium-3-name" class="text-xs font-bold text-orange-200 text-center truncate w-full">---</p>
                       <p id="podium-3-days" class="text-[10px] text-orange-300">-- দিন</p>
                       <div class="bg-gradient-to-t from-amber-800 to-amber-700 w-full h-20 rounded-t-xl mt-2 flex flex-col justify-center items-center shadow-lg border border-amber-800/30">
                           <span class="text-2xl font-extrabold text-white">৩</span>
-                          <span class="text-[9px] uppercase tracking-widest text-orange-100">ব্রোঞ্জ</span>
+                          <span class="text-[9px] font-bold uppercase tracking-widest text-orange-100 flex items-center gap-1">ব্রোঞ্জ🥉</span>
                       </div>
                   </div>
 
+              </div>
+
+              <!-- New section displaying what makes each leader outstanding with dynamic metrics -->
+              <div class="mt-6 border-t border-white/10 pt-5 space-y-3.5 text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
+                  <h4 class="font-bold text-amber-400 text-xs sm:text-sm flex items-center gap-1.5 justify-center mb-2">🎖️ মেডেল বিবরণী ও অর্জনের কারণ</h4>
+                  <div id="podium-1-desc-box" class="flex items-start gap-3 bg-white/5 p-3 rounded-2xl border border-amber-400/20">
+                      <span class="text-xl shrink-0">👑</span>
+                      <p class="leading-relaxed"><strong class="text-amber-300">গোল্ড মেডেল:</strong> <span id="podium-1-desc">সদস্যদের মধ্যে সবচেয়ে দ্রুততম সময়ে এবং লটারি অনুষ্ঠিত হওয়ার পর সর্বনিম্ন গড় সময়কালের সঞ্চয় জমা করার জন্য।</span></p>
+                  </div>
+                  <div id="podium-2-desc-box" class="flex items-start gap-3 bg-white/5 p-3 rounded-2xl border border-slate-300/10">
+                      <span class="text-xl shrink-0">🥈</span>
+                      <p class="leading-relaxed"><strong class="text-slate-200">সিলভার মেডেল:</strong> <span id="podium-2-desc">সদস্যদের মধ্যে অত্যন্ত নিয়মতান্ত্রিক উপায়ে ২য় দ্রুততম সময়ে সঞ্চয় জমা প্রদান করার জন্য।</span></p>
+                  </div>
+                  <div id="podium-3-desc-box" class="flex items-start gap-3 bg-white/5 p-3 rounded-2xl border border-amber-700/15">
+                      <span class="text-xl shrink-0">🥉</span>
+                      <p class="leading-relaxed"><strong class="text-orange-300">ব্রোঞ্জ মেডেল:</strong> <span id="podium-3-desc">সদস্যদের মধ্যে নিয়মিত সঞ্চয় জমার গতি বজায় রেখে ৩য় দ্রুততম স্থান লাভ করার জন্য।</span></p>
+                  </div>
               </div>
           </div>
 
@@ -562,6 +577,89 @@
     <div id="message-box" class="fixed top-20 sm:top-24 left-1/2 -translate-x-1/2 z-[300] transition-opacity duration-300 opacity-0 w-[90%] max-w-md">
         <div id="message-content" class="shadow-2xl rounded-xl p-4 font-semibold text-white flex items-center gap-3 backdrop-blur-md"></div>
     </div>
+    
+    <!-- PWA INSTALL MODAL (NATIVE APP PROMPT) -->
+    <div id="pwa-install-modal" class="fixed inset-x-4 bottom-14 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:w-[400px] z-[9999] bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 transform translate-y-[200%] transition-transform duration-500 flex flex-col gap-3">
+        <button id="close-pwa-btn" class="absolute top-2 right-2 text-slate-400 hover:bg-slate-100 rounded-full p-1.5 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex items-center gap-4">
+            <img src="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS" class="w-12 h-12 rounded-xl shadow-md border border-slate-100">
+            <div class="pr-6">
+                <h3 class="font-bold text-slate-800 text-sm">ESCS অ্যাপ ইনস্টল করুন</h3>
+                <p class="text-[11px] text-slate-500 leading-tight mt-0.5">দ্রুত অ্যাক্সেস ও চমৎকার অভিজ্ঞতার জন্য হোম স্ক্রিনে যোগ করুন।</p>
+            </div>
+        </div>
+        <button id="install-pwa-btn" class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-xl hover:bg-indigo-700 transition shadow-md text-sm mt-1">ইন্সটল করুন</button>
+    </div>
+
+    <!-- TOP 3 HIGHLIGHT POPUP -->
+    <!-- Updated design: wider structure, clear medal names and descriptions under photos to prevent overlap -->
+    <div id="top3-highlight-popup" class="fixed inset-x-4 bottom-14 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:w-[480px] z-[9998] bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl shadow-[0_15px_45px_rgba(0,0,0,0.5)] border border-indigo-500/35 p-1 transform translate-y-[250%] transition-transform duration-700">
+        <div class="relative bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-5">
+            <button id="close-top3-btn" class="absolute top-2 right-2 text-white/50 hover:text-white p-1.5 bg-white/10 hover:bg-white/20 rounded-full transition z-20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 class="text-center text-amber-400 font-extrabold text-sm sm:text-base mb-4 flex items-center justify-center gap-2 drop-shadow-md tracking-wider">
+                🏆 চ্যাম্পিয়ন সঞ্চয়ী চ্যাম্পিয়নবৃন্দ 🏆
+            </h3>
+            <div id="top3-highlight-content" class="flex flex-col gap-3 relative z-10">
+                <!-- Populated by JS dynamically based on Top 3 rankings -->
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW LOTTERY WINNER POPUP (MATCHING DESIGNS & CAPABILITY WITH HIGHLIGHT POPUP) -->
+    <div id="lottery-winner-popup" class="fixed inset-x-4 bottom-14 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:w-[480px] z-[9997] bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl shadow-[0_15px_45px_rgba(0,0,0,0.5)] border border-indigo-500/35 p-1 transform translate-y-[250%] transition-transform duration-700">
+        <div class="relative bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-5">
+            <!-- Close Button -->
+            <button id="close-lottery-winner-btn" class="absolute top-2 right-2 text-white/50 hover:text-white p-1.5 bg-white/10 hover:bg-white/20 rounded-full transition z-20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-center text-yellow-400 font-extrabold text-sm sm:text-base mb-4 flex items-center justify-center gap-2 drop-shadow-md tracking-wider">
+                🎉 চলতি মাসের লটারি বিজয়ী 🎉
+            </h3>
+            
+            <div id="lottery-winner-container-inner" class="flex flex-col gap-3 relative z-10">
+                <div class="flex items-center gap-4 p-3.5 bg-white/5 border border-yellow-500/30 rounded-2xl">
+                    <div class="relative shrink-0">
+                        <img id="lottery-winner-img" src="https://placehold.co/120x120" class="w-14 h-14 rounded-full object-cover border-2 border-yellow-400 shadow-md">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2">
+                            <h4 id="lottery-winner-name" class="text-sm font-extrabold text-white truncate">---</h4>
+                            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-500 to-amber-400 text-slate-950 shrink-0">১ম বিজয়ী 🏆</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1.5 mt-2 text-[11px]">
+                            <div class="bg-white/5 px-2 py-1 rounded border border-white/5">
+                                <span class="text-slate-400 block text-[9px] font-semibold leading-none">কার্ড নম্বর</span>
+                                <span id="lottery-winner-card" class="text-indigo-300 font-bold font-mono tracking-wider block mt-0.5">---</span>
+                            </div>
+                            <div class="bg-white/5 px-2 py-1 rounded border border-white/5">
+                                <span class="text-slate-400 block text-[9px] font-semibold leading-none">এমপ্লয়ী আইডি</span>
+                                <span id="lottery-winner-empid" class="text-indigo-300 font-bold font-mono tracking-wider block mt-0.5">---</span>
+                            </div>
+                            <div class="bg-white/5 px-2 py-1 rounded border border-white/5">
+                                <span class="text-slate-400 block text-[9px] font-semibold leading-none">ফোন নম্বর</span>
+                                <span id="lottery-winner-phone" class="text-slate-200 font-bold font-mono block mt-0.5">---</span>
+                            </div>
+                            <div class="bg-white/5 px-2 py-1 rounded border border-white/5">
+                                <span class="text-slate-400 block text-[9px] font-semibold leading-none">মোট সঞ্চয় জমা</span>
+                                <span id="lottery-winner-deposit" class="text-green-400 font-extrabold block mt-0.5">৳ ০</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-3.5 flex items-center justify-between text-[11px] text-slate-400 px-1">
+                <span id="lottery-winner-date" class="font-mono">তারিখ: ---</span>
+                <button id="dismiss-lottery-winner-btn" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-4 py-1.5 rounded-xl transition shadow">অসংখ্য ধন্যবাদ 🎉</button>
+            </div>
+        </div>
+    </div>
+
   </div>
   
   <div id="verify-email-modal" class="hidden fixed inset-0 bg-slate-50 z-[150] justify-center items-center p-4"></div>
@@ -608,10 +706,11 @@
       </div>
 
       <!-- Navigation Tabs -->
-      <div class="flex border-b border-slate-200/50 bg-slate-50/50 shrink-0 overflow-x-auto">
-          <button id="profile-tab-details" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">👤 বিস্তারিত</button>
-          <button id="profile-tab-transactions" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">🧾 লেনদেন</button>
-          <button id="profile-tab-summary" class="profile-tab flex-1 min-w-[120px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">📈 সার-সংক্ষেপ</button>
+      <div class="flex border-b border-slate-200/50 bg-slate-50/50 shrink-0 overflow-x-auto custom-scrollbar">
+          <button id="profile-tab-details" class="profile-tab flex-1 min-w-[100px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">👤 বিস্তারিত</button>
+          <button id="profile-tab-transactions" class="profile-tab flex-1 min-w-[100px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">🧾 লেনদেন</button>
+          <button id="profile-tab-summary" class="profile-tab flex-1 min-w-[100px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">📈 সার-সংক্ষেপ</button>
+          <button id="profile-tab-achievements" class="profile-tab flex-1 min-w-[100px] py-4 text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500">🏆 অর্জন</button>
       </div>
 
       <!-- Content Area -->
@@ -625,7 +724,7 @@
                       <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">ফোন</p><p id="profile-phone-view" class="text-slate-800 font-medium font-mono"></p></div>
                   </div>
                   <div class="space-y-4">
-                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">এমপ্লয়ি আইডি</p><p id="profile-employee-id-view" class="text-slate-800 font-medium font-mono"></p></div>
+                      <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">এমপ্লয়ী আইডি</p><p id="profile-employee-id-view" class="text-slate-800 font-medium font-mono"></p></div>
                       <div class="p-3 bg-slate-50 rounded-lg"><p class="text-xs text-slate-500 uppercase font-bold mb-1">কার্ড নম্বর</p><p id="profile-card-number-view" class="text-slate-800 font-medium font-mono"></p></div>
                   </div>
                   <div class="md:col-span-2">
@@ -675,6 +774,85 @@
                        <p id="loan-repaid" class="text-xl font-bold text-yellow-600 mt-1">৳ ০</p>
                    </div>
                </div>
+          </div>
+          
+          <!-- Achievements -->
+          <div id="profile-content-achievements" class="hidden max-w-4xl mx-auto space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <!-- Lottery Card -->
+                  <div class="bg-gradient-to-br from-white to-amber-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(251,191,36,0.15)] border border-amber-200 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                      <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                      <div class="flex items-center gap-4 mb-4 relative z-10">
+                          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-300 to-yellow-500 p-0.5 shadow-lg relative group-hover:scale-110 transition-transform duration-300">
+                              <div class="w-full h-full bg-white/20 backdrop-blur-md rounded-[14px] flex items-center justify-center text-3xl drop-shadow-md">🏆</div>
+                              <div class="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping opacity-75"></div>
+                          </div>
+                          <div>
+                              <h4 class="font-extrabold text-slate-800 text-lg">লটারি বিজয়ী</h4>
+                              <p class="text-[11px] text-amber-700 font-bold uppercase tracking-widest bg-amber-100/50 inline-block px-2 py-0.5 rounded-md mt-1 border border-amber-200/50">সেরা ভাগ্য</p>
+                          </div>
+                      </div>
+                      <div class="relative z-10">
+                          <p class="text-sm text-slate-600 font-medium mb-3 flex items-center gap-2">মোট জয়: <span id="ach-lottery-count" class="font-black text-amber-600 text-xl bg-white px-2 py-0.5 rounded-lg shadow-inner border border-amber-100">০</span></p>
+                          <div class="bg-white/60 backdrop-blur-sm p-3.5 rounded-xl border border-white shadow-sm text-sm text-slate-700 font-semibold break-words leading-relaxed" id="ach-lottery-list"></div>
+                      </div>
+                  </div>
+
+                  <!-- Gold Card -->
+                  <div class="bg-gradient-to-br from-white to-yellow-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(234,179,8,0.15)] border border-yellow-300 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                      <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                      <div class="flex items-center gap-4 mb-4 relative z-10">
+                          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-300 to-amber-500 p-0.5 shadow-lg relative group-hover:scale-110 transition-transform duration-300">
+                              <div class="w-full h-full bg-white/20 backdrop-blur-md rounded-[14px] flex items-center justify-center text-3xl drop-shadow-md">🥇</div>
+                              <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping opacity-75" style="animation-delay: 0.5s"></div>
+                          </div>
+                          <div>
+                              <h4 class="font-extrabold text-slate-800 text-lg">স্বর্ণপদক</h4>
+                              <p class="text-[11px] text-yellow-700 font-bold uppercase tracking-widest bg-yellow-100/50 inline-block px-2 py-0.5 rounded-md mt-1 border border-yellow-200/50">১ম স্থান অধিকার</p>
+                          </div>
+                      </div>
+                      <div class="relative z-10">
+                          <p class="text-sm text-slate-600 font-medium mb-3 flex items-center gap-2">মোট অর্জন: <span id="ach-gold-count" class="font-black text-yellow-600 text-xl bg-white px-2 py-0.5 rounded-lg shadow-inner border border-yellow-100">০</span></p>
+                          <div class="bg-white/60 backdrop-blur-sm p-3.5 rounded-xl border border-white shadow-sm text-sm text-slate-700 font-semibold break-words leading-relaxed" id="ach-gold-list"></div>
+                      </div>
+                  </div>
+
+                  <!-- Silver Card -->
+                  <div class="bg-gradient-to-br from-white to-slate-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(148,163,184,0.15)] border border-slate-300 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                      <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-slate-300 to-slate-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                      <div class="flex items-center gap-4 mb-4 relative z-10">
+                          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-300 to-slate-500 p-0.5 shadow-lg relative group-hover:scale-110 transition-transform duration-300">
+                              <div class="w-full h-full bg-white/20 backdrop-blur-md rounded-[14px] flex items-center justify-center text-3xl drop-shadow-md">🥈</div>
+                          </div>
+                          <div>
+                              <h4 class="font-extrabold text-slate-800 text-lg">রৌপ্যপদক</h4>
+                              <p class="text-[11px] text-slate-600 font-bold uppercase tracking-widest bg-slate-200/50 inline-block px-2 py-0.5 rounded-md mt-1 border border-slate-300/50">২য় স্থান অধিকার</p>
+                          </div>
+                      </div>
+                      <div class="relative z-10">
+                          <p class="text-sm text-slate-600 font-medium mb-3 flex items-center gap-2">মোট অর্জন: <span id="ach-silver-count" class="font-black text-slate-600 text-xl bg-white px-2 py-0.5 rounded-lg shadow-inner border border-slate-100">০</span></p>
+                          <div class="bg-white/60 backdrop-blur-sm p-3.5 rounded-xl border border-white shadow-sm text-sm text-slate-700 font-semibold break-words leading-relaxed" id="ach-silver-list"></div>
+                      </div>
+                  </div>
+
+                  <!-- Bronze Card -->
+                  <div class="bg-gradient-to-br from-white to-orange-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(249,115,22,0.15)] border border-orange-300 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                      <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-orange-400 to-red-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                      <div class="flex items-center gap-4 mb-4 relative z-10">
+                          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-red-600 p-0.5 shadow-lg relative group-hover:scale-110 transition-transform duration-300">
+                              <div class="w-full h-full bg-white/20 backdrop-blur-md rounded-[14px] flex items-center justify-center text-3xl drop-shadow-md">🥉</div>
+                          </div>
+                          <div>
+                              <h4 class="font-extrabold text-slate-800 text-lg">ব্রোঞ্জপদক</h4>
+                              <p class="text-[11px] text-orange-700 font-bold uppercase tracking-widest bg-orange-100/50 inline-block px-2 py-0.5 rounded-md mt-1 border border-orange-200/50">৩য় স্থান অধিকার</p>
+                          </div>
+                      </div>
+                      <div class="relative z-10">
+                          <p class="text-sm text-slate-600 font-medium mb-3 flex items-center gap-2">মোট অর্জন: <span id="ach-bronze-count" class="font-black text-orange-600 text-xl bg-white px-2 py-0.5 rounded-lg shadow-inner border border-orange-100">০</span></p>
+                          <div class="bg-white/60 backdrop-blur-sm p-3.5 rounded-xl border border-white shadow-sm text-sm text-slate-700 font-semibold break-words leading-relaxed" id="ach-bronze-list"></div>
+                      </div>
+                  </div>
+              </div>
           </div>
       </div> 
     </div>
@@ -790,16 +968,21 @@
     let noticeSlideInterval = null;
     let financeChartInstance = null;
     let trendChartInstance = null;
-    let memberChartInstance = null; // New Member Interactive Chart
+    let memberChartInstance = null;
     let lastDrawTime = 0;
     let isFirstSnapshot = true;
     let initialLoadComplete = false;
     let visitorLogged = false;
 
+    // --- PWA Feature & App State Trackers ---
+    let deferredPrompt;
+    let isAppInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    
     // --- State Cache for Memoized Rendering Optimization ---
     let cachedMembersState = null;
     let cachedNoticeState = null;
     let cachedLeaderboardState = null;
+    let globalAchievements = {};
 
     // Avatar image pre-loading cache for custom canvas rendering
     const avatarCache = {};
@@ -810,7 +993,12 @@
     const memberListPlaceholder = document.getElementById('member-list-placeholder');
     const profileModal = document.getElementById('profile-modal');
 
-    // --- Progressive Web App (PWA) Service Worker Registration ---
+    // --- Progressive Web App (PWA) Install Prompt Capture ---
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+    });
+
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -820,7 +1008,7 @@
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => console.log('সার্ভিস ওয়ার্কার সফলভাবে নিবন্ধিত হয়েছে!'))
                     .catch(err => {
-                        console.log('সার্ভিস ওয়ার্কার স্কিপ করা হয়েছে (স্যান্ডবক্স প্রিভিউয়ের জন্য নিরাপদ):', err.message);
+                        console.log('সার্ভিস ওয়ার্কার স্কিপ করা হয়েছে:', err.message);
                     });
             }
         });
@@ -851,7 +1039,6 @@
     window.addEventListener('hashchange', () => {
         const h = window.location.hash;
         
-        // Handle Main Views
         if (!h || h === '' || h === '#') {
             closeAllModals();
             switchView('view-home');
@@ -865,7 +1052,6 @@
             closeAllModals();
             switchView('view-finance');
             window.scrollTo(0, 0);
-            // Fix Chart.js rendering issue when unhidden
             setTimeout(() => {
                 if (financeChartInstance) financeChartInstance.resize();
                 if (trendChartInstance) trendChartInstance.resize();
@@ -878,15 +1064,11 @@
             renderLeaderboard();
             window.scrollTo(0, 0);
         }
-        // Handle Modals
         else if (h === '#fund') {
             closeFundDetails();
             renderFundModal();
             document.getElementById('monthly-fund-modal').classList.remove('hidden');
             document.getElementById('monthly-fund-modal').classList.add('flex');
-        } 
-        else if (h === '#fund-details') {
-            // Internal state triggered by JS
         } 
         else if (h === '#lottery') {
             document.getElementById('lottery-modal').classList.remove('hidden');
@@ -898,12 +1080,8 @@
             const m = document.getElementById('notif-modal');
             if (m.classList.contains('hidden')) openNotif();
         } 
-        else if (h === '#profile') {
-            // Ensure profile is visible, usually opened via script
-        }
     });
 
-    // Device / Visitor Logging
     function getBrowserInfo() {
         var ua = navigator.userAgent, tem, M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
         if (/trident/i.test(M[1])) { tem = /\brv[ :]+(\d+)/g.exec(ua) || []; return { name: 'IE', version: (tem[1] || '') }; }
@@ -1013,22 +1191,16 @@
         t.currentLoan = t.totalLoanTaken - t.totalLoanRepaid; return t;
     };
 
-    // --- Helper to shorten name strictly based on your specified rules ---
     const getShortenedName = (fullName) => {
         if (!fullName) return '';
         const parts = fullName.trim().split(/\s+/);
-        // ১ শব্দের নামের ক্ষেত্রে প্রথম শব্দ
         if (parts.length === 1) return parts[0];
-        // ২ শব্দের নামের ক্ষেত্রে প্রথম শব্দ
         if (parts.length === 2) return parts[0];
-        // ৩ শব্দের নামের ক্ষেত্রে মিডেল নেম (দ্বিতীয় শব্দ)
         if (parts.length === 3) return parts[1];
-        // ৩ এর অধিক শব্দের নামের ক্ষেত্রে সেকেন্ড শব্দ
         if (parts.length > 3) return parts[1];
         return fullName;
     };
 
-    // Computing deposit speed ranking system...
     const calculateMemberSpeedRankings = () => {
         const rankings = members.map(m => {
             let totalDaysDiff = 0;
@@ -1036,16 +1208,14 @@
             const deposits = (m.transactions || []).filter(t => t.type === 'deposit' && t.date);
 
             deposits.forEach(deposit => {
-                const monthKey = deposit.date.substring(0, 7); // Format: "YYYY-MM"
+                const monthKey = deposit.date.substring(0, 7);
                 let lotteryDate = null;
 
-                // Check if we have lottery distribution date in fundDistribution for this month
                 if (fundDistribution[monthKey] && fundDistribution[monthKey].date) {
                     lotteryDate = new Date(fundDistribution[monthKey].date);
                 } else if (fundDistribution[monthKey] && fundDistribution[monthKey].ts) {
                     lotteryDate = new Date(fundDistribution[monthKey].ts);
                 } else {
-                    // Fallback to the 1st day of the deposit's month
                     lotteryDate = new Date(monthKey + "-01");
                 }
 
@@ -1053,13 +1223,11 @@
                 const diffTime = payDate - lotteryDate;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 
-                // Keep values logic-bound (0 or positive days)
                 const speed = diffDays < 0 ? 0 : diffDays;
                 totalDaysDiff += speed;
                 paymentsAnalyzed++;
             });
 
-            // Fallback for members with no payments
             const avgSpeed = paymentsAnalyzed > 0 ? (totalDaysDiff / paymentsAnalyzed) : 999;
 
             return {
@@ -1069,7 +1237,6 @@
             };
         });
 
-        // Sort rankings: Lower average days = higher priority
         rankings.sort((a, b) => {
             if (a.avgDays === b.avgDays) return (b.totalPayments - a.totalPayments);
             return a.avgDays - b.avgDays;
@@ -1077,6 +1244,241 @@
 
         return rankings;
     };
+
+    const calculateGlobalAchievements = () => {
+        globalAchievements = {};
+        members.forEach(m => { globalAchievements[m.id] = { lotteryWins: [], gold: [], silver: [], bronze: [] }; });
+        
+        (lottery.history || []).forEach(h => {
+            const winnerMatch = members.find(m => m.name.trim() === h.winner.trim() || h.winner.includes(m.name) || m.name.includes(h.winner));
+            if (winnerMatch) globalAchievements[winnerMatch.id].lotteryWins.push(h.date);
+        });
+
+        const months = {};
+        members.forEach(m => {
+            (m.transactions || []).forEach(t => {
+                if(t.type === 'deposit' && t.date) {
+                    const monthKey = t.date.substring(0, 7);
+                    if(!months[monthKey]) months[monthKey] = {};
+                    
+                    let lotteryDate = new Date(monthKey + "-01");
+                    if (fundDistribution[monthKey]) {
+                        if(fundDistribution[monthKey].date) lotteryDate = new Date(fundDistribution[monthKey].date);
+                        else if(fundDistribution[monthKey].ts) lotteryDate = new Date(fundDistribution[monthKey].ts);
+                    }
+                    
+                    const diffDays = Math.max(0, Math.ceil((new Date(t.date) - lotteryDate) / (1000 * 60 * 60 * 24)));
+                    if (months[monthKey][m.id] === undefined) months[monthKey][m.id] = diffDays;
+                    else months[monthKey][m.id] = Math.max(months[monthKey][m.id], diffDays);
+                }
+            });
+        });
+
+        Object.keys(months).forEach(mk => {
+            const arr = Object.keys(months[mk]).map(id => ({ id, diffDays: months[mk][id] })).sort((a,b) => a.diffDays - b.diffDays);
+            if(arr.length > 0 && globalAchievements[arr[0].id]) globalAchievements[arr[0].id].gold.push(mk);
+            if(arr.length > 1 && globalAchievements[arr[1].id]) globalAchievements[arr[1].id].silver.push(mk);
+            if(arr.length > 2 && globalAchievements[arr[2].id]) globalAchievements[arr[2].id].bronze.push(mk);
+        });
+    };
+
+    // =========================================================
+    // --- UPDATED: PWA SEQUENCE & CELEBRATION POPUPS (DAILY LOGIC) ---
+    // =========================================================
+    
+    const showTop3Highlight = () => {
+        const today = new Date().toDateString();
+        // Check local storage for today's date instead of session storage
+        if(localStorage.getItem('top3_popup_shown_date') === today) return;
+        localStorage.setItem('top3_popup_shown_date', today);
+        
+        const rankings = calculateMemberSpeedRankings();
+        const top3 = rankings.slice(0, 3).filter(r => r.avgDays !== 999);
+        if(top3.length === 0) return;
+
+        const content = document.getElementById('top3-highlight-content');
+        const popup = document.getElementById('top3-highlight-popup');
+        
+        content.innerHTML = top3.map((r, i) => {
+            const medalName = i === 0 ? 'গোল্ড মেডেল 👑' : i === 1 ? 'সিলভার মেডেল 🥈' : 'ব্রোঞ্জ মেডেল 🥉';
+            const badgeColor = i === 0 ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950' : i === 1 ? 'bg-gradient-to-r from-slate-300 to-slate-100 text-slate-900' : 'bg-gradient-to-r from-orange-500 to-amber-700 text-slate-100';
+            const borderCls = i === 0 ? 'border-amber-400/40 shadow-[0_0_15px_rgba(234,179,8,0.1)]' : i === 1 ? 'border-slate-300/30' : 'border-orange-500/30';
+            const ph = r.member.photoUrl || `https://placehold.co/64x64/e2e8f0/64748b?text=${encodeURIComponent(r.member.name?.charAt(0)||'?')}`;
+            
+            // Suplimentary reasons of why they got Gold/Silver/Bronze medals
+            const descriptions = [
+                `চলতি মাসের লটারি ড্রয়ের পর সবচেয়ে কম সময়ে (গড়ে মাত্র <strong class="text-amber-400">${getBengaliNumber(r.avgDays)} দিনে</strong>) সবার আগে সঞ্চয় পরিশোধ করে প্রথম স্থান নিশ্চিত করেছেন।`,
+                `লটারি ড্রয়ের পর অত্যন্ত দায়িত্বশীলতার সাথে গড়ে মাত্র <strong class="text-slate-300">${getBengaliNumber(r.avgDays)} দিনে</strong> দ্রুততম সঞ্চয় জমা দিয়ে দ্বিতীয় স্থান অর্জন করেছেন।`,
+                `অসাধারণ নিয়মানুবর্তিতা বজায় রেখে লটারি ড্রয়ের পর গড়ে মাত্র <strong class="text-orange-400">${getBengaliNumber(r.avgDays)} দিনে</strong> সঞ্চয় জমা দিয়ে তৃতীয় স্থান অর্জন করেছেন।`
+            ];
+
+            return `
+            <div class="flex items-center gap-4 p-3.5 bg-white/5 border ${borderCls} rounded-2xl hover:bg-white/10 transition duration-300">
+                <div class="relative shrink-0">
+                    <!-- Photo fully clean and visible (no overlay) -->
+                    <img src="${ph}" onerror="this.src='${ph}'" class="w-14 h-14 rounded-full object-cover border-2 ${i===0 ? 'border-amber-400':'border-slate-400'} shadow-md">
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2">
+                        <h4 class="text-sm font-extrabold text-white truncate">${r.member.name}</h4>
+                        <!-- Gold, Silver, Bronze badges positioned clearly beneath name/photo metrics -->
+                        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full ${badgeColor} shrink-0">${medalName}</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">${descriptions[i]}</p>
+                </div>
+            </div>
+            `;
+        }).join('');
+
+        popup.classList.remove('translate-y-[250%]');
+    };
+
+    const showLotteryWinnerPopup = () => {
+        const history = lottery.history || [];
+        if (history.length === 0) return;
+        
+        // Fetch the most recent lottery draw details
+        const latestWinner = history[history.length - 1];
+        if (!latestWinner) return;
+
+        // Match the winner with our registered members to fetch more credentials
+        const matchedMember = members.find(m => 
+            m.name.trim() === latestWinner.winner.trim() || 
+            latestWinner.winner.includes(m.name) || 
+            m.name.includes(latestWinner.winner)
+        );
+        
+        const modal = document.getElementById('lottery-winner-popup');
+        const winnerImg = document.getElementById('lottery-winner-img');
+        const winnerName = document.getElementById('lottery-winner-name');
+        const winnerCard = document.getElementById('lottery-winner-card');
+        const winnerEmpId = document.getElementById('lottery-winner-empid');
+        const winnerPhone = document.getElementById('lottery-winner-phone');
+        const winnerDeposit = document.getElementById('lottery-winner-deposit');
+        const winnerDate = document.getElementById('lottery-winner-date');
+        
+        winnerName.textContent = latestWinner.winner;
+        winnerDate.textContent = `তারিখ: ${latestWinner.date || 'N/A'}`;
+        
+        const fallbackPic = 'https://placehold.co/120x120/e2e8f0/64748b?text=🏆';
+        
+        if (matchedMember) {
+            winnerImg.src = matchedMember.photoUrl || fallbackPic;
+            winnerImg.onerror = () => winnerImg.src = fallbackPic;
+            winnerCard.textContent = matchedMember.cardNumber || matchedMember['card-number'] || 'N/A';
+            winnerEmpId.textContent = matchedMember.employeeId || matchedMember['employee-id'] || 'N/A';
+            winnerPhone.textContent = matchedMember.phone || 'N/A';
+            
+            const totals = calculateMemberTotals(matchedMember);
+            winnerDeposit.textContent = `৳ ${getBengaliNumber(totals.totalDeposit)}`;
+        } else {
+            winnerImg.src = fallbackPic;
+            winnerCard.textContent = 'N/A';
+            winnerEmpId.textContent = 'N/A';
+            winnerPhone.textContent = 'N/A';
+            winnerDeposit.textContent = '৳ ০';
+        }
+
+        modal.classList.remove('translate-y-[250%]');
+    };
+
+    const closeLotteryWinnerPopup = () => {
+        const modal = document.getElementById('lottery-winner-popup');
+        modal.classList.add('translate-y-[250%]');
+    };
+
+    // Binding event listeners for newly added sequential popups
+    document.getElementById('close-lottery-winner-btn').addEventListener('click', closeLotteryWinnerPopup);
+    document.getElementById('dismiss-lottery-winner-btn').addEventListener('click', closeLotteryWinnerPopup);
+
+    const handleStartupSequence = () => {
+        // Prevent showing on inner pages directly
+        if(window.location.hash && window.location.hash !== '#' && window.location.hash !== '') return;
+        
+        const today = new Date().toDateString();
+        // Check if the startup popups were already handled TODAY
+        if(localStorage.getItem('startup_sequence_date') === today) return;
+        
+        const pwaModal = document.getElementById('pwa-install-modal');
+        
+        const triggerTop3 = () => {
+            // Save today's date so it won't show again today
+            localStorage.setItem('startup_sequence_date', today);
+            
+            // Show top3 highlight popup and ensure lottery popup is also loaded/rendered
+            setTimeout(() => {
+                showTop3Highlight();
+                // We pre-cache or prepare the lottery popup as well
+                const history = lottery.history || [];
+                if (history.length > 0) {
+                    const latestWinner = history[history.length - 1];
+                    const matchedMember = members.find(m => 
+                        m.name.trim() === latestWinner.winner.trim() || 
+                        latestWinner.winner.includes(m.name) || 
+                        m.name.includes(latestWinner.winner)
+                    );
+                    const winnerImg = document.getElementById('lottery-winner-img');
+                    const winnerName = document.getElementById('lottery-winner-name');
+                    const winnerCard = document.getElementById('lottery-winner-card');
+                    const winnerEmpId = document.getElementById('lottery-winner-empid');
+                    const winnerPhone = document.getElementById('lottery-winner-phone');
+                    const winnerDeposit = document.getElementById('lottery-winner-deposit');
+                    const winnerDate = document.getElementById('lottery-winner-date');
+                    
+                    winnerName.textContent = latestWinner.winner;
+                    winnerDate.textContent = `তারিখ: ${latestWinner.date || 'N/A'}`;
+                    const fallbackPic = 'https://placehold.co/120x120/e2e8f0/64748b?text=🏆';
+                    if (matchedMember) {
+                        winnerImg.src = matchedMember.photoUrl || fallbackPic;
+                        winnerImg.onerror = () => winnerImg.src = fallbackPic;
+                        winnerCard.textContent = matchedMember.cardNumber || matchedMember['card-number'] || 'N/A';
+                        winnerEmpId.textContent = matchedMember.employeeId || matchedMember['employee-id'] || 'N/A';
+                        winnerPhone.textContent = matchedMember.phone || 'N/A';
+                        const totals = calculateMemberTotals(matchedMember);
+                        winnerDeposit.textContent = `৳ ${getBengaliNumber(totals.totalDeposit)}`;
+                    } else {
+                        winnerImg.src = fallbackPic;
+                        winnerCard.textContent = 'N/A';
+                        winnerEmpId.textContent = 'N/A';
+                        winnerPhone.textContent = 'N/A';
+                        winnerDeposit.textContent = '৳ ০';
+                    }
+                }
+            }, 500);
+        };
+
+        // If PWA prompt is ready and hasn't been dismissed TODAY
+        if (!isAppInstalled && deferredPrompt && localStorage.getItem('pwa_dismissed_date') !== today) {
+            pwaModal.classList.remove('translate-y-[200%]');
+            
+            document.getElementById('install-pwa-btn').onclick = async () => {
+                pwaModal.classList.add('translate-y-[200%]');
+                if(deferredPrompt) {
+                    deferredPrompt.prompt();
+                    await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                }
+                triggerTop3();
+            };
+            
+            document.getElementById('close-pwa-btn').onclick = () => {
+                pwaModal.classList.add('translate-y-[200%]');
+                localStorage.setItem('pwa_dismissed_date', today);
+                triggerTop3();
+            };
+        } else {
+            triggerTop3();
+        }
+    };
+    
+    // Updated Close Top 3 Depositor logic: sequentially triggers the beautiful lottery winner popup right after
+    document.getElementById('close-top3-btn').addEventListener('click', () => {
+        document.getElementById('top3-highlight-popup').classList.add('translate-y-[250%]');
+        setTimeout(() => {
+            showLotteryWinnerPopup();
+        }, 600);
+    });
+    // =========================================================
 
     const setCopyrightYear = () => {
         const currentYear = new Date().getFullYear();
@@ -1187,7 +1589,6 @@
         } 
     });
 
-    // --- Interactive Chart rendering with detailed actions ---
     const renderCharts = (td, tlt, tlr) => {
         const ctxF = document.getElementById('financeChart').getContext('2d');
         if (financeChartInstance) financeChartInstance.destroy();
@@ -1209,25 +1610,20 @@
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9', borderDash: [5, 5] } }, x: { grid: { display: false } } } } 
         });
 
-        // --- Highly Interactive Member-wise Savings & Loan Chart ---
         const ctxM = document.getElementById('memberInteractiveChart').getContext('2d');
         if (memberChartInstance) memberChartInstance.destroy();
 
         const activeMembersList = members.filter(m => m.isActive !== false);
-        
-        // এক্স-অক্ষে দেখানোর জন্য নামের সুনির্দিষ্ট শর্ট ফর্ম বা ছাঁটাই করা নামের রূপান্তর
         const memberNames = activeMembersList.map(m => getShortenedName(m.name));
         const memberDeposits = activeMembersList.map(m => calculateMemberTotals(m).totalDeposit);
         const memberLoans = activeMembersList.map(m => calculateMemberTotals(m).currentLoan);
 
-        // ফায়ারবেস প্রোফাইল ছবিগুলো ক্যানভাসে ড্রয়িংয়ের জন্য প্রিলোড করা হচ্ছে
         activeMembersList.forEach(m => {
             if (m.photoUrl && !avatarCache[m.photoUrl]) {
                 const img = new Image();
                 img.src = m.photoUrl;
                 img.onload = () => {
                     avatarCache[m.photoUrl] = img;
-                    // একটি ছবি লোড শেষ হলে ক্যানভাস আপডেট করে রি-ড্র করা হবে
                     if (memberChartInstance) {
                         memberChartInstance.update();
                     }
@@ -1238,7 +1634,7 @@
             }
         });
 
-        // ক্যানভাসে সদস্যদের গোলাকার প্রোফাইল ছবি যুক্ত করার জন্য কাস্টম প্লাগইন
+        // Custom drawing avatars over horizontal chart ticks
         const memberAvatarsPlugin = {
             id: 'memberAvatars',
             afterDraw: (chart) => {
@@ -1248,10 +1644,9 @@
                 
                 activeMembersList.forEach((m, index) => {
                     const x = xAxis.getPixelForTick(index);
-                    const y = xAxis.top + 16; // এক্সিস লাইনের নিচে ঠিক মাঝখানে পজিশন
+                    const y = xAxis.top + 16;
                     
                     ctx.save();
-                    // বৃত্তাকার ক্লিপিং মাস্ক তৈরি
                     ctx.beginPath();
                     ctx.arc(x, y, 12, 0, Math.PI * 2);
                     ctx.closePath();
@@ -1259,10 +1654,8 @@
                     
                     const img = m.photoUrl ? avatarCache[m.photoUrl] : null;
                     if (img && img !== 'FAILED') {
-                        // ছবি সফলভাবে লোড হলে সেটি আঁকা হবে
                         ctx.drawImage(img, x - 12, y - 12, 24, 24);
                     } else {
-                        // ছবি না থাকলে বা ফেল করলে নামের প্রথম অক্ষর দিয়ে বাবল তৈরি
                         ctx.fillStyle = '#6366f1';
                         ctx.fill();
                         ctx.fillStyle = '#ffffff';
@@ -1273,7 +1666,6 @@
                     }
                     ctx.restore();
                     
-                    // প্রিমিয়াম বর্ডার যোগ করা হচ্ছে
                     ctx.save();
                     ctx.strokeStyle = '#e2e8f0';
                     ctx.lineWidth = 1.5;
@@ -1314,7 +1706,6 @@
                     },
                     tooltip: {
                         callbacks: {
-                            // মাউস হোভার বা টাচ করলে মেম্বারের সম্পূর্ণ আসল নামটি দেখতে পাওয়ার লজিক
                             title: (tooltipItems) => {
                                 const index = tooltipItems[0].dataIndex;
                                 const matchedMember = activeMembersList[index];
@@ -1346,13 +1737,13 @@
                     x: {
                         grid: { display: false },
                         ticks: { 
-                            padding: 35, // প্রোফাইল ছবিগুলো দেখানোর জন্য অক্ষের নিচে প্রয়োজনীয় জায়গা খালি করা হলো
+                            padding: 35,
                             font: { family: "'Hind Siliguri'", size: 10, weight: 'bold' } 
                         }
                     }
                 }
             },
-            plugins: [memberAvatarsPlugin] // গোলাকার ছবি আঁকার কাস্টম প্লাগইন অ্যাক্টিভেট করা হলো
+            plugins: [memberAvatarsPlugin]
         });
     };
 
@@ -1378,7 +1769,6 @@
         }
     };
 
-    // Helper to get speed label & style
     const getSpeedLabel = (avgDays) => {
         if (avgDays === 999) return { text: 'কোনো তথ্য নেই', cls: 'bg-slate-100 text-slate-500' };
         if (avgDays <= 3) return { text: '⚡ বিদ্যুৎ গতি', cls: 'bg-green-100 text-green-700' };
@@ -1388,6 +1778,7 @@
     };
 
     const renderUI = () => {
+        calculateGlobalAchievements();
         let td = 0, tlt = 0, tlr = 0;
         members.forEach(m => { const t = calculateMemberTotals(m); td+=t.totalDeposit; tlt+=t.totalLoanTaken; tlr+=t.totalLoanRepaid; });
         
@@ -1407,7 +1798,6 @@
             return !q || (m.name||'').toLowerCase().includes(q) || (m.id||'').includes(q) || (m.phone||'').includes(q) || cardNumber.includes(q) || employeeId.includes(q);
         });
 
-        // Compute rankings beforehand to showcase speed on cards
         const speedRankings = calculateMemberSpeedRankings();
 
         if (filtered.length === 0) memberListPlaceholder.classList.remove('hidden');
@@ -1417,31 +1807,41 @@
                 const ph = `https://placehold.co/64x64/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
                 const cardNum = m.cardNumber || m['card-number'] || m.cardnumber || 'N/A';
                 
-                // Get member speed ranking
                 const rankIndex = speedRankings.findIndex(r => r.member.id === m.id);
                 const rankInfo = speedRankings[rankIndex];
                 const speed = rankInfo ? rankInfo.avgDays : 999;
                 const badge = getSpeedLabel(speed);
-                const positionText = speed !== 999 ? `🏅 পজিশন: ${getBengaliNumber(rankIndex + 1)} তম` : '🏅 কোনো র‍্যাংক নেই';
+                const positionText = speed !== 999 ? `🏅 পজিশন: ${getBengaliNumber(rankIndex + 1)} তম` : '🏅 কোনো র‌্যাংক নেই';
+
+                const ach = globalAchievements[m.id] || { lotteryWins: [], gold: [], silver: [], bronze: [] };
+                let achHtml = '';
+                if(ach.lotteryWins.length || ach.gold.length || ach.silver.length || ach.bronze.length) {
+                    achHtml = `<div class="flex flex-wrap gap-1.5 mt-2">`;
+                    if(ach.lotteryWins.length) achHtml += `<span class="bg-gradient-to-r from-amber-400 to-yellow-500 text-yellow-950 text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-sm flex items-center gap-1 hover:scale-105 transition-transform cursor-default border border-yellow-300" title="লটারি বিজয়ী">🏆 <span class="bg-white/40 px-1 rounded-sm">${getBengaliNumber(ach.lotteryWins.length)}</span></span>`;
+                    if(ach.gold.length) achHtml += `<span class="bg-gradient-to-r from-yellow-300 to-amber-500 text-yellow-950 text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-sm flex items-center gap-1 hover:scale-105 transition-transform cursor-default border border-yellow-400" title="১ম স্থান">🥇 <span class="bg-white/40 px-1 rounded-sm">${getBengaliNumber(ach.gold.length)}</span></span>`;
+                    if(ach.silver.length) achHtml += `<span class="bg-gradient-to-r from-slate-200 to-slate-400 text-slate-900 text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-sm flex items-center gap-1 hover:scale-105 transition-transform cursor-default border border-slate-400" title="২য় স্থান">🥈 <span class="bg-white/40 px-1 rounded-sm">${getBengaliNumber(ach.silver.length)}</span></span>`;
+                    if(ach.bronze.length) achHtml += `<span class="bg-gradient-to-r from-orange-300 to-orange-500 text-orange-950 text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-sm flex items-center gap-1 hover:scale-105 transition-transform cursor-default border border-orange-400" title="৩য় স্থান">🥉 <span class="bg-white/40 px-1 rounded-sm">${getBengaliNumber(ach.bronze.length)}</span></span>`;
+                    achHtml += `</div>`;
+                }
 
                 const card = document.createElement('div');
                 card.className = 'bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-200 transition group flex flex-col h-full relative overflow-hidden';
                 card.innerHTML = `
                     <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition text-6xl select-none">💳</div>
-                    <div class="flex items-start gap-4 mb-5 relative z-10">
+                    <div class="flex items-start gap-4 mb-4 relative z-10">
                         <img class="w-14 h-14 rounded-full object-cover border-2 border-indigo-100 shadow-sm mt-1" src="${m.photoUrl||ph}" onerror="this.src='${ph}'">
                         <div class="overflow-hidden w-full">
-                            <h4 class="font-bold text-slate-800 truncate text-[18px] mb-1.5">${m.name}</h4>
-                            <p class="text-[13px] text-indigo-600 font-semibold flex items-center gap-1.5"><span class="text-sm">💳</span> ${cardNum}</p>
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-[13px] text-slate-600 mt-1.5">
-                                <p class="flex items-center gap-1"><span class="text-sm">📞</span> <span class="font-medium tracking-wide">${m.phone || 'N/A'}</span></p>
+                            <h4 class="font-bold text-slate-800 truncate text-[18px] leading-tight">${m.name}</h4>
+                            ${achHtml}
+                            <div class="flex flex-col gap-1 text-[13px] text-slate-600 ${achHtml ? 'mt-2.5' : 'mt-1.5'}">
+                                <p class="text-indigo-600 font-semibold flex items-center gap-1.5"><span class="text-sm">💳</span> ${cardNum}</p>
+                                <p class="flex items-center gap-1.5"><span class="text-sm">📞</span> <span class="font-medium tracking-wide">${m.phone || 'N/A'}</span></p>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Ranking & Promptness Score Section -->
                     <div class="bg-slate-50/70 rounded-lg p-2.5 mb-3 text-xs flex justify-between items-center relative z-10">
-                        <span class="font-medium text-slate-500">${positionText}</span>
+                        <span class="font-semibold text-slate-600">${positionText}</span>
                         <span class="px-2 py-0.5 rounded font-bold text-[10px] ${badge.cls}">${badge.text} ${speed !== 999 ? `(${getBengaliNumber(speed)} দিন)` : ''}</span>
                     </div>
 
@@ -1457,7 +1857,6 @@
         if(activeMember) { const fresh = members.find(m=>m.id===activeMember.id); if(fresh && filtered.includes(fresh)) showProfile(fresh.id, false); else closeProfileModal(false); }
     };
 
-    // Render the beautiful leaderboards podiums and full stats
     const renderLeaderboard = () => {
         const rankings = calculateMemberSpeedRankings();
         const fallbackPic = 'https://placehold.co/128x128/e2e8f0/64748b?text=M';
@@ -1468,10 +1867,15 @@
             document.getElementById('podium-1-name').textContent = top1.member.name;
             document.getElementById('podium-1-days').textContent = `গড় ${getBengaliNumber(top1.avgDays)} দিন`;
             document.getElementById('podium-1-img').src = top1.member.photoUrl || fallbackPic;
+            
+            // Setting dynamic explanation for Gold medal
+            document.getElementById('podium-1-desc').innerHTML = `<strong class="text-white">${top1.member.name}</strong> চলতি মাসের লটারির ড্র হওয়ার পর গড়ে মাত্র <strong class="text-amber-400">${getBengaliNumber(top1.avgDays)} দিনে</strong> সঞ্চয় জমা দিয়ে প্রথম স্থান লাভ করে স্বর্ণপদক অর্জন করেছেন।`;
+            document.getElementById('podium-1-desc-box').classList.remove('hidden');
         } else {
             document.getElementById('podium-1-name').textContent = 'খালি';
             document.getElementById('podium-1-days').textContent = '-- দিন';
             document.getElementById('podium-1-img').src = fallbackPic;
+            document.getElementById('podium-1-desc-box').classList.add('hidden');
         }
 
         // 2nd Place Podium
@@ -1480,10 +1884,15 @@
             document.getElementById('podium-2-name').textContent = top2.member.name;
             document.getElementById('podium-2-days').textContent = `গড় ${getBengaliNumber(top2.avgDays)} দিন`;
             document.getElementById('podium-2-img').src = top2.member.photoUrl || fallbackPic;
+            
+            // Setting dynamic explanation for Silver medal
+            document.getElementById('podium-2-desc').innerHTML = `<strong class="text-white">${top2.member.name}</strong> লটারি পরবর্তী কিস্তি গড়ে মাত্র <strong class="text-slate-300">${getBengaliNumber(top2.avgDays)} দিনে</strong> জমা দিয়ে চমৎকার ধারাবাহিকতা বজায় রেখে ২য় স্থান লাভ করেছেন।`;
+            document.getElementById('podium-2-desc-box').classList.remove('hidden');
         } else {
             document.getElementById('podium-2-name').textContent = 'খালি';
             document.getElementById('podium-2-days').textContent = '-- দিন';
             document.getElementById('podium-2-img').src = fallbackPic;
+            document.getElementById('podium-2-desc-box').classList.add('hidden');
         }
 
         // 3rd Place Podium
@@ -1492,13 +1901,18 @@
             document.getElementById('podium-3-name').textContent = top3.member.name;
             document.getElementById('podium-3-days').textContent = `গড় ${getBengaliNumber(top3.avgDays)} দিন`;
             document.getElementById('podium-3-img').src = top3.member.photoUrl || fallbackPic;
+            
+            // Setting dynamic explanation for Bronze medal
+            document.getElementById('podium-3-desc').innerHTML = `<strong class="text-white">${top3.member.name}</strong> অত্যন্ত সুশৃঙ্খলভাবে লটারি ড্র হওয়ার পর গড়ে মাত্র <strong class="text-orange-400">${getBengaliNumber(top3.avgDays)} দিনে</strong> সঞ্চয় জমা দিয়ে ৩য় স্থান অধিকার করেছেন।`;
+            document.getElementById('podium-3-desc-box').classList.remove('hidden');
         } else {
             document.getElementById('podium-3-name').textContent = 'খালি';
             document.getElementById('podium-3-days').textContent = '-- দিন';
             document.getElementById('podium-3-img').src = fallbackPic;
+            document.getElementById('podium-3-desc-box').classList.add('hidden');
         }
 
-        // Remainder of the lists
+        // Remainder of the list
         const listContainer = document.getElementById('leaderboard-list');
         listContainer.innerHTML = '';
 
@@ -1509,7 +1923,6 @@
             const badge = getSpeedLabel(avgSpeed);
             const ph = `https://placehold.co/48x48/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
 
-            // Calculate progress promptness percentage for progress bars
             let progressPct = 0;
             if (avgSpeed !== 999) {
                 progressPct = Math.max(5, 100 - (avgSpeed * 3));
@@ -1528,13 +1941,12 @@
                     <img class="w-10 h-10 rounded-full object-cover border border-slate-200" src="${m.photoUrl || ph}" onerror="this.src='${ph}'">
                     <div class="min-w-0">
                         <p class="font-bold text-slate-800 text-sm truncate">${m.name}</p>
-                        <p class="text-[10px] text-slate-400">মোট জমা: ${getBengaliNumber(totalPays)} বার</p>
+                        <p class="text-[10px] text-slate-400 font-medium">মোট জমা: ${getBengaliNumber(totalPays)} বার</p>
                     </div>
                 </div>
                 
-                <!-- Speed Progress Indicator -->
                 <div class="w-full sm:w-1/3 mt-2 sm:mt-0">
-                    <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                    <div class="flex justify-between text-[10px] text-slate-400 mb-1 font-medium">
                         <span>জমা দেওয়ার সময়কাল</span>
                         <span class="font-bold text-slate-600">${avgSpeed !== 999 ? `${getBengaliNumber(avgSpeed)} দিন` : 'তথ্য নেই'}</span>
                     </div>
@@ -1543,7 +1955,6 @@
                     </div>
                 </div>
 
-                <!-- Badge Class -->
                 <div class="w-full sm:w-1/3 flex justify-end mt-2 sm:mt-0">
                     <span class="px-3 py-1 rounded-full font-bold text-[10px] sm:text-xs ${badge.cls}">${badge.text}</span>
                 </div>
@@ -1582,7 +1993,6 @@
         if (!images.length && !notice.text) display.innerHTML = `<div class="text-center text-slate-400 py-6 italic">কোনো নোটিশ নেই</div>`;
     };
 
-    // --- Profile Display & Table Generation ---
     const showProfile = (id, animate = true) => {
         if(animate) window.location.hash = 'profile'; 
         const m = members.find(x => x.id === id); activeMember = m; if(!m) return;
@@ -1611,6 +2021,21 @@
         document.getElementById('loan-taken').textContent = `৳ ${getBengaliNumber(t.totalLoanTaken)}`;
         document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(t.totalLoanRepaid)}`;
 
+        const ach = globalAchievements[id] || { lotteryWins: [], gold: [], silver: [], bronze: [] };
+        const formatMonthList = (list) => list.length ? list.map(mk => {
+            const text = mk.includes('-') ? formatDate(mk + '-01', 'monthYear') : mk;
+            return `<span class="inline-block bg-white/60 px-2.5 py-1 rounded-md border border-slate-200/50 text-xs shadow-sm m-0.5">${text}</span>`;
+        }).join('') : '<span class="text-slate-400 italic">কোনো অর্জন নেই</span>';
+        
+        document.getElementById('ach-lottery-count').textContent = getBengaliNumber(ach.lotteryWins.length);
+        document.getElementById('ach-lottery-list').innerHTML = formatMonthList(ach.lotteryWins);
+        document.getElementById('ach-gold-count').textContent = getBengaliNumber(ach.gold.length);
+        document.getElementById('ach-gold-list').innerHTML = formatMonthList(ach.gold);
+        document.getElementById('ach-silver-count').textContent = getBengaliNumber(ach.silver.length);
+        document.getElementById('ach-silver-list').innerHTML = formatMonthList(ach.silver);
+        document.getElementById('ach-bronze-count').textContent = getBengaliNumber(ach.bronze.length);
+        document.getElementById('ach-bronze-list').innerHTML = formatMonthList(ach.bronze);
+
         const tbody = document.getElementById('transactions-table-body');
         
         tbody.innerHTML = (m.transactions||[]).length === 0 ? '<tr><td colspan="5" class="py-6 text-center text-slate-400 italic">কোনো লেনদেন নেই</td></tr>' : 
@@ -1637,6 +2062,7 @@
         
         document.getElementById('profile-content-details').classList.add('hidden');
         document.getElementById('profile-content-summary').classList.add('hidden');
+        document.getElementById('profile-content-achievements').classList.add('hidden');
         document.getElementById('profile-content-transactions').classList.remove('hidden');
 
         if(animate) { 
@@ -1743,6 +2169,7 @@
         else { winSec.classList.add('hidden', 'scale-95', 'opacity-0'); }
     };
     
+    // Confetti Engine for celebration
     const canvas = document.getElementById("confetti"), ctx = canvas.getContext("2d");
     let parts = [];
     const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
@@ -1755,7 +2182,6 @@
     };
     const startConfetti = () => { parts=[]; for(let i=0;i<100;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*20, vy:(Math.random()-.5)*20, c:`hsl(${Math.random()*360},70%,50%)`}); updateConfetti(); };
 
-    // --- Firebase Initialization with Caching and State Memoization ---
     const initFirebase = async () => {
         const cachedLogo = localStorage.getItem('cached_logo_url');
         const favicon = document.getElementById('favicon');
@@ -1766,15 +2192,14 @@
             db = getFirestore(app); 
             auth = getAuth(app); 
 
-            // --- Enable Offline Data Persistence (Caching) ---
             try {
                 await enableMultiTabIndexedDbPersistence(db);
-                console.log("অফলাইন!");
+                console.log("অফলাইন ডাটা সক্রিয়!");
             } catch (err) {
                 if (err.code == 'failed-precondition') {
                     console.warn("অফলাইন পারসিস্টেন্স ব্যর্থ হয়েছে: একাধিক ট্যাব খোলা আছে।");
                 } else if (err.code == 'unimplemented') {
-                    console.warn("অফলাইন পারসিস্টেন্স ব্যর্থ হয়েছে: ব্রাউজার সাপোর্ট করে না।");
+                    console.warn("অফলাইন পারসিস্টেন্স ব্যর্থ হয়েছে: ব্রাউজার সাপোর্ট করে কাশী।");
                 }
             }
 
@@ -1787,7 +2212,6 @@
                 if (!visitorLogged) { logVisitor(); visitorLogged = true; }
                 mainAppContent.classList.remove('hidden'); document.getElementById('app-loader').classList.add('opacity-0'); setTimeout(()=>document.getElementById('app-loader').remove(),500);
                 
-                // Show home page on initial load if no hash
                 if(!window.location.hash) {
                     switchView('view-home');
                 } else {
@@ -1798,7 +2222,6 @@
                 onSnapshot(docRef, (s) => {
                     const d = s.data(); if(!d) return;
                     
-                    // Memoized State Diffing to prevent useless UI calculations
                     const newMembersState = JSON.stringify(d.members || []);
                     const newNoticeState = JSON.stringify(d.notice || {});
                     const newLeaderboardState = JSON.stringify(d.lottery || {});
@@ -1815,7 +2238,6 @@
                     }
                     isFirstSnapshot = false;
 
-                    // Execute UI updates only if state has actually changed
                     if (newMembersState !== cachedMembersState) {
                         cachedMembersState = newMembersState;
                         renderUI();
@@ -1835,14 +2257,18 @@
                     renderImportantLinks(); 
                     renderNotifications();
 
-                    if(!initialLoadComplete) { checkAndPlayNotifications(); initialLoadComplete=true; }
+                    if(!initialLoadComplete) { 
+                        checkAndPlayNotifications(); 
+                        initialLoadComplete = true; 
+                        
+                        setTimeout(() => handleStartupSequence(), 2000);
+                    }
                 });
             } else { try { await signInAnonymously(auth); } catch(e){console.error(e);} }
         });
     };
     initFirebase();
 
-    // --- Binding click, touch, and navigation interactions ---
     document.addEventListener('click', e => {
         const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], .fund-card');
         if(!t) return;
@@ -1869,7 +2295,7 @@
         else if(t.classList.contains('profile-tab')) {
             document.querySelectorAll('.profile-tab').forEach(x => { x.classList.remove('tab-active','text-indigo-600'); x.classList.add('text-slate-500'); });
             t.classList.add('tab-active','text-indigo-600'); t.classList.remove('text-slate-500');
-            ['details','transactions','summary'].forEach(k => document.getElementById(`profile-content-${k}`).classList.add('hidden'));
+            ['details','transactions','summary','achievements'].forEach(k => document.getElementById(`profile-content-${k}`).classList.add('hidden'));
             document.getElementById(`profile-content-${id.replace('profile-tab-','')}`).classList.remove('hidden');
         }
     });
