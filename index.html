@@ -600,7 +600,7 @@
             <button id="close-top3-btn" class="absolute top-2 right-2 text-white/50 hover:text-white p-1.5 bg-white/10 hover:bg-white/20 rounded-full transition z-20">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
-            <h3 class="text-center text-amber-400 font-extrabold text-sm sm:text-base mb-4 flex items-center justify-center gap-2 drop-shadow-md tracking-wider">
+            <h3 id="top3-highlight-title" class="text-center text-amber-400 font-extrabold text-sm sm:text-base mb-4 flex items-center justify-center gap-2 drop-shadow-md tracking-wider">
                 🏆 সেরা সঞ্চয়ী  🏆
             </h3>
             <div id="top3-highlight-content" class="flex flex-col gap-3 relative z-10">
@@ -1296,6 +1296,28 @@
         const top3 = rankings.slice(0, 3).filter(r => r.avgDays !== 999);
         if(top3.length === 0) return;
 
+        // --- Dynamic Date Title Logic based on latest funding month ---
+        const titleEl = document.getElementById('top3-highlight-title');
+        const mDeps = Object.keys(fundDistribution).sort().reverse();
+        if (mDeps.length > 0 && titleEl) {
+            const latestKey = mDeps[0];
+            const [lYear, lMonth] = latestKey.split('-');
+            const lDate = new Date(lYear, parseInt(lMonth) - 1);
+            const monthStr = lDate.toLocaleString('bn-BD', { month: 'long' });
+            const yearStr = getBengaliYear(lYear);
+            const formattedName = `${monthStr}-${yearStr}`; // e.g. "মে-২০২৬"
+
+            const now = new Date();
+            const currentKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+            if(latestKey === currentKey) {
+                titleEl.innerHTML = `🏆 চলতি মাসের (${formattedName}) সেরা সঞ্চয়ী 🏆`;
+            } else {
+                titleEl.innerHTML = `🏆 গত ${formattedName} মাসে সেরা সঞ্চয়ী ছিল 🏆`;
+            }
+        }
+        // -------------------------------------------------------------
+
         const content = document.getElementById('top3-highlight-content');
         const popup = document.getElementById('top3-highlight-popup');
         
@@ -1335,11 +1357,11 @@
 
     const showLotteryWinnerPopup = () => {
         const history = lottery.history || [];
-        if (history.length === 0) return;
+        if (history.length === 0) return false;
         
         // Fetch the most recent lottery draw details
         const latestWinner = history[history.length - 1];
-        if (!latestWinner) return;
+        if (!latestWinner) return false;
 
         // Match the winner with our registered members to fetch more credentials
         const matchedMember = members.find(m => 
@@ -1380,14 +1402,25 @@
         }
 
         modal.classList.remove('translate-y-[250%]');
+        return true;
     };
 
     const closeLotteryWinnerPopup = () => {
         const modal = document.getElementById('lottery-winner-popup');
         modal.classList.add('translate-y-[250%]');
+        
+        // When lottery popup is closed, trigger Top 3 highlight with a small delay for smooth animation
+        setTimeout(() => {
+            showTop3Highlight();
+        }, 600);
     };
 
-    // Binding event listeners for newly added sequential popups
+    // Close Top 3 Depositor logic (Now independent, does not trigger Lottery anymore)
+    document.getElementById('close-top3-btn').addEventListener('click', () => {
+        document.getElementById('top3-highlight-popup').classList.add('translate-y-[250%]');
+    });
+
+    // Binding event listeners for Lottery Winner Popup
     document.getElementById('close-lottery-winner-btn').addEventListener('click', closeLotteryWinnerPopup);
     document.getElementById('dismiss-lottery-winner-btn').addEventListener('click', closeLotteryWinnerPopup);
 
@@ -1401,50 +1434,17 @@
         
         const pwaModal = document.getElementById('pwa-install-modal');
         
-        const triggerTop3 = () => {
+        const triggerPopups = () => {
             // Save today's date so it won't show again today
             localStorage.setItem('startup_sequence_date', today);
             
-            // Show top3 highlight popup and ensure lottery popup is also loaded/rendered
-            setTimeout(() => {
+            // First show Lottery Winner popup. If none exist, show Top 3 straight away.
+            const history = lottery.history || [];
+            if (history.length > 0) {
+                showLotteryWinnerPopup();
+            } else {
                 showTop3Highlight();
-                // We pre-cache or prepare the lottery popup as well
-                const history = lottery.history || [];
-                if (history.length > 0) {
-                    const latestWinner = history[history.length - 1];
-                    const matchedMember = members.find(m => 
-                        m.name.trim() === latestWinner.winner.trim() || 
-                        latestWinner.winner.includes(m.name) || 
-                        m.name.includes(latestWinner.winner)
-                    );
-                    const winnerImg = document.getElementById('lottery-winner-img');
-                    const winnerName = document.getElementById('lottery-winner-name');
-                    const winnerCard = document.getElementById('lottery-winner-card');
-                    const winnerEmpId = document.getElementById('lottery-winner-empid');
-                    const winnerPhone = document.getElementById('lottery-winner-phone');
-                    const winnerDeposit = document.getElementById('lottery-winner-deposit');
-                    const winnerDate = document.getElementById('lottery-winner-date');
-                    
-                    winnerName.textContent = latestWinner.winner;
-                    winnerDate.textContent = `তারিখ: ${latestWinner.date || 'N/A'}`;
-                    const fallbackPic = 'https://placehold.co/120x120/e2e8f0/64748b?text=🏆';
-                    if (matchedMember) {
-                        winnerImg.src = matchedMember.photoUrl || fallbackPic;
-                        winnerImg.onerror = () => winnerImg.src = fallbackPic;
-                        winnerCard.textContent = matchedMember.cardNumber || matchedMember['card-number'] || 'N/A';
-                        winnerEmpId.textContent = matchedMember.employeeId || matchedMember['employee-id'] || 'N/A';
-                        winnerPhone.textContent = matchedMember.phone || 'N/A';
-                        const totals = calculateMemberTotals(matchedMember);
-                        winnerDeposit.textContent = `৳ ${getBengaliNumber(totals.totalDeposit)}`;
-                    } else {
-                        winnerImg.src = fallbackPic;
-                        winnerCard.textContent = 'N/A';
-                        winnerEmpId.textContent = 'N/A';
-                        winnerPhone.textContent = 'N/A';
-                        winnerDeposit.textContent = '৳ ০';
-                    }
-                }
-            }, 500);
+            }
         };
 
         // If PWA prompt is ready and hasn't been dismissed TODAY
@@ -1458,26 +1458,18 @@
                     await deferredPrompt.userChoice;
                     deferredPrompt = null;
                 }
-                triggerTop3();
+                triggerPopups();
             };
             
             document.getElementById('close-pwa-btn').onclick = () => {
                 pwaModal.classList.add('translate-y-[200%]');
                 localStorage.setItem('pwa_dismissed_date', today);
-                triggerTop3();
+                triggerPopups();
             };
         } else {
-            triggerTop3();
+            triggerPopups();
         }
     };
-    
-    // Updated Close Top 3 Depositor logic: sequentially triggers the beautiful lottery winner popup right after
-    document.getElementById('close-top3-btn').addEventListener('click', () => {
-        document.getElementById('top3-highlight-popup').classList.add('translate-y-[250%]');
-        setTimeout(() => {
-            showLotteryWinnerPopup();
-        }, 600);
-    });
     // =========================================================
 
     const setCopyrightYear = () => {
