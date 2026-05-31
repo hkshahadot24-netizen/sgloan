@@ -486,7 +486,7 @@
                   </div>
                   <div id="podium-3-desc-box" class="flex items-start gap-3 bg-white/5 p-3 rounded-2xl border border-amber-700/15">
                       <span class="text-xl shrink-0">🥉</span>
-                      <p class="leading-relaxed"><strong class="text-orange-300">ব্রোঞ্জ মেডেল:</strong> <span id="podium-3-desc">সদস্যদের মধ্যে নিয়মিত সঞ্চয় জমার গতি বজায় রেখে ৩য় দ্রুততম স্থান লাভ করার জন্য।</span></p>
+                      <p class="leading-relaxed"><strong class="text-orange-300">ব্রোঞ্জ মেডেল:</strong> <span id="podium-3-desc">সদস্যদের মধ্যে নিয়মিত সঞ্চয় জমার গতি বজায় রেখে ৩য় দ্রুততম স্থান লাভ করার জন্য।</span></p>
                   </div>
               </div>
           </div>
@@ -584,9 +584,10 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="flex items-center gap-4">
-            <img src="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS" class="w-12 h-12 rounded-xl shadow-md border border-slate-100">
+            <!-- PWA Logo ID added here -->
+            <img id="pwa-logo-img" src="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS" class="w-12 h-12 rounded-xl shadow-md border border-slate-100">
             <div class="pr-6">
-                <h3 class="font-bold text-slate-800 text-sm">ESCS অ্যাপ ইনস্টল করুন</h3>
+                <h3 class="font-bold text-slate-800 text-sm">ESCS অ্যাপ ইন্সটল করুন</h3>
                 <p class="text-[11px] text-slate-500 leading-tight mt-0.5">দ্রুত অ্যাক্সেস ও চমৎকার অভিজ্ঞতার জন্য হোম স্ক্রিনে যোগ করুন।</p>
             </div>
         </div>
@@ -1001,6 +1002,12 @@
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+    });
+
+    // PWA Installed Event
+    window.addEventListener('appinstalled', () => {
+        isAppInstalled = true;
+        deferredPrompt = null;
     });
 
     // --- Service Worker Registration ---
@@ -1736,23 +1743,51 @@
     const renderHeaderLogo = () => {
         const img = document.getElementById('header-logo-img');
         const footerImg = document.getElementById('footer-logo-img');
+        const pwaImg = document.getElementById('pwa-logo-img');
         const favicon = document.getElementById('favicon');
         if (logoUrl) { 
             img.src = logoUrl; img.onerror = () => img.src = 'https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS'; 
             if(footerImg) { footerImg.src = logoUrl; footerImg.onerror = () => footerImg.src = 'https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS'; }
+            if(pwaImg) { pwaImg.src = logoUrl; pwaImg.onerror = () => pwaImg.src = 'https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS'; }
             if(favicon) favicon.href = logoUrl; 
             localStorage.setItem('cached_logo_url', logoUrl); 
         }
     };
+    
     const renderImportantLinks = () => {
         const c = document.getElementById('important-links-display'); 
         if(c) { c.innerHTML = ''; c.classList.add('hidden'); }
         const btn = document.getElementById('footer-app-btn');
-        if (appDownloadUrl) { btn.href = appDownloadUrl; btn.target = "_blank"; }
-        else { 
-            const appLink = importantLinks.find(l => l.name.toLowerCase().includes('app') || l.name.includes('অ্যাপ'));
-            if(appLink) { btn.href = appLink.url; btn.target = "_blank"; } else { btn.href = "#"; btn.onclick = (e) => { e.preventDefault(); showMessage('অ্যাপ লিংক শীঘ্রই আসছে!', 'info'); }; }
-        }
+        
+        // Update: Click behavior updated for PWA installation
+        btn.onclick = async (e) => {
+            e.preventDefault();
+            if (isAppInstalled) {
+                showMessage('অ্যাপটি ইতিমধ্যে আপনার ডিভাইসে ইন্সটল করা আছে!', 'info');
+            } else if (deferredPrompt) {
+                // Show native install prompt
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    deferredPrompt = null;
+                    isAppInstalled = true;
+                }
+            } else {
+                // Fallback to URL redirection if PWA cannot be triggered
+                if (appDownloadUrl) { 
+                    window.open(appDownloadUrl, '_blank'); 
+                } else { 
+                    const appLink = importantLinks.find(l => l.name.toLowerCase().includes('app') || l.name.includes('অ্যাপ'));
+                    if(appLink) { 
+                        window.open(appLink.url, '_blank'); 
+                    } else { 
+                        showMessage('আপনার ব্রাউজার থেকে সরাসরি ইন্সটল অপশনটি ব্যবহার করুন।', 'info'); 
+                    }
+                }
+            }
+        };
+        btn.href = "#"; 
+        btn.removeAttribute('target');
     };
 
     const getSpeedLabel = (avgDays) => {
@@ -2189,7 +2224,11 @@
     const initFirebase = async () => {
         const cachedLogo = localStorage.getItem('cached_logo_url');
         const favicon = document.getElementById('favicon');
-        if(cachedLogo) { const loaderImg = document.getElementById('loader-logo-img'); if(loaderImg) loaderImg.src = cachedLogo; if(favicon) favicon.href = cachedLogo; }
+        if(cachedLogo) { 
+            const loaderImg = document.getElementById('loader-logo-img'); if(loaderImg) loaderImg.src = cachedLogo; 
+            const pwaImgCached = document.getElementById('pwa-logo-img'); if(pwaImgCached) pwaImgCached.src = cachedLogo;
+            if(favicon) favicon.href = cachedLogo; 
+        }
         
         try { 
             app = initializeApp(firebaseConfig); 
