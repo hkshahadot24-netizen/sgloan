@@ -8,7 +8,7 @@
   <!-- Favicon -->
   <link id="favicon" rel="icon" type="image/png" href="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS">
   
-  <!-- PWA Web App Manifest (Updated Path) -->
+  <!-- PWA Web App Manifest -->
   <link rel="manifest" href="/sgloan/manifest.json" />
   <meta name="theme-color" content="#6366f1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -82,10 +82,6 @@
     /* --- Modern Card Hover Effects --- */
     .hover-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .hover-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-
-    /* --- Lottery & Fund Modal Styles --- */
-    #lottery-modal { font-family: 'Hind Siliguri', sans-serif; background-color: #0f172a; color: #f1f5f9; }
-    .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
     
     /* --- Utility --- */
     .tab-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; background-color: rgba(238, 242, 255, 0.8); }
@@ -126,6 +122,9 @@
 </head>
 <body class="text-slate-800 antialiased relative">
 
+  <!-- CONFETTI CANVAS (Globally available for animations) -->
+  <canvas id="confetti" class="fixed inset-0 pointer-events-none z-[9999]"></canvas>
+
   <!-- ================= WATERMARK LAYER ================= -->
   <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden flex justify-between items-center">
       <div class="absolute top-[20%] sm:top-1/2 -translate-y-1/2 -left-24 sm:-left-12 lg:left-4 xl:left-12 opacity-[0.06] text-indigo-900 drop-shadow-xl transform -rotate-12 transition-all duration-700">
@@ -152,6 +151,7 @@
       <div class="absolute bottom-[10%] sm:top-1/2 sm:-translate-y-1/2 -right-24 sm:-right-12 lg:right-4 xl:right-12 opacity-[0.06] text-indigo-900 drop-shadow-xl transform rotate-12 transition-all duration-700">
           <svg class="w-[80vw] sm:w-[45vw] max-w-[350px] xl:max-w-[450px] h-auto" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
               <g transform="translate(100,100)">
+                  <!-- Similar SVG content for background -->
                   <circle cx="0" cy="-35" r="14" fill="currentColor"/>
                   <circle cx="-30" cy="15" r="14" fill="currentColor"/>
                   <circle cx="30" cy="15" r="14" fill="currentColor"/>
@@ -172,7 +172,7 @@
       </div>
   </div>
 
-  <!-- APP LOADER WITH DOUBLE RING & LOGO -->
+  <!-- APP LOADER -->
   <div id="app-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-500">
       <div class="relative w-32 h-32 mb-6 flex justify-center items-center">
           <div class="absolute inset-0 border-[6px] border-indigo-50 rounded-full"></div>
@@ -189,12 +189,12 @@
   <!-- Main Application Content -->
   <div id="main-app-content" class="hidden relative z-10 flex flex-col min-h-screen">
     
-    <!-- Modern Header -->
+    <!-- Modern Global Header -->
     <header class="fixed top-0 w-full z-50 glass-header transition-all duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16 sm:h-20 gap-4">
           <div class="flex items-center gap-3 flex-1">
-            <a href="#" class="relative group cursor-pointer shrink-0">
+            <a href="#" class="relative group cursor-pointer shrink-0" title="হোম পেইজে ফিরে যান">
                 <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
                 <img id="header-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS" alt="লোগো" class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white object-cover bg-white shadow-sm">
             </a>
@@ -267,7 +267,7 @@
               
               <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
                   
-                  <!-- Member List Icon (Directory) -->
+                  <!-- Member List Icon -->
                   <a href="#members" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-indigo-200 hover:-translate-y-1 transition-all group">
                       <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
                           <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -278,7 +278,7 @@
                       <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">প্রোফাইল ও বিস্তারিত</span>
                   </a>
 
-                  <!-- Financial Stats Icon (Stats) -->
+                  <!-- Financial Stats Icon -->
                   <a href="#finance" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-emerald-200 hover:-translate-y-1 transition-all group">
                       <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
                           <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,7 +289,7 @@
                       <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">ফান্ড বিশ্লেষণ</span>
                   </a>
 
-                  <!-- Monthly Fund Icon (Treasury) -->
+                  <!-- Monthly Fund Icon -->
                   <a href="#fund" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-purple-200 hover:-translate-y-1 transition-all group">
                       <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
                           <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -300,9 +300,9 @@
                       <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">জমার হিসাব</span>
                   </a>
 
-                  <!-- Lucky Lottery Icon (Dices) -->
+                  <!-- Lucky Lottery Icon -->
                   <a href="#lottery" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-orange-200 hover:-translate-y-1 transition-all group">
-                      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
+                      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
                           <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -312,7 +312,7 @@
                       <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">লটারি দেখুন</span>
                   </a>
 
-                  <!-- Leaderboard Icon (Gold Trophy for Ranking) -->
+                  <!-- Leaderboard Icon -->
                   <a href="#ranking" class="flex flex-col items-center justify-center p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:border-amber-200 hover:-translate-y-1 transition-all group col-span-2 sm:col-span-1">
                       <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 text-white flex items-center justify-center mb-3 shadow-md group-hover:scale-105 transition-transform duration-300">
                           <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -428,9 +428,7 @@
                    চলতি মাসের সেরা ৩ সঞ্চয়ী 
               </h3>
               
-              <!-- Updated podium grid: medals removed from face overlay, beautiful podium names below -->
               <div class="grid grid-cols-3 gap-2 max-w-lg mx-auto items-end pt-8 pb-4 relative z-10">
-                  
                   <!-- 2nd Place -->
                   <div class="flex flex-col items-center">
                       <div class="relative mb-2">
@@ -444,7 +442,7 @@
                       </div>
                   </div>
 
-                  <!-- 1st Place (Center Big Podium) -->
+                  <!-- 1st Place -->
                   <div class="flex flex-col items-center transform -translate-y-4">
                       <div class="relative mb-2">
                           <div class="absolute -inset-1 rounded-full bg-amber-400 animate-pulse blur opacity-40"></div>
@@ -470,10 +468,9 @@
                           <span class="text-[9px] font-bold uppercase tracking-widest text-orange-100 flex items-center gap-1">ব্রোঞ্জ🥉</span>
                       </div>
                   </div>
-
               </div>
 
-              <!-- New section displaying what makes each leader outstanding with dynamic metrics -->
+              <!-- Metrics -->
               <div class="mt-6 border-t border-white/10 pt-5 space-y-3.5 text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
                   <h4 class="font-bold text-amber-400 text-xs sm:text-sm flex items-center gap-1.5 justify-center mb-2">🎖️ মেডেল বিবরণী ও অর্জনের কারণ</h4>
                   <div id="podium-1-desc-box" class="flex items-start gap-3 bg-white/5 p-3 rounded-2xl border border-amber-400/20">
@@ -491,16 +488,128 @@
               </div>
           </div>
 
-          <!-- Rest of the Ranks List -->
+          <!-- Ranks List -->
           <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100">
               <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><span class="w-1.5 h-5 bg-indigo-500 rounded-full"></span> সকল সদস্যের গতি তালিকা</h4>
-              <div id="leaderboard-list" class="space-y-3">
-                  <!-- Dynamically populated rows -->
-              </div>
+              <div id="leaderboard-list" class="space-y-3"></div>
           </div>
 
       </div>
       <!-- ================= END LEADERBOARD VIEW ================= -->
+
+      <!-- ================= MONTHLY FUND VIEW ================= -->
+      <div id="view-fund" class="hidden space-y-4 fade-in-up">
+          
+          <!-- View Header -->
+          <div class="flex items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-slate-100/50">
+              <a href="#" class="w-10 h-10 flex shrink-0 items-center justify-center bg-slate-100 hover:bg-purple-100 hover:text-purple-600 rounded-full transition-colors text-slate-600">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+              </a>
+              <div>
+                  <h2 class="text-lg sm:text-xl font-bold text-slate-800 leading-tight">মাসিক তহবিল</h2>
+                  <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">লেনদেন ব্যবস্থাপনা ও মাসিক বিবরণী</p>
+              </div>
+          </div>
+
+          <!-- Content Area -->
+          <div class="relative bg-white/95 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden flex flex-col h-[calc(100vh-200px)] min-h-[500px]">
+              
+              <!-- Fund List View -->
+              <div id="fund-list-container" class="absolute inset-0 p-4 sm:p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 content-start transition-transform duration-300 ease-out custom-scrollbar"></div>
+              
+              <!-- Fund Details View (Slide-in) -->
+              <div id="fund-details-container" class="absolute inset-0 bg-slate-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out z-20">
+                  <div class="bg-white p-4 border-b border-slate-200 flex items-center gap-3 shadow-sm shrink-0">
+                      <!-- Using #fund leverages the router to close the detail panel cleanly -->
+                      <a href="#fund" id="fund-details-back-btn" class="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition">
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                      </a>
+                      <div>
+                          <h4 id="fund-details-title" class="text-lg font-bold text-slate-800">---</h4>
+                          <p class="text-xs text-slate-500">জমা প্রদানকারী সদস্যদের তালিকা</p>
+                      </div>
+                  </div>
+                  
+                  <div class="flex-grow overflow-hidden flex flex-col p-4 sm:p-6">
+                      <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-full max-h-full">
+                          <!-- Desktop Header -->
+                          <div class="hidden sm:grid grid-cols-12 gap-4 bg-slate-50 text-slate-600 border-b border-slate-100 py-3 px-4 font-semibold sticky top-0 rounded-t-xl shrink-0">
+                              <div class="col-span-5">সদস্যের নাম</div>
+                              <div class="col-span-3 text-center">তারিখ</div>
+                              <div class="col-span-3 text-right">পরিমাণ</div>
+                              <div class="col-span-1 text-right">ক্রমিক</div>
+                          </div>
+                          
+                          <!-- Scrollable List Body -->
+                          <div id="fund-details-body" class="divide-y divide-slate-100 text-slate-700 overflow-y-auto flex-grow custom-scrollbar"></div>
+                          
+                          <!-- Sticky Footer -->
+                          <div class="bg-indigo-50 font-bold text-indigo-900 border-t border-indigo-100 py-4 px-4 flex justify-between items-center sm:grid sm:grid-cols-12 sm:gap-4 shrink-0 rounded-b-xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 relative">
+                              <div class="sm:col-span-8 text-left sm:text-right text-sm sm:text-base">সর্বমোট জমা:</div>
+                              <div id="fund-details-total" class="sm:col-span-3 text-right text-lg sm:text-base text-indigo-700">৳ ০</div>
+                              <div class="hidden sm:block sm:col-span-1"></div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+      <!-- ================= END MONTHLY FUND VIEW ================= -->
+
+      <!-- ================= LOTTERY VIEW ================= -->
+      <div id="view-lottery" class="hidden space-y-4 fade-in-up">
+          
+          <!-- View Header -->
+          <div class="flex items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-slate-100/50 relative z-10">
+              <a href="#" class="w-10 h-10 flex shrink-0 items-center justify-center bg-slate-100 hover:bg-orange-100 hover:text-orange-600 rounded-full transition-colors text-slate-600">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+              </a>
+              <div>
+                  <h2 class="text-lg sm:text-xl font-bold text-slate-800 leading-tight">মাসিক লটারি</h2>
+                  <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">সঞ্চয়ী সদস্যদের ভাগ্য পরীক্ষা</p>
+              </div>
+          </div>
+
+          <!-- Content Area (Light Theme Integration) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+              
+              <!-- Left Sidebar: History -->
+              <div class="lg:col-span-4 xl:col-span-3 flex flex-col gap-4 order-2 lg:order-1">
+                  <div class="bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-slate-100/50 flex-1 flex flex-col h-[400px] lg:h-[calc(100vh-200px)] min-h-[500px]">
+                      <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2 border-b border-slate-100 pb-3"><span class="w-2 h-6 bg-orange-500 rounded-full"></span>পূর্ববর্তী বিজয়ী</h3>
+                      <ul id="lotteryHistory" class="space-y-3 overflow-y-auto flex-1 text-sm pr-1 custom-scrollbar"></ul>
+                  </div>
+              </div>
+
+              <!-- Main Content: Winner & Participants -->
+              <div class="lg:col-span-8 xl:col-span-9 flex flex-col gap-6 order-1 lg:order-2 h-auto lg:h-[calc(100vh-200px)] lg:min-h-[500px]">
+                  
+                  <!-- Winner Banner -->
+                  <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-700 transform scale-95 opacity-0 shrink-0">
+                      <div class="bg-gradient-to-br from-amber-50 to-orange-100 p-8 md:p-12 rounded-2xl border border-orange-200 shadow-[0_4px_20px_rgba(251,146,60,0.15)] text-center relative overflow-hidden">
+                          <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/50 rounded-full blur-2xl"></div>
+                          <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-yellow-200/50 rounded-full blur-2xl"></div>
+                          <h3 class="text-xl md:text-2xl text-orange-600 mb-3 font-bold animate-pulse relative z-10">🎉 চলতি মাসের বিজয়ী 🎉</h3>
+                          <div id="lotteryWinnerText" class="text-4xl md:text-6xl font-extrabold text-slate-800 break-words drop-shadow-sm tracking-wide relative z-10"></div>
+                          <div id="lotteryWinnerDate" class="text-slate-500 mt-4 font-mono text-sm font-bold relative z-10"></div>
+                      </div>
+                  </div>
+                  
+                  <!-- Participants List -->
+                  <div class="bg-white/95 backdrop-blur-md p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100/50 flex-1 flex flex-col overflow-hidden">
+                      <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3 shrink-0">
+                          <h3 class="text-slate-700 font-bold flex items-center gap-2"><span class="w-2 h-6 bg-cyan-500 rounded-full"></span>অংশগ্রহণকারী</h3>
+                          <span class="bg-cyan-50 text-cyan-700 px-3 py-1 rounded-full text-xs font-bold border border-cyan-100">মোট: <span id="lotteryCountBadge">0</span></span>
+                      </div>
+                      <ul id="lotteryParticipants" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 overflow-y-auto flex-grow pr-2 custom-scrollbar content-start"></ul>
+                  </div>
+                  
+              </div>
+          </div>
+
+      </div>
+      <!-- ================= END LOTTERY VIEW ================= -->
 
     </main>
 
@@ -578,13 +687,12 @@
         <div id="message-content" class="shadow-2xl rounded-xl p-4 font-semibold text-white flex items-center gap-3 backdrop-blur-md"></div>
     </div>
     
-    <!-- PWA INSTALL MODAL (NATIVE APP PROMPT) -->
+    <!-- PWA INSTALL MODAL -->
     <div id="pwa-install-modal" class="fixed inset-x-4 bottom-14 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:w-[400px] z-[9999] bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 transform translate-y-[200%] transition-transform duration-500 flex flex-col gap-3">
         <button id="close-pwa-btn" class="absolute top-2 right-2 text-slate-400 hover:bg-slate-100 rounded-full p-1.5 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         <div class="flex items-center gap-4">
-            <!-- PWA Logo ID added here -->
             <img id="pwa-logo-img" src="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS" class="w-12 h-12 rounded-xl shadow-md border border-slate-100">
             <div class="pr-6">
                 <h3 class="font-bold text-slate-800 text-sm">ESCS অ্যাপ ইন্সটল করুন</h3>
@@ -595,7 +703,6 @@
     </div>
 
     <!-- TOP 3 HIGHLIGHT POPUP -->
-    <!-- Updated design: wider structure, clear medal names and descriptions under photos to prevent overlap -->
     <div id="top3-highlight-popup" class="fixed inset-x-4 bottom-14 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:w-[480px] z-[9998] bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl shadow-[0_15px_45px_rgba(0,0,0,0.5)] border border-indigo-500/35 p-1 transform translate-y-[250%] transition-transform duration-700">
         <div class="relative bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-5">
             <button id="close-top3-btn" class="absolute top-2 right-2 text-white/50 hover:text-white p-1.5 bg-white/10 hover:bg-white/20 rounded-full transition z-20">
@@ -604,16 +711,13 @@
             <h3 id="top3-highlight-title" class="text-center text-amber-400 font-extrabold text-sm sm:text-base mb-4 flex items-center justify-center gap-2 drop-shadow-md tracking-wider">
                 🏆 সেরা সঞ্চয়ী  🏆
             </h3>
-            <div id="top3-highlight-content" class="flex flex-col gap-3 relative z-10">
-                <!-- Populated by JS dynamically based on Top 3 rankings -->
-            </div>
+            <div id="top3-highlight-content" class="flex flex-col gap-3 relative z-10"></div>
         </div>
     </div>
 
-    <!-- NEW LOTTERY WINNER POPUP -->
+    <!-- LOTTERY WINNER POPUP -->
     <div id="lottery-winner-popup" class="fixed inset-x-4 bottom-14 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:w-[480px] z-[9997] bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl shadow-[0_15px_45px_rgba(0,0,0,0.5)] border border-indigo-500/35 p-1 transform translate-y-[250%] transition-transform duration-700">
         <div class="relative bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] bg-white/5 backdrop-blur-md rounded-xl p-4 sm:p-5">
-            <!-- Close Button -->
             <button id="close-lottery-winner-btn" class="absolute top-2 right-2 text-white/50 hover:text-white p-1.5 bg-white/10 hover:bg-white/20 rounded-full transition z-20">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -633,7 +737,6 @@
                             <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-500 to-amber-400 text-slate-950 shrink-0">১ম বিজয়ী 🏆</span>
                         </div>
                         
-                        <!-- FIX 1: Mobile responsive grid to prevent overlap issues and handle long numbers -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-2 text-[11px]">
                             <div class="bg-white/5 px-2 py-1.5 rounded border border-white/5">
                                 <span class="text-slate-400 block text-[9px] font-semibold leading-none">কার্ড নম্বর</span>
@@ -708,7 +811,6 @@
            </div>
       </div>
 
-      <!-- FIX 2: Profile Navigation Tabs - Adjusted width and text size so they fit without horizontal scroll -->
       <div class="flex border-b border-slate-200/50 bg-slate-50/50 shrink-0 overflow-x-hidden w-full justify-between">
           <button id="profile-tab-details" class="profile-tab flex-1 py-3 sm:py-4 px-1 sm:px-2 text-[11px] sm:text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500 whitespace-nowrap">👤 বিস্তারিত</button>
           <button id="profile-tab-transactions" class="profile-tab flex-1 py-3 sm:py-4 px-1 sm:px-2 text-[11px] sm:text-sm font-semibold hover:bg-white/80 transition text-center text-slate-500 whitespace-nowrap">🧾 লেনদেন</button>
@@ -782,7 +884,6 @@
           <!-- Achievements -->
           <div id="profile-content-achievements" class="hidden max-w-4xl mx-auto space-y-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <!-- Lottery Card -->
                   <div class="bg-gradient-to-br from-white to-amber-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(251,191,36,0.15)] border border-amber-200 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
                       <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
                       <div class="flex items-center gap-4 mb-4 relative z-10">
@@ -801,7 +902,6 @@
                       </div>
                   </div>
 
-                  <!-- Gold Card -->
                   <div class="bg-gradient-to-br from-white to-yellow-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(234,179,8,0.15)] border border-yellow-300 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
                       <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
                       <div class="flex items-center gap-4 mb-4 relative z-10">
@@ -820,7 +920,6 @@
                       </div>
                   </div>
 
-                  <!-- Silver Card -->
                   <div class="bg-gradient-to-br from-white to-slate-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(148,163,184,0.15)] border border-slate-300 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
                       <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-slate-300 to-slate-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
                       <div class="flex items-center gap-4 mb-4 relative z-10">
@@ -838,7 +937,6 @@
                       </div>
                   </div>
 
-                  <!-- Bronze Card -->
                   <div class="bg-gradient-to-br from-white to-orange-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(249,115,22,0.15)] border border-orange-300 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
                       <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-orange-400 to-red-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
                       <div class="flex items-center gap-4 mb-4 relative z-10">
@@ -858,99 +956,6 @@
               </div>
           </div>
       </div> 
-    </div>
-  </div>
-
-  <!-- Monthly Fund Modal -->
-  <div id="monthly-fund-modal" class="hidden fixed inset-0 z-[150] flex flex-col bg-slate-50 text-slate-800 overflow-hidden transition-all duration-300">
-      <!-- Header -->
-      <div class="relative z-10 flex justify-between items-center p-4 sm:p-6 border-b border-slate-200 bg-white shadow-sm">
-          <div class="flex items-center gap-4">
-              <a href="#" class="w-10 h-10 flex shrink-0 items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-colors text-slate-600">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-              </a>
-              <div>
-                  <h3 class="text-xl sm:text-2xl font-bold text-slate-800">মাসিক তহবিল</h3>
-                  <p class="text-xs sm:text-sm text-slate-500">লেনদেন ব্যবস্থাপনা</p>
-              </div>
-          </div>
-      </div>
-      <!-- Main Content Container -->
-      <div class="relative flex-grow overflow-hidden">
-          <div id="fund-list-container" class="absolute inset-0 p-4 sm:p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 content-start pb-20 transition-transform duration-300 ease-out"></div>
-          <div id="fund-details-container" class="absolute inset-0 bg-slate-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out z-20">
-              <div class="bg-white p-4 border-b border-slate-200 flex items-center gap-3 shadow-sm shrink-0">
-                  <a href="#fund" id="fund-details-back-btn" class="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition">
-                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                  </a>
-                  <div>
-                      <h4 id="fund-details-title" class="text-lg font-bold text-slate-800">---</h4>
-                      <p class="text-xs text-slate-500">জমা প্রদানকারী সদস্যদের তালিকা</p>
-                  </div>
-              </div>
-              
-              <!-- FIX 3: Fully Native Responsive List/Table View for mobile (No horizontal scrolling) -->
-              <div class="flex-grow overflow-hidden flex flex-col p-4 sm:p-6">
-                  <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-full max-h-full">
-                      <!-- Desktop Header -->
-                      <div class="hidden sm:grid grid-cols-12 gap-4 bg-slate-50 text-slate-600 border-b border-slate-100 py-3 px-4 font-semibold sticky top-0 rounded-t-xl shrink-0">
-                          <div class="col-span-5">সদস্যের নাম</div>
-                          <div class="col-span-3 text-center">তারিখ</div>
-                          <div class="col-span-3 text-right">পরিমাণ</div>
-                          <div class="col-span-1 text-right">ক্রমিক</div>
-                      </div>
-                      
-                      <!-- Scrollable List Body -->
-                      <div id="fund-details-body" class="divide-y divide-slate-100 text-slate-700 overflow-y-auto flex-grow custom-scrollbar"></div>
-                      
-                      <!-- Sticky Footer -->
-                      <div class="bg-indigo-50 font-bold text-indigo-900 border-t border-indigo-100 py-4 px-4 flex justify-between items-center sm:grid sm:grid-cols-12 sm:gap-4 shrink-0 rounded-b-xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 relative">
-                          <div class="sm:col-span-8 text-left sm:text-right text-sm sm:text-base">সর্বমোট জমা:</div>
-                          <div id="fund-details-total" class="sm:col-span-3 text-right text-lg sm:text-base text-indigo-700">৳ ০</div>
-                          <div class="hidden sm:block sm:col-span-1"></div>
-                      </div>
-                  </div>
-              </div>
-
-          </div>
-      </div>
-  </div>
-
-  <!-- Lottery Modal -->
-  <div id="lottery-modal" class="hidden fixed inset-0 z-[100] flex flex-col bg-[#0f172a] text-slate-200">
-    <canvas id="confetti" class="fixed inset-0 pointer-events-none z-0"></canvas>
-    <div class="relative z-10 flex justify-between items-center p-4 lg:px-8 border-b border-slate-800 bg-[#0f172a]/80 backdrop-blur">
-        <a href="#" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition border border-slate-700">
-            <span>⬅ ফিরে যান</span>
-        </a>
-        <div class="text-right">
-            <h1 class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">মাসিক লটারি</h1>
-        </div>
-    </div>
-    <div class="relative z-10 w-full max-w-[1600px] mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 grow overflow-y-auto">
-        <div class="lg:col-span-3 flex flex-col gap-4 order-2 lg:order-1">
-            <div class="glass-card p-4 rounded-xl flex-1 flex flex-col">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">📜 পূর্ববর্তী বিজয়ী</h2>
-                <ul id="lotteryHistory" class="space-y-2 overflow-y-auto flex-1 max-h-[300px] lg:max-h-none text-sm pr-1 custom-scrollbar"></ul>
-            </div>
-        </div>
-        <div class="lg:col-span-9 flex flex-col gap-6 order-1 lg:order-2">
-            <div id="lotteryWinnerSection" class="hidden w-full transition-all duration-700 transform scale-95 opacity-0">
-                <div class="glass-card p-8 md:p-12 rounded-2xl border border-yellow-500/30 shadow-[0_0_50px_rgba(234,179,8,0.2)] text-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/10 to-transparent"></div>
-                    <h3 class="text-2xl md:text-3xl text-yellow-400 mb-4 font-bold animate-pulse relative z-10">🎉 চলতি মাসের বিজয়ী 🎉</h3>
-                    <div id="lotteryWinnerText" class="text-5xl md:text-7xl font-extrabold text-white break-words drop-shadow-xl tracking-wide relative z-10"></div>
-                    <div id="lotteryWinnerDate" class="text-slate-400 mt-4 font-mono text-sm relative z-10"></div>
-                </div>
-            </div>
-            <div class="glass-card p-6 rounded-xl flex-1 flex flex-col shadow-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-slate-200">অংশগ্রহণকারী</h2>
-                    <span class="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-bold border border-cyan-500/20">মোট: <span id="lotteryCountBadge">0</span></span>
-                </div>
-                <ul id="lotteryParticipants" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3 overflow-y-auto max-h-[500px] pr-2"></ul>
-            </div>
-        </div>
     </div>
   </div>
 
@@ -1010,7 +1015,7 @@
         deferredPrompt = null;
     });
 
-    // --- Service Worker Registration (Fixed for GitHub Pages /sgloan/) ---
+    // --- Service Worker Registration ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sgloan/sw.js', { scope: '/sgloan/' })
@@ -1020,14 +1025,12 @@
     }
 
     // --- Core Router Logic (Hash Navigation) ---
-    const appViews = ['view-home', 'view-members', 'view-finance', 'view-ranking'];
+    // Added 'view-fund' and 'view-lottery' to standard views
+    const appViews = ['view-home', 'view-members', 'view-finance', 'view-ranking', 'view-fund', 'view-lottery'];
     
     function closeAllModals() {
         closeProfileModal(false);
         closeNotif();
-        document.getElementById('monthly-fund-modal').classList.add('hidden');
-        document.getElementById('monthly-fund-modal').classList.remove('flex');
-        document.getElementById('lottery-modal').classList.add('hidden');
         closeFundDetails();
     }
 
@@ -1047,6 +1050,7 @@
         if (!h || h === '' || h === '#') {
             closeAllModals();
             switchView('view-home');
+            window.scrollTo(0, 0);
         } 
         else if (h === '#members') {
             closeAllModals();
@@ -1070,16 +1074,19 @@
             window.scrollTo(0, 0);
         }
         else if (h === '#fund') {
-            closeFundDetails();
+            closeAllModals();
+            switchView('view-fund');
+            closeFundDetails(); // Always return to list view initially when routing here
             renderFundModal();
-            document.getElementById('monthly-fund-modal').classList.remove('hidden');
-            document.getElementById('monthly-fund-modal').classList.add('flex');
+            window.scrollTo(0, 0);
         } 
         else if (h === '#lottery') {
-            document.getElementById('lottery-modal').classList.remove('hidden');
+            closeAllModals();
+            switchView('view-lottery');
             renderLotteryModal();
             resizeCanvas();
             if (lottery.history && lottery.history.length) startConfetti();
+            window.scrollTo(0, 0);
         } 
         else if (h === '#notif') {
             const m = document.getElementById('notif-modal');
@@ -1102,13 +1109,11 @@
         return os || 'অজানা (Unknown)';
     }
 
-    // --- আইডি ভিত্তিক লোকেশন (এক্সেস/GPS ভিত্তিক সিস্টেম বাদ দেওয়া হলো) ---
     async function getLocation(sid) {
         return `Visitor ID: ${sid.substring(0, 8).toUpperCase()}`; 
     }
 
     async function logVisitor() {
-        // IP বা লোকেশন পারমিশন এড়াতে ব্রাউজারে আইডি সেভ করে রাখা হচ্ছে
         let sid = localStorage.getItem('samiti_visitor_id');
         let isNew = false;
         
@@ -1121,7 +1126,6 @@
         const now = Date.now();
         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'visitors', sid);
 
-        // শুধুমাত্র নতুন সেশন হলে একবার ডাটা সেভ করবে (API কল সীমিত করতে)
         if (isNew || !sessionStorage.getItem('session_logged')) {
             const browserInfo = getBrowserInfo();
             const os = getOSInfo();
@@ -1132,7 +1136,6 @@
             await updateDoc(docRef, { lastActive: now }).catch(()=>{});
         }
         
-        // Active Status Ping
         setInterval(() => { updateDoc(docRef, { lastActive: Date.now() }).catch(() => {}); }, 60000);
     }
 
@@ -2051,8 +2054,6 @@
         const c = document.getElementById('fund-list-container');
         const mDeps = members.reduce((acc,m) => { (m.transactions||[]).filter(t=>t.type==='deposit'&&t.date).forEach(t=>{ const k=t.date.substring(0,7); acc[k]=(acc[k]||0)+Number(t.amount); }); return acc; }, {});
         const sorted = Object.keys(mDeps).sort().reverse();
-        document.getElementById('fund-list-container').classList.remove('-translate-x-full');
-        document.getElementById('fund-details-container').classList.add('translate-x-full');
 
         c.innerHTML = sorted.length ? sorted.map((k) => {
             const dist = fundDistribution[k];
@@ -2107,7 +2108,6 @@
         const total = monthlyDeposits.reduce((sum, item) => sum + item.amount, 0);
         totalEl.textContent = `৳ ${getBengaliNumber(total)}`;
         
-        // FIX 3 (JS Update): Rendering List view instead of strict table to prevent horizontal scrolling
         if(monthlyDeposits.length === 0) { 
             bodyEl.innerHTML = `<div class="py-8 text-center text-slate-400 italic">এই মাসে কোনো জমার তথ্য নেই</div>`; 
         } else {
@@ -2144,12 +2144,27 @@
         const lp = lottery.participants||[], lh = lottery.history||[];
         document.getElementById("lotteryCountBadge").textContent = getBengaliNumber(lp.length);
         const list = document.getElementById("lotteryParticipants");
-        list.innerHTML = lp.length ? lp.map((n,i)=>`<li class="bg-slate-800/50 border border-slate-700 rounded-lg p-2 text-center text-slate-300 text-sm font-medium relative overflow-hidden group hover:bg-cyan-900/20 hover:border-cyan-500/50 transition"><span class="absolute top-1 left-1 text-[10px] text-slate-600">#${i+1}</span>${n}</li>`).join('') : `<li class="col-span-full text-center text-slate-500 py-8">অংশগ্রহণকারী নেই</li>`;
+        
+        // Updated to matching light theme styles
+        list.innerHTML = lp.length ? lp.map((n,i)=>`
+            <li class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-center text-slate-700 text-sm font-bold shadow-sm hover:shadow-md hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-800 transition relative overflow-hidden group">
+                <span class="absolute top-1 left-1.5 text-[9px] text-slate-400 font-mono">#${getBengaliNumber(i+1)}</span>${n}
+            </li>`).join('') : `<li class="col-span-full text-center text-slate-400 py-8 italic font-semibold">কোনো অংশগ্রহণকারী নেই</li>`;
+            
         const hist = document.getElementById("lotteryHistory");
-        hist.innerHTML = lh.length ? [...lh].reverse().map(h=>`<li class="flex justify-between items-center bg-slate-800/40 p-2 rounded border-l-2 border-cyan-500 mb-2"><span class="text-cyan-200 font-medium text-xs">${h.winner}</span><span class="text-slate-500 text-[10px]">${h.date}</span></li>`).join('') : `<li class="text-center text-slate-600 text-xs py-2">ইতিহাস নেই</li>`;
+        hist.innerHTML = lh.length ? [...lh].reverse().map(h=>`
+            <li class="flex justify-between items-center bg-slate-50 p-3 rounded-lg border-l-4 border-orange-400 mb-2 shadow-sm transition hover:bg-slate-100">
+                <span class="text-slate-700 font-bold text-sm">${h.winner}</span>
+                <span class="text-slate-500 text-xs font-medium">${h.date}</span>
+            </li>`).join('') : `<li class="text-center text-slate-400 text-xs py-4 italic font-semibold">কোনো ইতিহাস নেই</li>`;
+            
         const winSec = document.getElementById("lotteryWinnerSection");
         const latest = lh[lh.length-1];
-        if(latest) { document.getElementById("lotteryWinnerText").textContent = latest.winner; document.getElementById("lotteryWinnerDate").textContent = latest.date; winSec.classList.remove('hidden', 'scale-95', 'opacity-0'); } 
+        if(latest) { 
+            document.getElementById("lotteryWinnerText").textContent = latest.winner; 
+            document.getElementById("lotteryWinnerDate").textContent = `তারিখ: ${latest.date}`; 
+            winSec.classList.remove('hidden', 'scale-95', 'opacity-0'); 
+        } 
         else { winSec.classList.add('hidden', 'scale-95', 'opacity-0'); }
     };
     
@@ -2164,7 +2179,7 @@
         parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.2; p.vx*=0.95; ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,6,6); if(p.y<canvas.height) act=true; });
         if(act) requestAnimationFrame(updateConfetti);
     };
-    const startConfetti = () => { parts=[]; for(let i=0;i<100;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*20, vy:(Math.random()-.5)*20, c:`hsl(${Math.random()*360},70%,50%)`}); updateConfetti(); };
+    const startConfetti = () => { parts=[]; for(let i=0;i<150;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*25, vy:(Math.random()-.5)*25, c:`hsl(${Math.random()*360},70%,50%)`}); updateConfetti(); };
 
     const initFirebase = async () => {
         const cachedLogo = localStorage.getItem('cached_logo_url');
