@@ -8,8 +8,8 @@
   <!-- Favicon -->
   <link id="favicon" rel="icon" type="image/png" href="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS">
   
-  <!-- PWA Web App Manifest (Data URI for Single File Compliance) -->
-  <link rel="manifest" href='data:application/json,{"name":"একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)","short_name":"ESCS","description":"ESCS সমবায় সমিতি ম্যানেজমেন্ট অ্যাপ","start_url":".","display":"standalone","background_color":"#f8fafc","theme_color":"#6366f1","icons":[{"src":"https://placehold.co/192x192/6366f1/FFFFFF?text=ESCS","sizes":"192x192","type":"image/png"},{"src":"https://placehold.co/512x512/6366f1/FFFFFF?text=ESCS","sizes":"512x512","type":"image/png"}]}' />
+  <!-- PWA Web App Manifest -->
+  <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#6366f1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1003,18 +1003,12 @@
         deferredPrompt = e;
     });
 
+    // --- Service Worker Registration ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-            const isSecureProtocol = location.protocol === 'https:';
-
-            if (isSecureProtocol || isLocalhost) {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('সার্ভিস ওয়ার্কার সফলভাবে নিবন্ধিত হয়েছে!'))
-                    .catch(err => {
-                        console.log('সার্ভিস ওয়ার্কার স্কিপ করা হয়েছে:', err.message);
-                    });
-            }
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker সফলভাবে নিবন্ধিত হয়েছে!'))
+                .catch(err => console.log('Service Worker রেজিস্ট্রেশন ব্যর্থ হয়েছে:', err));
         });
     }
 
