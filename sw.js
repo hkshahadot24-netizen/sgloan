@@ -1,5 +1,5 @@
 // sw.js - Service Worker for PWA (ESCS)
-const CACHE_NAME = 'escs-cache-v2';
+const CACHE_NAME = 'escs-cache-v3'; // ভার্সন পরিবর্তন করা হয়েছে ক্যাশ রিলোডের জন্য
 
 // গিটহাব সাব-ডিরেক্টরির (/sgloan/) পাথগুলো নির্দিষ্ট করা হয়েছে
 const ASSETS_TO_CACHE = [
@@ -10,18 +10,18 @@ const ASSETS_TO_CACHE = [
     '/sgloan/icon-512.png'
 ];
 
-// ১. ইনস্টল ইভেন্ট: প্রয়োজনীয় ফাইলগুলো ব্রাউজার ক্যাশে জমা করা
+// ১. ইনস্টল ইভেন্ট: প্রথমবার সব কোর ফাইল ক্যাশে জমা করা
 self.addEventListener('install', (event) => {
     self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('Service Worker: Caching core assets for /sgloan/');
+            console.log('Service Worker: Blazing fast cache initialized!');
             return cache.addAll(ASSETS_TO_CACHE);
         })
     );
 });
 
-// ২. অ্যাক্টিভেট ইভেন্ট: অ্যাপ আপডেট হলে পুরনো ক্যাশ ডিলিট করা
+// ২. অ্যাক্টিভেট ইভেন্ট: অ্যাপের নতুন ভার্সন আসলে পুরনো ক্যাশ সাথে সাথে ডিলিট করা
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
@@ -38,32 +38,36 @@ self.addEventListener('activate', (event) => {
     return self.clients.claim();
 });
 
-// ৩. ফেচ ইভেন্ট: অনলাইন থাকলে লাইভ ডেটা আনবে, অফলাইন থাকলে ক্যাশ থেকে অ্যাপ দেখাবে
+// ৩. ফেচ ইভেন্ট: ন্যানোসেকেন্ড লোডিং স্পিডের আসল ম্যাজিক (Stale-While-Revalidate)
 self.addEventListener('fetch', (event) => {
-    // PWA-এর start_url বা অ্যাপ নেটিভলি ওপেন করার জন্য অফলাইন হ্যান্ডলিং
-    if (event.request.mode === 'navigate') {
-        event.respondWith(
-            fetch(event.request).catch(() => {
-                return caches.match('/sgloan/index.html') || caches.match('/sgloan/');
-            })
-        );
-        return;
-    }
+    // শুধুমাত্র GET রিকোয়েস্ট ক্যাশ করা হবে
+    if (event.request.method !== 'GET') return;
 
     event.respondWith(
-        fetch(event.request)
-            .then((response) => response)
-            .catch(() => {
-                // ইন্টারনেট না থাকলে প্রথমে ক্যাশ ফাইলগুলো চেক করবে
-                return caches.match(event.request).then((cachedResponse) => {
-                    if (cachedResponse) {
-                        return cachedResponse;
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.match(event.request).then((cachedResponse) => {
+                
+                // ব্যাকগ্রাউন্ডে নেটওয়ার্ক থেকে ফাইল আপডেট করার প্রমিস
+                const fetchPromise = fetch(event.request).then((networkResponse) => {
+                    // যদি নেটওয়ার্ক রেসপন্স ঠিক থাকে, তবে ক্যাশ আপডেট করে নাও
+                    if (networkResponse && networkResponse.status === 200) {
+                        cache.put(event.request, networkResponse.clone());
                     }
-                    // যদি ক্যাশেও না থাকে তখন এই মেসেজ দেখাবে
-                    return new Response('অফলাইন মোডে আছেন। দয়া করে ইন্টারনেট কানেকশন চেক করুন।', {
-                        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
-                    });
+                    return networkResponse;
+                }).catch(() => {
+                    // নেটওয়ার্ক না থাকলে ক্যাশড ফাইলই রিটার্ন করবে, কোনো এরর দেবে না
+                    return cachedResponse;
                 });
-            })
+
+                // যদি ক্যাশে ফাইল অলরেডি থাকে, তবে সেকেন্ডের মধ্যে সেটা ইউজারকে দেখিয়ে দাও (Instant Load)
+                // আর ক্যাশে না থাকলে নেটওয়ার্কের জন্য অপেক্ষা করো
+                return cachedResponse || fetchPromise;
+            });
+        }).catch(() => {
+            // একদম অফলাইন এবং ক্যাশেও ফাইল নেই এমন চরম মূহুর্তের ফলব্যাক
+            if (event.request.mode === 'navigate') {
+                return caches.match('/sgloan/index.html') || caches.match('/sgloan/');
+            }
+        })
     );
 });
