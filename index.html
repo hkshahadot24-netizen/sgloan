@@ -15,6 +15,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="ESCS">
 
+  <!-- Resource Hints for Blazing Fast Loading -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://www.gstatic.com">
+
   <!-- Tailwind CSS with Typography Plugin -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <!-- Google Fonts -->
@@ -151,7 +158,6 @@
       <div class="absolute bottom-[10%] sm:top-1/2 sm:-translate-y-1/2 -right-24 sm:-right-12 lg:right-4 xl:right-12 opacity-[0.06] text-indigo-900 drop-shadow-xl transform rotate-12 transition-all duration-700">
           <svg class="w-[80vw] sm:w-[45vw] max-w-[350px] xl:max-w-[450px] h-auto" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
               <g transform="translate(100,100)">
-                  <!-- Similar SVG content for background -->
                   <circle cx="0" cy="-35" r="14" fill="currentColor"/>
                   <circle cx="-30" cy="15" r="14" fill="currentColor"/>
                   <circle cx="30" cy="15" r="14" fill="currentColor"/>
@@ -189,7 +195,7 @@
   <!-- Main Application Content -->
   <div id="main-app-content" class="hidden relative z-10 flex flex-col min-h-screen">
     
-    <!-- Modern Global Header -->
+    <!-- Modern Global Header with Smart Notification Icon -->
     <header class="fixed top-0 w-full z-50 glass-header transition-all duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16 sm:h-20 gap-4">
@@ -206,9 +212,13 @@
             </div>
           </div>
           <div class="flex items-center gap-3 shrink-0">
-            <button id="open-notif-btn" class="relative group p-2 rounded-full hover:bg-slate-100 transition duration-200">
-                <div class="text-2xl sm:text-2xl text-slate-600 group-hover:text-indigo-600 transition-colors">🔔</div>
-                <span id="notif-badge" class="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm hidden transform scale-0 transition-transform duration-300"></span>
+            <!-- Modern Smart Notification Button with SVG Icon -->
+            <button id="open-notif-btn" class="relative group p-2.5 bg-white/60 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-xl transition-all duration-300 flex items-center justify-center shadow-sm" aria-label="Notifications">
+                <svg class="w-6 h-6 sm:w-7 sm:h-7 text-slate-600 group-hover:text-indigo-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <span id="notif-ring" class="absolute inset-0 rounded-xl border-2 border-indigo-400 opacity-0 group-hover:animate-ping hidden"></span>
+                <span id="notif-badge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] sm:text-xs font-black h-5 w-5 sm:h-6 sm:w-6 flex items-center justify-center rounded-full border-2 border-white shadow-md opacity-0 scale-0 transition-all duration-300">0</span>
             </button>
           </div>
         </div>
@@ -223,24 +233,24 @@
           
           <!-- Top Section: Stats Cards (3 Columns) -->
           <div class="grid grid-cols-3 gap-3 sm:gap-6">
-            <div class="bg-white/80 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
+            <a href="#members" class="bg-white/80 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group flex flex-col justify-center items-center sm:items-start text-center sm:text-left cursor-pointer block">
                 <div class="absolute right-0 top-0 w-24 h-24 bg-indigo-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
                 <p class="text-[10px] sm:text-sm font-medium text-slate-500 relative z-10">মোট সদস্য</p>
                 <p id="total-members" class="text-lg sm:text-4xl font-bold text-slate-800 mt-0.5 sm:mt-1 relative z-10">০</p>
                 <div class="mt-1 sm:mt-2 text-[9px] sm:text-xs text-indigo-500 font-semibold flex items-center justify-center sm:justify-start gap-1">👥 একটিভ</div>
-            </div>
-            <div class="bg-white/80 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
+            </a>
+            <a href="#finance" class="bg-white/80 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group flex flex-col justify-center items-center sm:items-start text-center sm:text-left cursor-pointer block">
                 <div class="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
                 <p class="text-[10px] sm:text-sm font-medium text-slate-500 relative z-10">মোট জমা</p>
                 <p id="total-paid" class="text-[15px] sm:text-3xl font-bold text-green-600 mt-0.5 sm:mt-1 relative z-10 truncate w-full">৳ ০</p>
                 <div class="mt-1 sm:mt-2 text-[9px] sm:text-xs text-green-500 font-semibold">💰 সেভিংস</div>
-            </div>
-            <div class="bg-white/80 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
+            </a>
+            <a href="#finance" class="bg-white/80 backdrop-blur-md p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-100/50 hover-card relative overflow-hidden group flex flex-col justify-center items-center sm:items-start text-center sm:text-left cursor-pointer block">
                 <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-full -mr-8 -mt-8 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
                 <p class="text-[10px] sm:text-sm font-medium text-slate-500 relative z-10">ঋণ প্রদান</p>
                 <p id="total-loan-given" class="text-[15px] sm:text-3xl font-bold mt-0.5 sm:mt-1 relative z-10 truncate text-red-500 w-full">৳ ০</p>
                 <div class="mt-1 sm:mt-2 text-[9px] sm:text-xs text-red-500 font-semibold">📉 বিনিয়োগ</div>
-            </div>
+            </a>
           </div>
 
           <!-- Middle Section: Notice Board -->
@@ -321,7 +331,7 @@
                           </svg>
                       </div>
                       <span class="text-xs sm:text-sm font-bold text-slate-700 text-center leading-tight">সদস্য র‌্যাংক</span>
-                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">জমার গতির তালিকা</span>
+                      <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1">সঞ্চয়ের গতির তালিকা</span>
                   </a>
 
               </div>
@@ -661,9 +671,6 @@
       </div>
     </footer>
 
-    <!-- AUTO TOAST CONTAINER -->
-    <div id="auto-toast-container" class="fixed top-[70px] right-2 z-[200] flex flex-col items-end pointer-events-none max-w-[250px] sm:max-w-sm"></div>
-
     <!-- FIXED BOTTOM TICKER -->
     <div id="bottom-ticker" class="fixed bottom-0 left-0 w-full bg-slate-900 text-white z-40 border-t-2 border-indigo-500 hidden shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
         <div class="flex items-center h-10 sm:h-12 overflow-hidden relative">
@@ -771,7 +778,17 @@
   <div id="verify-email-modal" class="hidden fixed inset-0 bg-slate-50 z-[150] justify-center items-center p-4"></div>
   <div id="auth-modal" class="hidden fixed inset-0 bg-slate-900/80 z-[200] justify-center items-center p-4 backdrop-blur-sm"></div>
 
-  <!-- Notification Modal -->
+  <!-- App Update Toast for PWA -->
+  <div id="app-update-toast" class="fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-[9999] bg-slate-900 text-white px-4 py-3 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center gap-4 transform translate-y-[250%] transition-transform duration-500 border border-indigo-500/50 w-[90%] max-w-sm">
+      <span class="text-2xl animate-bounce">🚀</span>
+      <div class="flex-1">
+          <h4 class="font-bold text-sm text-indigo-300">নতুন আপডেট এসেছে!</h4>
+          <p class="text-[10px] text-slate-300 mt-0.5">নতুন ফিচার উপভোগ করতে অ্যাপটি রিলোড করুন।</p>
+      </div>
+      <button id="reload-app-btn" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-md">রিলোড</button>
+  </div>
+
+  <!-- Notification Drawer/Modal -->
   <div id="notif-modal" class="hidden fixed inset-0 z-[80] justify-end overflow-hidden">
     <div id="notif-overlay-bg" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
     <div id="notif-panel" class="relative bg-white/95 backdrop-blur-xl w-full max-w-sm h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out z-10 border-l border-white/20">
@@ -787,7 +804,7 @@
     </div>
   </div>
 
-  <!-- Profile Modal -->
+  <!-- Profile Modal with Redesigned Compact Achievements Tab -->
   <div id="profile-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 justify-center items-center p-0 sm:p-4">
     <div id="profile-modal-box" class="bg-white/95 backdrop-blur-xl sm:rounded-2xl shadow-2xl w-full max-w-6xl h-full sm:h-[90vh] flex flex-col relative overflow-hidden modal-exit border border-white/20">
       
@@ -881,80 +898,97 @@
                </div>
           </div>
           
-          <!-- Achievements -->
-          <div id="profile-content-achievements" class="hidden max-w-4xl mx-auto space-y-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div class="bg-gradient-to-br from-white to-amber-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(251,191,36,0.15)] border border-amber-200 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-                      <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                      <div class="flex items-center gap-4 mb-4 relative z-10">
-                          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-300 to-yellow-500 p-0.5 shadow-lg relative group-hover:scale-110 transition-transform duration-300">
-                              <div class="w-full h-full bg-white/20 backdrop-blur-md rounded-[14px] flex items-center justify-center text-3xl drop-shadow-md">🏆</div>
-                              <div class="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping opacity-75"></div>
-                          </div>
-                          <div>
-                              <h4 class="font-extrabold text-slate-800 text-lg">লটারি বিজয়ী</h4>
-                              <p class="text-[11px] text-amber-700 font-bold uppercase tracking-widest bg-amber-100/50 inline-block px-2 py-0.5 rounded-md mt-1 border border-amber-200/50">সেরা ভাগ্য</p>
-                          </div>
-                      </div>
-                      <div class="relative z-10">
-                          <p class="text-sm text-slate-600 font-medium mb-3 flex items-center gap-2">মোট জয়: <span id="ach-lottery-count" class="font-black text-amber-600 text-xl bg-white px-2 py-0.5 rounded-lg shadow-inner border border-amber-100">০</span></p>
-                          <div class="bg-white/60 backdrop-blur-sm p-3.5 rounded-xl border border-white shadow-sm text-sm text-slate-700 font-semibold break-words leading-relaxed" id="ach-lottery-list"></div>
-                      </div>
+          <!-- Redesigned Achievements (Modern Smart Badges in One Compact Page View) -->
+          <div id="profile-content-achievements" class="hidden max-w-4xl mx-auto">
+              <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200/60">
+                  <div class="text-center mb-6">
+                      <h3 class="text-base sm:text-lg font-bold text-slate-800 flex items-center justify-center gap-2">
+                           🎖️ অর্জিত সম্মাননা ও মেডেলসমূহ
+                      </h3>
+                      <p class="text-[11px] sm:text-xs text-slate-400 mt-1">লটারি ড্রয়ের পর সঞ্চয় জমার গতি এবং বিজয়ের ভিত্তিতে মেডেলসমূহ প্রদান করা হয়</p>
                   </div>
 
-                  <div class="bg-gradient-to-br from-white to-yellow-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(234,179,8,0.15)] border border-yellow-300 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-                      <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                      <div class="flex items-center gap-4 mb-4 relative z-10">
-                          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-300 to-amber-500 p-0.5 shadow-lg relative group-hover:scale-110 transition-transform duration-300">
-                              <div class="w-full h-full bg-white/20 backdrop-blur-md rounded-[14px] flex items-center justify-center text-3xl drop-shadow-md">🥇</div>
-                              <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping opacity-75" style="animation-delay: 0.5s"></div>
+                  <!-- 2x2 Grid on Mobile, 4 Columns on Tablet/Desktop for scroll-free view -->
+                  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                      
+                      <!-- Lottery Winner Badge -->
+                      <div class="bg-gradient-to-br from-amber-50 to-orange-50/50 p-4 rounded-xl border border-amber-200/60 shadow-sm flex flex-col justify-between items-center text-center">
+                          <div class="relative mb-2 flex items-center justify-center">
+                              <!-- Vector Ribbon Star SVG -->
+                              <svg class="w-10 h-10 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                  <path d="M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" fill="rgba(245, 158, 11, 0.15)" />
+                                  <path d="M8.21 13.89L7 21l5-3 5 3-1.21-7.12" stroke-linecap="round" stroke-linejoin="round" />
+                                  <path d="M12 5v6M10 7h4" stroke-linecap="round" stroke-linejoin="round" />
+                              </svg>
                           </div>
-                          <div>
-                              <h4 class="font-extrabold text-slate-800 text-lg">স্বর্ণপদক</h4>
-                              <p class="text-[11px] text-yellow-700 font-bold uppercase tracking-widest bg-yellow-100/50 inline-block px-2 py-0.5 rounded-md mt-1 border border-yellow-200/50">১ম স্থান অধিকার</p>
+                          <h4 class="font-bold text-slate-800 text-xs">লটারি বিজয়ী</h4>
+                          <span class="text-[9px] text-amber-700 font-bold bg-amber-100/50 px-2 py-0.5 rounded mt-1 border border-amber-200/50">সেরা ভাগ্য</span>
+                          <div class="mt-3 w-full">
+                              <p class="text-[11px] text-slate-500 font-medium mb-1.5">মোট জয়: <span id="ach-lottery-count" class="font-extrabold text-amber-600 bg-white px-1.5 py-0.5 rounded border border-amber-200">০</span></p>
+                              <div class="bg-white/60 p-1.5 rounded-lg border border-slate-100 text-[9px] text-slate-600 font-semibold max-h-20 overflow-y-auto custom-scrollbar flex flex-wrap gap-1 justify-center" id="ach-lottery-list"></div>
                           </div>
                       </div>
-                      <div class="relative z-10">
-                          <p class="text-sm text-slate-600 font-medium mb-3 flex items-center gap-2">মোট অর্জন: <span id="ach-gold-count" class="font-black text-yellow-600 text-xl bg-white px-2 py-0.5 rounded-lg shadow-inner border border-yellow-100">০</span></p>
-                          <div class="bg-white/60 backdrop-blur-sm p-3.5 rounded-xl border border-white shadow-sm text-sm text-slate-700 font-semibold break-words leading-relaxed" id="ach-gold-list"></div>
-                      </div>
-                  </div>
 
-                  <div class="bg-gradient-to-br from-white to-slate-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(148,163,184,0.15)] border border-slate-300 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-                      <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-slate-300 to-slate-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                      <div class="flex items-center gap-4 mb-4 relative z-10">
-                          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-300 to-slate-500 p-0.5 shadow-lg relative group-hover:scale-110 transition-transform duration-300">
-                              <div class="w-full h-full bg-white/20 backdrop-blur-md rounded-[14px] flex items-center justify-center text-3xl drop-shadow-md">🥈</div>
+                      <!-- Gold Medal Badge -->
+                      <div class="bg-gradient-to-br from-yellow-50 to-amber-50/50 p-4 rounded-xl border border-yellow-300/60 shadow-sm flex flex-col justify-between items-center text-center">
+                          <div class="relative mb-2 flex items-center justify-center">
+                              <!-- Vector Gold Medallion SVG -->
+                              <svg class="w-10 h-10 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                  <circle cx="12" cy="12" r="9" stroke="currentColor" fill="rgba(234, 179, 8, 0.15)"/>
+                                  <path d="M12 8v4l3 1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                  <path d="M12 3a9 9 0 0 1 0 18" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 2"/>
+                                  <text x="12" y="15" font-family="sans-serif" font-weight="extrabold" font-size="6" fill="currentColor" text-anchor="middle">1st</text>
+                              </svg>
                           </div>
-                          <div>
-                              <h4 class="font-extrabold text-slate-800 text-lg">রৌপ্যপদক</h4>
-                              <p class="text-[11px] text-slate-600 font-bold uppercase tracking-widest bg-slate-200/50 inline-block px-2 py-0.5 rounded-md mt-1 border border-slate-300/50">২য় স্থান অধিকার</p>
+                          <h4 class="font-bold text-slate-800 text-xs">স্বর্ণপদক</h4>
+                          <span class="text-[9px] text-yellow-700 font-bold bg-yellow-100/50 px-2 py-0.5 rounded mt-1 border border-yellow-200/50">১ম স্থান</span>
+                          <div class="mt-3 w-full">
+                              <p class="text-[11px] text-slate-500 font-medium mb-1.5">অর্জন: <span id="ach-gold-count" class="font-extrabold text-yellow-600 bg-white px-1.5 py-0.5 rounded border border-yellow-200">০</span></p>
+                              <div class="bg-white/60 p-1.5 rounded-lg border border-slate-100 text-[9px] text-slate-600 font-semibold max-h-20 overflow-y-auto custom-scrollbar flex flex-wrap gap-1 justify-center" id="ach-gold-list"></div>
                           </div>
                       </div>
-                      <div class="relative z-10">
-                          <p class="text-sm text-slate-600 font-medium mb-3 flex items-center gap-2">মোট অর্জন: <span id="ach-silver-count" class="font-black text-slate-600 text-xl bg-white px-2 py-0.5 rounded-lg shadow-inner border border-slate-100">০</span></p>
-                          <div class="bg-white/60 backdrop-blur-sm p-3.5 rounded-xl border border-white shadow-sm text-sm text-slate-700 font-semibold break-words leading-relaxed" id="ach-silver-list"></div>
-                      </div>
-                  </div>
 
-                  <div class="bg-gradient-to-br from-white to-orange-50 p-6 rounded-2xl shadow-[0_4px_20px_rgba(249,115,22,0.15)] border border-orange-300 relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-                      <div class="absolute -right-4 -top-4 w-32 h-32 bg-gradient-to-br from-orange-400 to-red-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                      <div class="flex items-center gap-4 mb-4 relative z-10">
-                          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-red-600 p-0.5 shadow-lg relative group-hover:scale-110 transition-transform duration-300">
-                              <div class="w-full h-full bg-white/20 backdrop-blur-md rounded-[14px] flex items-center justify-center text-3xl drop-shadow-md">🥉</div>
+                      <!-- Silver Medal Badge -->
+                      <div class="bg-gradient-to-br from-slate-50 to-slate-100/50 p-4 rounded-xl border border-slate-300/60 shadow-sm flex flex-col justify-between items-center text-center">
+                          <div class="relative mb-2 flex items-center justify-center">
+                              <!-- Vector Silver Medallion SVG -->
+                              <svg class="w-10 h-10 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                  <circle cx="12" cy="12" r="9" stroke="currentColor" fill="rgba(148, 163, 184, 0.15)"/>
+                                  <path d="M12 8v4l3 1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                  <path d="M12 3a9 9 0 0 1 0 18" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 2"/>
+                                  <text x="12" y="15" font-family="sans-serif" font-weight="extrabold" font-size="6" fill="currentColor" text-anchor="middle">2nd</text>
+                              </svg>
                           </div>
-                          <div>
-                              <h4 class="font-extrabold text-slate-800 text-lg">ব্রোঞ্জপদক</h4>
-                              <p class="text-[11px] text-orange-700 font-bold uppercase tracking-widest bg-orange-100/50 inline-block px-2 py-0.5 rounded-md mt-1 border border-orange-200/50">৩য় স্থান অধিকার</p>
+                          <h4 class="font-bold text-slate-800 text-xs">রৌপ্যপদক</h4>
+                          <span class="text-[9px] text-slate-600 font-bold bg-slate-200/50 px-2 py-0.5 rounded mt-1 border border-slate-300/50">২য় স্থান</span>
+                          <div class="mt-3 w-full">
+                              <p class="text-[11px] text-slate-500 font-medium mb-1.5">অর্জন: <span id="ach-silver-count" class="font-extrabold text-slate-600 bg-white px-1.5 py-0.5 rounded border border-slate-200">০</span></p>
+                              <div class="bg-white/60 p-1.5 rounded-lg border border-slate-100 text-[9px] text-slate-600 font-semibold max-h-20 overflow-y-auto custom-scrollbar flex flex-wrap gap-1 justify-center" id="ach-silver-list"></div>
                           </div>
                       </div>
-                      <div class="relative z-10">
-                          <p class="text-sm text-slate-600 font-medium mb-3 flex items-center gap-2">মোট অর্জন: <span id="ach-bronze-count" class="font-black text-orange-600 text-xl bg-white px-2 py-0.5 rounded-lg shadow-inner border border-orange-100">০</span></p>
-                          <div class="bg-white/60 backdrop-blur-sm p-3.5 rounded-xl border border-white shadow-sm text-sm text-slate-700 font-semibold break-words leading-relaxed" id="ach-bronze-list"></div>
+
+                      <!-- Bronze Medal Badge -->
+                      <div class="bg-gradient-to-br from-orange-50 to-amber-100/30 p-4 rounded-xl border border-orange-300/60 shadow-sm flex flex-col justify-between items-center text-center">
+                          <div class="relative mb-2 flex items-center justify-center">
+                              <!-- Vector Bronze Medallion SVG -->
+                              <svg class="w-10 h-10 text-orange-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                  <circle cx="12" cy="12" r="9" stroke="currentColor" fill="rgba(249, 115, 22, 0.15)"/>
+                                  <path d="M12 8v4l3 1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                  <path d="M12 3a9 9 0 0 1 0 18" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 2"/>
+                                  <text x="12" y="15" font-family="sans-serif" font-weight="extrabold" font-size="6" fill="currentColor" text-anchor="middle">3rd</text>
+                              </svg>
+                          </div>
+                          <h4 class="font-bold text-slate-800 text-xs">ব্রোঞ্জপদক</h4>
+                          <span class="text-[9px] text-orange-700 font-bold bg-orange-100/50 px-2 py-0.5 rounded mt-1 border border-orange-200/50">৩য় স্থান</span>
+                          <div class="mt-3 w-full">
+                              <p class="text-[11px] text-slate-500 font-medium mb-1.5">অর্জন: <span id="ach-bronze-count" class="font-extrabold text-orange-600 bg-white px-1.5 py-0.5 rounded border border-orange-200">০</span></p>
+                              <div class="bg-white/60 p-1.5 rounded-lg border border-slate-100 text-[9px] text-slate-600 font-semibold max-h-20 overflow-y-auto custom-scrollbar flex flex-wrap gap-1 justify-center" id="ach-bronze-list"></div>
+                          </div>
                       </div>
+
                   </div>
               </div>
-          </div>
+          </div> 
       </div> 
     </div>
   </div>
@@ -1015,17 +1049,47 @@
         deferredPrompt = null;
     });
 
-    // --- Service Worker Registration ---
+    // --- Network Connectivity Listeners ---
+    window.addEventListener('online', () => showMessage('ইন্টারনেট সংযোগ ফিরে এসেছে!', 'success'));
+    window.addEventListener('offline', () => showMessage('আপনি অফলাইনে আছেন। ক্যাশ থেকে অ্যাপ চলছে।', 'error'));
+
+    // --- Service Worker Registration & Update Logic ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sgloan/sw.js', { scope: '/sgloan/' })
-                .then(reg => console.log('Service Worker সফলভাবে নিবন্ধিত হয়েছে! Scope:', reg.scope))
+                .then(reg => {
+                    console.log('Service Worker সফলভাবে নিবন্ধিত হয়েছে! Scope:', reg.scope);
+                    
+                    // Listen for updates (Stale-While-Revalidate triggers this when new version is cached)
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New update is ready in background
+                                document.getElementById('app-update-toast').classList.remove('translate-y-[250%]');
+                            }
+                        });
+                    });
+                })
                 .catch(err => console.log('Service Worker রেজিস্ট্রেশন ব্যর্থ হয়েছে:', err));
+        });
+        
+        // Handle reload button click
+        document.getElementById('reload-app-btn').addEventListener('click', () => {
+            document.getElementById('app-update-toast').classList.add('translate-y-[250%]');
+            window.location.reload();
+        });
+
+        // Prevent multiple reloads
+        let refreshing;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) return;
+            refreshing = true;
+            window.location.reload();
         });
     }
 
     // --- Core Router Logic (Hash Navigation) ---
-    // Added 'view-fund' and 'view-lottery' to standard views
     const appViews = ['view-home', 'view-members', 'view-finance', 'view-ranking', 'view-fund', 'view-lottery'];
     
     function closeAllModals() {
@@ -1076,7 +1140,7 @@
         else if (h === '#fund') {
             closeAllModals();
             switchView('view-fund');
-            closeFundDetails(); // Always return to list view initially when routing here
+            closeFundDetails(); 
             renderFundModal();
             window.scrollTo(0, 0);
         } 
@@ -1138,6 +1202,24 @@
         
         setInterval(() => { updateDoc(docRef, { lastActive: Date.now() }).catch(() => {}); }, 60000);
     }
+
+    // --- Local Storage Helpers for Smart Notification Tracking ---
+    const getReadNotifIds = () => {
+        try {
+            return JSON.parse(localStorage.getItem('samiti_read_notif_ids') || '[]');
+        } catch(e) { 
+            return []; 
+        }
+    };
+
+    const markNotifAsRead = (ts) => {
+        const ids = getReadNotifIds();
+        if (!ids.includes(ts)) {
+            ids.push(ts);
+            localStorage.setItem('samiti_read_notif_ids', JSON.stringify(ids));
+        }
+        renderNotifications();
+    };
 
     // Utils
     const getBengaliNumber = (n) => {
@@ -1392,49 +1474,22 @@
         const today = new Date().toDateString();
         if(localStorage.getItem('startup_sequence_date') === today) return;
         
-        const pwaModal = document.getElementById('pwa-install-modal');
-        
-        const triggerPopups = () => {
-            localStorage.setItem('startup_sequence_date', today);
-            const history = lottery.history || [];
-            if (history.length > 0) {
-                showLotteryWinnerPopup();
-            } else {
-                showTop3Highlight();
-            }
-        };
-
-        if (!isAppInstalled && deferredPrompt && localStorage.getItem('pwa_dismissed_date') !== today) {
-            pwaModal.classList.remove('translate-y-[200%]');
-            
-            document.getElementById('install-pwa-btn').onclick = async () => {
-                pwaModal.classList.add('translate-y-[200%]');
-                if(deferredPrompt) {
-                    deferredPrompt.prompt();
-                    await deferredPrompt.userChoice;
-                    deferredPrompt = null;
-                }
-                triggerPopups();
-            };
-            
-            document.getElementById('close-pwa-btn').onclick = () => {
-                pwaModal.classList.add('translate-y-[200%]');
-                localStorage.setItem('pwa_dismissed_date', today);
-                triggerPopups();
-            };
+        localStorage.setItem('startup_sequence_date', today);
+        const history = lottery.history || [];
+        if (history.length > 0) {
+            showLotteryWinnerPopup();
         } else {
-            triggerPopups();
+            showTop3Highlight();
         }
     };
-    // =========================================================
 
     const setCopyrightYear = () => {
         const currentYear = new Date().getFullYear();
         const startYear = 2025;
         const copyrightEl = document.getElementById('copyright-text');
         if(copyrightEl) {
-            if(currentYear > startYear) copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)}-${getBengaliYear(currentYear)} একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
-            else copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)} একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
+            if(currentYear > startYear) copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)}-${getBengaliYear(currentYear)} একতা সঞ্চয় কো-অপারেティブ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
+            else copyrightEl.innerHTML = `&copy; ${getBengaliYear(startYear)} একতা সঞ্চয় কো-অপারেティブ সোসাইটি (ইএসসিএস)। সর্বস্বত্ব সংরক্ষিত।`;
         }
     };
     setCopyrightYear();
@@ -1452,17 +1507,36 @@
         setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
     };
     
+    // --- Render Notifications & Dynamically Decreasing Unread Count via LocalStorage ---
     const renderNotifications = () => {
         const list = document.getElementById('notif-list'), badge = document.getElementById('notif-badge'), count = document.getElementById('notif-count');
-        const lastRead = Number(localStorage.getItem('samiti_notif_last_read') || 0);
-        const unread = activityLog.filter(l => l.ts > lastRead).length;
         
-        if (unread > 0) { badge.textContent = getBengaliNumber(unread); badge.classList.remove('hidden'); badge.classList.add('animate-bounce'); } 
-        else { badge.classList.add('hidden'); badge.classList.remove('animate-bounce'); }
+        const readIds = getReadNotifIds();
+        
+        // Count unread notifications that aren't clicked yet
+        const unreadLogs = activityLog.filter(l => !readIds.includes(l.ts));
+        const unread = unreadLogs.length;
+        
+        if (unread > 0) { 
+            badge.textContent = unread;
+            badge.classList.remove('opacity-0', 'scale-0'); 
+            badge.classList.add('opacity-100', 'scale-100', 'animate-bounce'); 
+            const ring = document.getElementById('notif-ring');
+            if(ring) ring.classList.remove('hidden');
+        } else { 
+            badge.classList.add('opacity-0', 'scale-0'); 
+            badge.classList.remove('opacity-100', 'scale-100', 'animate-bounce'); 
+            const ring = document.getElementById('notif-ring');
+            if(ring) ring.classList.add('hidden');
+        }
+        
         count.textContent = getBengaliNumber(activityLog.length);
         list.innerHTML = '';
 
-        if (activityLog.length === 0) { list.innerHTML = '<div class="flex flex-col items-center justify-center h-48 text-slate-400 gap-2"><span class="text-4xl">🔕</span><span>কোনো নতুন আপডেট নেই</span></div>'; return; }
+        if (activityLog.length === 0) { 
+            list.innerHTML = '<div class="flex flex-col items-center justify-center h-48 text-slate-400 gap-2"><span class="text-4xl">🔕</span><span>কোনো নতুন আপডেট নেই</span></div>'; 
+            return; 
+        }
         
         activityLog.forEach(log => {
             let icon = '📌', border = 'border-l-4 border-slate-300', badgeText = 'আপডেট', typeCls = 'bg-slate-100 text-slate-600';
@@ -1472,14 +1546,14 @@
             else if (log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-4 border-red-500'; badgeText = 'ঋণ প্রদান'; typeCls = 'bg-red-100 text-red-700'; }
             else if (log.msg.includes('সঞ্চয়') || log.msg.includes('জমা') || log.msg.includes('টাকা') || log.msg.includes('কিস্তি')) { icon = '💰'; border = 'border-l-4 border-green-500'; badgeText = 'সঞ্চয় জমা'; typeCls = 'bg-green-100 text-green-700'; }
             
-            const isUnread = log.ts > lastRead;
+            const isUnread = !readIds.includes(log.ts);
             const bg = isUnread ? 'bg-indigo-50/50' : 'bg-white';
             const memberMatch = members.find(m => log.msg.includes(m.name));
             const actionAttr = memberMatch ? `data-member-id="${memberMatch.id}"` : '';
             const actionBtn = memberMatch ? `<span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full ml-auto">প্রোফাইল ➜</span>` : '';
 
             list.innerHTML += `
-            <div data-notification-msg="${log.msg}" ${actionAttr} class="${bg} p-3 rounded-lg shadow-sm ${border} mb-2 cursor-pointer hover:bg-slate-50 transition relative">
+            <div data-notification-msg="${log.msg}" data-notif-ts="${log.ts}" ${actionAttr} class="${bg} p-3 rounded-lg shadow-sm ${border} mb-2 cursor-pointer hover:bg-slate-50 transition relative">
                 <div class="flex justify-between items-start">
                     <span class="text-sm text-slate-700 font-medium flex gap-2 w-full">
                         <span class="text-lg leading-none">${icon}</span> 
@@ -1488,44 +1562,11 @@
                             <div class="leading-tight">${log.msg}</div>
                         </div>
                     </span>
-                    ${isUnread?'<span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0 ml-2"></span>':''}
+                    ${isUnread ? '<span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0 ml-2 animate-pulse shadow-[0_0_5px_rgba(239,68,68,0.6)]"></span>' : ''}
                 </div>
                 <div class="flex items-center mt-2 text-xs text-slate-400"><span>${log.dateStr || ''}</span>${actionBtn}</div>
             </div>`;
         });
-    };
-    
-    const checkAndPlayNotifications = () => {
-        const lastRead = Number(localStorage.getItem('samiti_notif_last_read') || 0);
-        const unreadLogs = activityLog.filter(l => l.ts > lastRead).sort((a,b) => a.ts - b.ts);
-        if (unreadLogs.length > 0) playNotificationSequence(unreadLogs);
-    };
-    const playNotificationSequence = (logs) => {
-        if (logs.length === 0) return;
-        const current = logs[0]; showAutoToast(current);
-        localStorage.setItem('samiti_notif_last_read', current.ts); renderNotifications();
-        setTimeout(() => playNotificationSequence(logs.slice(1)), 2500);
-    };
-    
-    const showAutoToast = (log) => {
-        const c = document.getElementById('auto-toast-container');
-        c.innerHTML = ''; 
-        const t = document.createElement('div');
-        let icon = '📌', border = 'border-l-2 border-indigo-300', badgeText = 'আপডেট', typeCls = 'text-indigo-500';
-        
-        if (log.msg.includes('লটারি')) { icon = '🎲'; border = 'border-l-2 border-purple-400'; badgeText = 'লটারি'; typeCls = 'text-purple-600'; }
-        else if (log.msg.includes('ঋণ') && (log.msg.includes('জমা') || log.msg.includes('পরিশোধ') || log.msg.includes('ফেরত'))) { icon = '💳'; border = 'border-l-2 border-yellow-400'; badgeText = 'ঋণ জমা'; typeCls = 'text-yellow-600'; }
-        else if (log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-2 border-red-400'; badgeText = 'ঋণ প্রদান'; typeCls = 'text-red-500'; }
-        else if (log.msg.includes('সঞ্চয়') || log.msg.includes('জমা') || log.msg.includes('টাকা') || log.msg.includes('কিস্তি')) { icon = '💰'; border = 'border-l-4 border-green-400'; badgeText = 'সঞ্চয় জমা'; typeCls = 'text-green-600'; }
-        
-        const memberMatch = members.find(m => log.msg.includes(m.name));
-        t.className = `bg-white/80 backdrop-blur-xl p-3 rounded-2xl shadow-xl ${border} w-auto max-w-[280px] flex items-center gap-3 transform transition-all duration-500 ease-out origin-top-right scale-0 opacity-0 translate-x-[20px] -translate-y-[20px] cursor-pointer pointer-events-auto border border-white/50 ring-1 ring-white/60`;
-        t.setAttribute('data-notification-msg', log.msg);
-        if (memberMatch) t.setAttribute('data-member-id', memberMatch.id);
-        t.innerHTML = `<div class="text-2xl">${icon}</div><div class="flex-1 min-w-0"><p class="font-bold ${typeCls} text-[10px] uppercase tracking-wider mb-0.5">${badgeText}</p><p class="font-bold text-slate-800 text-xs line-clamp-2 leading-tight">${log.msg}</p><p class="text-[9px] text-slate-500 mt-1">এখনই</p></div>`;
-        c.appendChild(t);
-        requestAnimationFrame(() => { t.classList.remove('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]'); t.classList.add('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0'); });
-        setTimeout(() => { t.classList.remove('scale-100', 'opacity-100', 'translate-x-0', 'translate-y-0'); t.classList.add('scale-0', 'opacity-0', 'translate-x-[20px]', '-translate-y-[20px]'); setTimeout(() => t.remove(), 500); }, 3000);
     };
 
     let touchStartX = 0;
@@ -1607,8 +1648,8 @@
                         ctx.fill();
                         ctx.fillStyle = '#ffffff';
                         ctx.font = 'bold 10px "Hind Siliguri", sans-serif';
-                        ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
+                        ctx.textAlign = 'center';
                         ctx.fillText(m.name ? m.name.charAt(0) : '?', x, y);
                     }
                     ctx.restore();
@@ -1991,10 +2032,12 @@
         document.getElementById('loan-repaid').textContent = `৳ ${getBengaliNumber(t.totalLoanRepaid)}`;
 
         const ach = globalAchievements[id] || { lotteryWins: [], gold: [], silver: [], bronze: [] };
+        
+        // Render months inside compact responsive badges without any vertical/horizontal scrolling
         const formatMonthList = (list) => list.length ? list.map(mk => {
             const text = mk.includes('-') ? formatDate(mk + '-01', 'monthYear') : mk;
-            return `<span class="inline-block bg-white/60 px-2.5 py-1 rounded-md border border-slate-200/50 text-xs shadow-sm m-0.5">${text}</span>`;
-        }).join('') : '<span class="text-slate-400 italic">কোনো অর্জন নেই</span>';
+            return `<span class="inline-block bg-white border border-slate-100 px-2 py-0.5 rounded text-[10px] font-bold shadow-sm text-slate-700">${text}</span>`;
+        }).join('') : '<span class="text-slate-400 italic text-[10px]">কোনো অর্জন নেই</span>';
         
         document.getElementById('ach-lottery-count').textContent = getBengaliNumber(ach.lotteryWins.length);
         document.getElementById('ach-lottery-list').innerHTML = formatMonthList(ach.lotteryWins);
@@ -2145,7 +2188,6 @@
         document.getElementById("lotteryCountBadge").textContent = getBengaliNumber(lp.length);
         const list = document.getElementById("lotteryParticipants");
         
-        // Updated to matching light theme styles
         list.innerHTML = lp.length ? lp.map((n,i)=>`
             <li class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-center text-slate-700 text-sm font-bold shadow-sm hover:shadow-md hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-800 transition relative overflow-hidden group">
                 <span class="absolute top-1 left-1.5 text-[9px] text-slate-400 font-mono">#${getBengaliNumber(i+1)}</span>${n}
@@ -2261,7 +2303,6 @@
                     renderNotifications();
 
                     if(!initialLoadComplete) { 
-                        checkAndPlayNotifications(); 
                         initialLoadComplete = true; 
                         
                         setTimeout(() => handleStartupSequence(), 2000);
@@ -2276,8 +2317,17 @@
         const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], .fund-card');
         if(!t) return;
         
+        // Handle Individual Notification Card Click
         if(t.hasAttribute('data-notification-msg')) {
-            const mid = t.getAttribute('data-member-id'); const msg = t.getAttribute('data-notification-msg');
+            const mid = t.getAttribute('data-member-id'); 
+            const msg = t.getAttribute('data-notification-msg');
+            const ts = Number(t.getAttribute('data-notif-ts') || 0);
+            
+            // Mark individual notification as read in Local Storage on click
+            if (ts) {
+                markNotifAsRead(ts);
+            }
+            
             closeNotif();
             if(mid) { 
                 showProfile(mid); 
@@ -2292,7 +2342,15 @@
         const id = t.id;
         if(id === 'open-notif-btn') openNotif();
         else if(id === 'close-notif-btn' || id === 'notif-overlay-bg') { if(window.location.hash) history.back(); else closeNotif(); }
-        else if(id === 'mark-read-btn') { localStorage.setItem('samiti_notif_last_read', activityLog.length?activityLog[0].ts:0); renderNotifications(); showMessage('পঠিত হিসেবে মার্ক করা হয়েছে'); }
+        else if(id === 'mark-read-btn') { 
+            // Mark all current loaded notifications as read
+            const currentIds = activityLog.map(l => l.ts);
+            const existingRead = getReadNotifIds();
+            const allRead = [...new Set([...existingRead, ...currentIds])];
+            localStorage.setItem('samiti_read_notif_ids', JSON.stringify(allRead));
+            renderNotifications(); 
+            showMessage('সবগুলো নোটিফিকেশন পঠিত হিসেবে মার্ক করা হয়েছে'); 
+        }
         else if(t.classList.contains('view-profile-btn')) showProfile(t.dataset.id);
         else if(id === 'close-profile') { closeProfileModal(true); }
         else if(t.classList.contains('profile-tab')) {
