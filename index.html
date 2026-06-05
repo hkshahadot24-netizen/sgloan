@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)</title>
   
   <!-- Favicon -->
@@ -704,7 +704,7 @@
             <img id="pwa-logo-img" src="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS" class="w-12 h-12 rounded-xl shadow-md border border-slate-100">
             <div class="pr-6">
                 <h3 class="font-bold text-slate-800 text-sm">ESCS অ্যাপ ইন্সটল করুন</h3>
-                <p class="text-[11px] text-slate-500 leading-tight mt-0.5">দ্রুত অ্যাক্সেস ও চমৎকার অভিজ্ঞতার জন্য হোম স্ক্রিনে যোগ করুন।</p>
+                <p class="text-[11px] text-slate-500 leading-tight mt-0.5">দ্রুত অ্যাক্সেস ও চমৎকার অভিজ্ঞতার জন্য হোম স্ক্রিনে যোগ করুন.</p>
             </div>
         </div>
         <button id="install-pwa-btn" class="w-full bg-indigo-600 text-white font-bold py-2.5 rounded-xl hover:bg-indigo-700 transition shadow-md text-sm mt-1">ইন্সটল করুন</button>
@@ -771,6 +771,21 @@
             <div class="mt-3.5 flex items-center justify-between text-[11px] text-slate-400 px-1">
                 <span id="lottery-winner-date" class="font-mono">তারিখ: ---</span>
                 <button id="dismiss-lottery-winner-btn" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-4 py-1.5 rounded-xl transition shadow">অসংখ্য ধন্যবাদ 🎉</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exit Confirmation Modal (NEW & UPDATED) -->
+    <div id="confirmation-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[9999] justify-center items-center p-4 transition-opacity duration-300">
+        <div id="confirmation-modal-box" class="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 text-center transform scale-95 opacity-0 transition-all duration-300 border border-slate-100/20">
+            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5 border-[6px] border-red-100">
+                <span class="text-4xl">🚪</span>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-2">নিশ্চিত করুন</h3>
+            <p id="confirmation-message" class="text-sm mb-8 font-medium text-slate-500 leading-relaxed"></p>
+            <div class="flex justify-center gap-4">
+                <button id="confirm-no" class="flex-1 bg-slate-100 text-slate-700 py-3 rounded-xl font-bold hover:bg-slate-200 transition active:scale-95">না, থাক</button>
+                <button id="confirm-yes" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600 transition shadow-lg shadow-red-500/30 active:scale-95">হ্যাঁ, বের হবো</button>
             </div>
         </div>
     </div>
@@ -1162,7 +1177,7 @@
 
     function getOSInfo() {
         var userAgent = window.navigator.userAgent, platform = window.navigator.platform, macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'], windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'], iosPlatforms = ['iPhone', 'iPad', 'iPod'], os = null;
-        if (macosPlatforms.indexOf(platform) !== -1) { os = 'Mac OS'; } else if (iosPlatforms.indexOf(platform) !== -1) { os = 'Windows'; } else if (/Android/.test(userAgent)) { os = 'Android'; } else if (!os && /Linux/.test(platform)) { os = 'Linux'; }
+        if (macosPlatforms.indexOf(platform) !== -1) { os = 'Mac OS'; } else if (iosPlatforms.indexOf(platform) !== -1) { os = 'iOS'; } else if (windowsPlatforms.indexOf(platform) !== -1) { os = 'Windows'; } else if (/Android/.test(userAgent)) { os = 'Android'; } else if (!os && /Linux/.test(platform)) { os = 'Linux'; }
         return os || 'অজানা (Unknown)';
     }
 
@@ -1249,6 +1264,30 @@
       box.classList.remove('opacity-0'); setTimeout(() => box.classList.add('opacity-0'), 3000);
     };
 
+    const showConfirmation = (msg) => new Promise(res => { 
+        const m = document.getElementById('confirmation-modal');
+        const box = document.getElementById('confirmation-modal-box');
+        document.getElementById('confirmation-message').textContent = msg; 
+        
+        const y = document.getElementById('confirm-yes'), n = document.getElementById('confirm-no'); 
+        const cl = (v) => { 
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); res(v); }, 300); 
+        }; 
+        const hy = () => { cleanup(); cl(true); };
+        const hn = () => { cleanup(); cl(false); };
+        const cleanup = () => { y.removeEventListener('click', hy); n.removeEventListener('click', hn); }; 
+        
+        y.addEventListener('click', hy); n.addEventListener('click', hn); 
+        
+        m.classList.remove('hidden'); 
+        m.classList.add('flex'); 
+        void m.offsetWidth; // trigger reflow
+        box.classList.remove('scale-95', 'opacity-0');
+        box.classList.add('scale-100', 'opacity-100');
+    });
+
     const calculateMemberTotals = (m) => {
         const t = { totalDeposit: 0, totalLoanTaken: 0, totalLoanRepaid: 0, currentLoan: 0 };
         if(m?.transactions) m.transactions.forEach(x => { const a = Number(x.amount)||0; if(x.type === 'deposit') t.totalDeposit+=a; else if(x.type === 'loanTaken') t.totalLoanTaken+=a; else if(x.type === 'loanRepayment') t.totalLoanRepaid+=a; });
@@ -1265,7 +1304,6 @@
         return fullName;
     };
 
-    // --- UPDATED LOGIC: Only calculate Speed for Months with Loan Distributed ---
     const calculateMemberSpeedRankings = () => {
         const rankings = members.map(m => {
             let totalDaysDiff = 0;
@@ -1274,8 +1312,6 @@
 
             deposits.forEach(deposit => {
                 const monthKey = deposit.date.substring(0, 7);
-                
-                // IMPORTANT: Only process if a loan/fund distribution has occurred for this month
                 if (!fundDistribution[monthKey]) return; 
 
                 let lotteryDate = null;
@@ -1313,7 +1349,6 @@
         return rankings;
     };
 
-    // --- UPDATED LOGIC: Only count achievements for months with loan distribution ---
     const calculateGlobalAchievements = () => {
         globalAchievements = {};
         members.forEach(m => { globalAchievements[m.id] = { lotteryWins: [], gold: [], silver: [], bronze: [] }; });
@@ -1328,8 +1363,6 @@
             (m.transactions || []).forEach(t => {
                 if(t.type === 'deposit' && t.date) {
                     const monthKey = t.date.substring(0, 7);
-                    
-                    // IMPORTANT: Only count achievements for months where loan is distributed
                     if (!fundDistribution[monthKey]) return;
                     
                     if(!months[monthKey]) months[monthKey] = {};
@@ -1355,12 +1388,10 @@
         });
     };
     
-    // --- UPDATED LOGIC: Top 3 Popup only shows latest distributed month ---
     const showTop3Highlight = () => {
         const mDeps = Object.keys(fundDistribution).sort().reverse();
         const latestKey = mDeps.length > 0 ? mDeps[0] : 'none';
         
-        // Ensure popup shows every day OR whenever a new distribution is processed
         const today = new Date().toDateString();
         const cacheKey = `top3_popup_${latestKey}_${today}`;
         
@@ -1502,7 +1533,6 @@
         
         const today = new Date().toDateString();
         
-        // We only control the Lottery sequence through this date cache, Top 3 has its own cache logic now
         if(localStorage.getItem('startup_sequence_date') !== today) {
             localStorage.setItem('startup_sequence_date', today);
             const history = lottery.history || [];
@@ -1511,8 +1541,6 @@
                 return;
             }
         }
-        
-        // Fallback to top 3 if lottery wasn't shown
         showTop3Highlight();
     };
 
@@ -1540,18 +1568,16 @@
         setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
     };
     
-    // --- Render Notifications & Dynamically Decreasing Unread Count via LocalStorage ---
+    // --- Render Notifications ---
     const renderNotifications = () => {
         const list = document.getElementById('notif-list'), badge = document.getElementById('notif-badge'), count = document.getElementById('notif-count');
         
         const readIds = getReadNotifIds();
-        
-        // Count unread notifications that aren't clicked yet
         const unreadLogs = activityLog.filter(l => !readIds.includes(l.ts));
         const unread = unreadLogs.length;
         
         if (unread > 0) { 
-            badge.textContent = unread;
+            badge.textContent = getBengaliNumber(unread);
             badge.classList.remove('opacity-0', 'scale-0'); 
             badge.classList.add('opacity-100', 'scale-100', 'animate-bounce'); 
             const ring = document.getElementById('notif-ring');
@@ -1574,40 +1600,104 @@
         activityLog.forEach(log => {
             let icon = '📌', border = 'border-l-4 border-slate-300', badgeText = 'আপডেট', typeCls = 'bg-slate-100 text-slate-600';
             
-            // --- UPDATED LOGIC FOR EXACT TEXT REQUIREMENTS ---
+            // Text matching logic updated for exact rich strings
             if (log.msg.includes('লটারি')) { icon = '🎲'; border = 'border-l-4 border-purple-500'; badgeText = 'লটারি'; typeCls = 'bg-purple-100 text-purple-700'; }
-            else if (log.msg.includes('ঋণ') && (log.msg.includes('জমা') || log.msg.includes('পরিশোধ') || log.msg.includes('ফেরত'))) { icon = '💳'; border = 'border-l-4 border-yellow-500'; badgeText = 'ঋণ পরিশোধ'; typeCls = 'bg-yellow-100 text-yellow-700'; }
-            else if (log.msg.includes('ঋণ')) { icon = '💸'; border = 'border-l-4 border-red-500'; badgeText = 'ঋণ গ্রহণ'; typeCls = 'bg-red-100 text-red-700'; }
-            else if (log.msg.includes('সঞ্চয়') || log.msg.includes('জমা') || log.msg.includes('টাকা') || log.msg.includes('কিস্তি')) { icon = '💰'; border = 'border-l-4 border-green-500'; badgeText = 'সঞ্চয় জমা'; typeCls = 'bg-green-100 text-green-700'; }
+            else if (log.msg.includes('তহবিল') || log.msg.includes('প্রদান করা হল')) { icon = '💸'; border = 'border-l-4 border-red-500'; badgeText = 'তহবিল প্রদান'; typeCls = 'bg-red-100 text-red-700'; }
+            else if (log.msg.includes('ঋণ পরিশোধ') || log.msg.includes('বকেয়া ঋণ') || log.msg.includes('ঋণ আপডেট')) { icon = '💳'; border = 'border-l-4 border-yellow-500'; badgeText = 'ঋণ আপডেট'; typeCls = 'bg-yellow-100 text-yellow-700'; }
+            else if (log.msg.includes('সঞ্চয়') || log.msg.includes('জমা') || log.msg.includes('গৃহীত')) { icon = '💰'; border = 'border-l-4 border-green-500'; badgeText = 'মাসিক জমা'; typeCls = 'bg-green-100 text-green-700'; }
             
             const isUnread = !readIds.includes(log.ts);
             const bg = isUnread ? 'bg-indigo-50/50' : 'bg-white';
             const memberMatch = members.find(m => log.msg.includes(m.name));
             const actionAttr = memberMatch ? `data-member-id="${memberMatch.id}"` : '';
-            const actionBtn = memberMatch ? `<span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full ml-auto">প্রোফাইল ➜</span>` : '';
+            const actionBtn = memberMatch ? `<span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full ml-auto whitespace-nowrap">প্রোফাইল ➜</span>` : '';
             
-            // --- HIGHLIGHT MEMBER NAME ---
             let displayMsg = log.msg;
             if (memberMatch) {
-                // Wrap the member name with a strong tag for highlighting
                 displayMsg = displayMsg.replace(memberMatch.name, `<strong class="text-indigo-700 font-bold">${memberMatch.name}</strong>`);
             }
 
             list.innerHTML += `
-            <div data-notification-msg="${log.msg}" data-notif-ts="${log.ts}" ${actionAttr} class="${bg} p-3 rounded-lg shadow-sm ${border} mb-2 cursor-pointer hover:bg-slate-50 transition relative">
+            <div data-notification-msg="${log.msg}" data-notif-ts="${log.ts}" ${actionAttr} class="${bg} p-3 rounded-xl shadow-sm ${border} mb-3 cursor-pointer hover:bg-slate-50 transition relative">
                 <div class="flex justify-between items-start">
-                    <span class="text-sm text-slate-700 font-medium flex gap-2 w-full">
-                        <span class="text-lg leading-none">${icon}</span> 
+                    <span class="text-sm text-slate-700 font-medium flex gap-3 w-full">
+                        <span class="text-xl leading-none mt-1">${icon}</span> 
                         <div class="flex-1">
-                            <span class="inline-block text-[10px] px-2 py-0.5 rounded mb-1 font-bold ${typeCls}">${badgeText}</span>
-                            <div class="leading-tight">${displayMsg}</div>
+                            <span class="inline-block text-[10px] px-2 py-0.5 rounded-md mb-1.5 font-bold ${typeCls}">${badgeText}</span>
+                            <div class="leading-relaxed text-[13px]">${displayMsg}</div>
                         </div>
                     </span>
-                    ${isUnread ? '<span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0 ml-2 animate-pulse shadow-[0_0_5px_rgba(239,68,68,0.6)]"></span>' : ''}
+                    ${isUnread ? '<span class="w-2.5 h-2.5 rounded-full bg-red-500 mt-1 shrink-0 ml-2 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>' : ''}
                 </div>
-                <div class="flex items-center mt-2 text-xs text-slate-400"><span>${log.dateStr || ''}</span>${actionBtn}</div>
+                <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-100/50 text-[11px] text-slate-400"><span>${log.dateStr || ''}</span>${actionBtn}</div>
             </div>`;
         });
+    };
+
+    const checkAndPlayNotifications = () => {
+        const readIds = getReadNotifIds();
+        const unreadLogs = activityLog.filter(l => !readIds.includes(l.ts)).sort((a,b) => a.ts - b.ts);
+        
+        if (unreadLogs.length > 0) {
+            playNotificationSequence(unreadLogs);
+        }
+    };
+
+    const playNotificationSequence = (logs) => {
+        if (logs.length === 0) return;
+        const currentLog = logs[0];
+        const remainingLogs = logs.slice(1);
+        
+        showAutoToast(currentLog);
+        markNotifAsRead(currentLog.ts);
+
+        setTimeout(() => { playNotificationSequence(remainingLogs); }, 4500); 
+    };
+
+    const showAutoToast = (log) => {
+        const container = document.getElementById('auto-toast-container');
+        const toast = document.createElement('div');
+        
+        let icon = '📌', borderClass = 'border-l-4 border-slate-400';
+
+        if(log.msg.includes('লটারি')) { icon = '🎲'; borderClass = 'border-l-4 border-purple-500'; }
+        else if(log.msg.includes('তহবিল') || log.msg.includes('প্রদান করা হল')) { icon = '💸'; borderClass = 'border-l-4 border-red-500'; }
+        else if(log.msg.includes('ঋণ পরিশোধ') || log.msg.includes('বকেয়া ঋণ')) { icon = '💳'; borderClass = 'border-l-4 border-yellow-500'; }
+        else if(log.msg.includes('জমা') || log.msg.includes('গৃহীত')) { icon = '💰'; borderClass = 'border-l-4 border-green-500'; }
+
+        toast.className = `toast-slide-in pointer-events-auto bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.15)] ${borderClass} w-[90vw] max-w-[360px] flex items-start gap-3.5 cursor-pointer hover:bg-slate-50 transition transform hover:scale-105 border border-slate-100/50`;
+        toast.innerHTML = `
+            <div class="text-3xl mt-0.5 shrink-0">${icon}</div>
+            <div class="flex-1 min-w-0">
+                <p class="font-bold text-slate-800 text-[13px] leading-snug break-words">${log.msg}</p>
+                <p class="text-[10px] text-slate-400 mt-2 text-right font-semibold">${log.dateStr}</p>
+            </div>
+        `;
+
+        toast.addEventListener('click', () => {
+            window.handleNotificationClick(log.msg);
+            toast.remove(); 
+        });
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.remove('toast-slide-in');
+            toast.classList.add('toast-slide-out');
+            setTimeout(() => toast.remove(), 500);
+        }, 4000);
+    };
+
+    window.handleNotificationClick = (msg) => {
+        if (msg.includes('লটারি')) {
+            window.location.hash = 'lottery';
+        } else if (msg.includes('নোটিশ')) {
+            document.getElementById('notice-display').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (msg.includes('তহবিল')) {
+            window.location.hash = 'fund';
+        } else {
+            window.location.hash = 'members';
+        }
     };
 
     let touchStartX = 0;
@@ -2074,7 +2164,6 @@
 
         const ach = globalAchievements[id] || { lotteryWins: [], gold: [], silver: [], bronze: [] };
         
-        // Render months inside compact responsive badges without any vertical/horizontal scrolling
         const formatMonthList = (list) => list.length ? list.map(mk => {
             const text = mk.includes('-') ? formatDate(mk + '-01', 'monthYear') : mk;
             return `<span class="inline-block bg-white border border-slate-100 px-2 py-0.5 rounded text-[10px] font-bold shadow-sm text-slate-700">${text}</span>`;
