@@ -15,6 +15,10 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="ESCS">
 
+  <!-- Requested visual assets -->
+  <link rel="preload" as="image" href="https://i.postimg.cc/SsjNVgrk/header.avif">
+  <link rel="preload" as="image" href="https://i.postimg.cc/9XRyQbjg/bennar.avif">
+
   <!-- Resource Hints for Blazing Fast Loading -->
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,7 +40,7 @@
         background-color: #f8fafc; /* Slate 50 */
         /* Subtle Dot Pattern for texture */
         background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236366f1' fill-opacity='0.02' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
-        padding-bottom: 60px;
+        padding-bottom: 90px;
     }
     
     /* --- Custom Scrollbar --- */
@@ -77,13 +81,113 @@
     .fade-in-up { animation: fadeInUp 0.4s ease-out forwards; opacity: 0; transform: translateY(15px); }
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* --- Glassmorphism Header --- */
+    /* --- Sharp Global Header / Mobile Safe Image Area --- */
     .glass-header {
-        background: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid rgba(255,255,255,0.4);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        background: #ffffff;
+        border-bottom: 1px solid rgba(226,232,240,0.75);
+        box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.08);
+        position: fixed;
+        overflow: hidden;
+    }
+
+    .glass-header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(180deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.92) 48%, rgba(255,255,255,0.18) 100%),
+            url('https://i.postimg.cc/SsjNVgrk/header.avif') center bottom / 100% auto no-repeat;
+        background-color: #ffffff;
+        opacity: 1;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* Keep the complete header image visible on phones; never crop/blur it. */
+    @media (max-width: 640px) {
+        .glass-header::before {
+            background:
+                linear-gradient(180deg, #ffffff 0%, #ffffff 38%, rgba(255,255,255,0.94) 55%, rgba(255,255,255,0.22) 100%),
+                url('https://i.postimg.cc/SsjNVgrk/header.avif') center bottom / 100% auto no-repeat;
+            background-color: #ffffff;
+        }
+    }
+
+    .glass-header > div {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* --- Footer: Clean White PNG/Transparent Banner --- */
+    .site-footer-with-banner {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        background: #ffffff;
+        border-top: 1px solid rgba(226,232,240,0.75);
+        box-shadow: 0 -2px 15px rgba(0,0,0,0.04);
+    }
+
+    .site-footer-with-banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background-image: url('https://i.postimg.cc/9XRyQbjg/bennar.avif');
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: contain;
+        background-color: #ffffff;
+        pointer-events: none;
+    }
+
+    .site-footer-with-banner::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: #ffffff;
+        opacity: 0.08;
+        pointer-events: none;
+    }
+
+    /* On mobile the whole banner stays visible instead of being cropped. */
+    @media (max-width: 640px) {
+        .site-footer-with-banner::before {
+            background-size: 100% auto;
+            background-position: center top;
+        }
+        .site-footer-with-banner::after { opacity: 0; }
+    }
+
+    .site-footer-with-banner > * {
+        position: relative;
+        z-index: 1;
+    }
+
+
+    /* Mobile footer: keep the top white and fill the lower area with the banner */
+    @media (max-width: 640px) {
+        .site-footer-with-banner {
+            background: #fff;
+            padding-top: 180px;
+            min-height: 520px;
+        }
+        .site-footer-with-banner::before {
+            top: 180px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            background-position: center bottom;
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+        }
+        .site-footer-with-banner::after {
+            top: 180px;
+            bottom: 0;
+            background: transparent;
+        }
     }
 
     /* --- Modern Card Hover Effects --- */
@@ -195,8 +299,8 @@
   <!-- Main Application Content -->
   <div id="main-app-content" class="hidden relative z-10 flex flex-col min-h-screen">
     
-    <!-- Modern Global Header with Smart Notification Icon -->
-    <header class="fixed top-0 w-full z-50 glass-header transition-all duration-300">
+    <!-- Modern Global Header with Smart Notification Icon + Header Background -->
+    <header class="fixed top-0 w-full z-50 glass-header transition-all duration-300" role="banner" aria-label="ওয়েবসাইট হেডার">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16 sm:h-20 gap-4">
           <div class="flex items-center gap-3 flex-1">
@@ -625,7 +729,7 @@
     </main>
 
     <!-- Modern Footer Section -->
-    <footer class="bg-white/90 backdrop-blur-md border-t border-slate-200/50 pt-12 pb-24 sm:pb-16 mt-auto shadow-[0_-2px_15px_rgba(0,0,0,0.02)] relative z-10">
+    <footer class="site-footer-with-banner pt-12 pb-24 sm:pb-16 mt-auto relative z-10" role="contentinfo">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12 mb-10">
           <div class="space-y-4">
@@ -671,6 +775,8 @@
         </div>
       </div>
     </footer>
+
+    <!-- ================= END SITE BOTTOM BANNER ================= -->
 
     <!-- FIXED BOTTOM TICKER -->
     <div id="bottom-ticker" class="fixed bottom-0 left-0 w-full bg-slate-900 text-white z-40 border-t-2 border-indigo-500 hidden shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
