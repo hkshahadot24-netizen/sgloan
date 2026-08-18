@@ -94,9 +94,7 @@
         content: "";
         position: absolute;
         inset: 0;
-        background:
-            linear-gradient(180deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.92) 48%, rgba(255,255,255,0.18) 100%),
-            url('https://i.postimg.cc/SsjNVgrk/header.avif') center bottom / 100% auto no-repeat;
+        background: url('https://i.postimg.cc/SsjNVgrk/header.avif') center center / 100% 100% no-repeat;
         background-color: #ffffff;
         opacity: 1;
         z-index: -1;
@@ -106,9 +104,7 @@
     /* Keep the complete header image visible on phones; never crop/blur it. */
     @media (max-width: 640px) {
         .glass-header::before {
-            background:
-                linear-gradient(180deg, #ffffff 0%, #ffffff 38%, rgba(255,255,255,0.94) 55%, rgba(255,255,255,0.22) 100%),
-                url('https://i.postimg.cc/SsjNVgrk/header.avif') center bottom / 100% auto no-repeat;
+            background: url('https://i.postimg.cc/SsjNVgrk/header.avif') center center / 100% 100% no-repeat;
             background-color: #ffffff;
         }
     }
