@@ -114,6 +114,158 @@
         z-index: 1;
     }
 
+    /* --- Premium Golden Logo Ring + Sparkle --- */
+    .premium-logo-wrap {
+        position: relative;
+        width: 54px;
+        height: 54px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+    }
+    .premium-logo-wrap::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        background: conic-gradient(from 0deg, transparent 0 12%, #f7e7a8 18%, #d4a72c 28%, #fff3b8 38%, #b88620 52%, transparent 66% 100%);
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+        mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+        filter: drop-shadow(0 0 5px rgba(212,167,44,.72));
+        animation: premiumGoldSpin 4.5s linear infinite;
+    }
+    .premium-logo-wrap::after {
+        content: "✦";
+        position: absolute;
+        top: -6px;
+        right: -3px;
+        color: #fff5bf;
+        font-size: 14px;
+        line-height: 1;
+        text-shadow: 0 0 4px #d4a72c, 0 0 10px rgba(212,167,44,.9);
+        animation: premiumSparkle 1.8s ease-in-out infinite;
+        pointer-events: none;
+    }
+    .premium-logo-wrap .logo-sparkle {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: #fff8d6;
+        box-shadow: 0 0 7px 2px rgba(212,167,44,.85);
+        pointer-events: none;
+        animation: premiumSparkleDot 2.2s ease-in-out infinite;
+    }
+    .premium-logo-wrap .logo-sparkle.one { top: 4px; left: 10px; animation-delay: .2s; }
+    .premium-logo-wrap .logo-sparkle.two { bottom: 7px; right: 3px; width: 4px; height: 4px; animation-delay: .9s; }
+    .premium-logo-wrap img {
+        width: 43px !important;
+        height: 43px !important;
+        border: 2px solid #f4d98a !important;
+        box-shadow: 0 0 0 2px rgba(91,55,30,.34), 0 3px 12px rgba(67,39,25,.25), 0 0 18px rgba(212,167,44,.25) !important;
+        z-index: 2;
+    }
+    @keyframes premiumGoldSpin { to { transform: rotate(360deg); } }
+    @keyframes premiumSparkle { 0%,100% { opacity:.25; transform:scale(.65) rotate(0deg); } 45% { opacity:1; transform:scale(1.25) rotate(18deg); } 70% { opacity:.55; transform:scale(.9) rotate(-8deg); } }
+    @keyframes premiumSparkleDot { 0%,100% { opacity:.2; transform:scale(.55); } 45% { opacity:1; transform:scale(1.5); } 70% { opacity:.35; transform:scale(.8); } }
+
+    /* --- Member Card Decorative Vector Shapes --- */
+    #member-list-cards > div {
+        isolation: isolate;
+    }
+    #member-list-cards > div::before {
+        content: "";
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        top: -72px;
+        right: -62px;
+        border-radius: 42% 58% 62% 38% / 38% 42% 58% 62%;
+        background: linear-gradient(135deg, rgba(212,167,44,.16), rgba(91,55,30,.06));
+        border: 1px solid rgba(212,167,44,.18);
+        transform: rotate(18deg);
+        z-index: 0;
+        pointer-events: none;
+    }
+    #member-list-cards > div::after {
+        content: "✦";
+        position: absolute;
+        right: 15px;
+        top: 14px;
+        color: rgba(180,130,36,.38);
+        font-size: 24px;
+        line-height: 1;
+        text-shadow: 10px 14px 0 rgba(180,130,36,.14), -12px 20px 0 rgba(91,55,30,.10);
+        z-index: 0;
+        pointer-events: none;
+    }
+    #member-list-cards > div > * { position: relative; z-index: 1; }
+    .member-vector-mark {
+        position: absolute;
+        left: -10px;
+        bottom: -18px;
+        width: 84px;
+        height: 84px;
+        opacity: .10;
+        transform: rotate(-14deg);
+        z-index: 0 !important;
+        pointer-events: none;
+    }
+    .member-vector-mark svg { width:100%; height:100%; fill:none; stroke:#8a5b2f; stroke-width:1.4; }
+
+    /* --- Notice: Coffee-Gold-Coffee Fine Border --- */
+    .notice-premium {
+        border: 1px solid #8a5b2f !important;
+        box-shadow: 0 0 0 1px #d4a72c, 0 0 0 3px rgba(138,91,47,.42), 0 18px 50px rgba(67,39,25,.13) !important;
+    }
+    .notice-premium-body {
+        border-top: 1px solid rgba(212,167,44,.35);
+    }
+    #notice-display > div.relative.w-full {
+        border: 1px solid #d4a72c !important;
+        box-shadow: 0 0 0 1px #6f4528, 0 9px 24px rgba(67,39,25,.15) !important;
+    }
+    .notice-card-number-row {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        margin:10px 0 4px;
+        padding:9px 10px;
+        border:1px solid rgba(212,167,44,.48);
+        border-left:3px solid #8a5b2f;
+        border-radius:12px;
+        background:linear-gradient(135deg,#fffaf0,#f8edcf);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+    }
+    .notice-card-number-value {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-weight:800;
+        color:#4a2c1b;
+        letter-spacing:.7px;
+        word-break:break-all;
+    }
+    .copy-card-btn {
+        flex:0 0 auto;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:5px;
+        border:1px solid #c8972e;
+        border-radius:9px;
+        background:#5b371e;
+        color:#fff8e5;
+        padding:6px 9px;
+        font-size:11px;
+        font-weight:800;
+        cursor:pointer;
+        box-shadow:0 4px 10px rgba(67,39,25,.14);
+        transition:transform .18s ease, background .18s ease;
+    }
+    .copy-card-btn:hover { transform:translateY(-1px); background:#754a28; }
+    .copy-card-btn.copied { background:#287a50; border-color:#8ed1ae; }
+    .whatsapp-icon { width:18px; height:18px; flex:0 0 auto; fill:currentColor; }
+
     /* --- Footer: Clean White PNG/Transparent Banner --- */
     .site-footer-with-banner {
         position: relative;
@@ -225,6 +377,471 @@
         }
         .responsive-table td > span, .responsive-table td > div { text-align: right; }
     }
+
+
+    /* =========================================================
+       PREMIUM COFFEE + GOLD DESIGN SYSTEM
+       Added without removing existing functionality.
+       ========================================================= */
+    :root {
+        --premium-coffee-950: #24150f;
+        --premium-coffee-900: #2f1b12;
+        --premium-coffee-800: #432719;
+        --premium-gold: #d4a72c;
+        --premium-gold-soft: #f5e3a8;
+        --premium-cream: #fffaf0;
+        --premium-navy: #172235;
+        --premium-green: #237a4b;
+    }
+    body {
+        background-color: #f7f3eb;
+        background-image: radial-gradient(circle at 12% 15%, rgba(212,167,44,.08) 0 2px, transparent 3px), radial-gradient(circle at 85% 75%, rgba(67,39,25,.05) 0 2px, transparent 3px), linear-gradient(135deg, rgba(255,255,255,.72), rgba(247,243,235,.9));
+        background-size: 24px 24px, 30px 30px, auto;
+    }
+    .hover-card {
+        border-color: rgba(212,167,44,.18) !important;
+        box-shadow: 0 8px 24px rgba(67,39,25,.07) !important;
+        background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(255,250,240,.92)) !important;
+    }
+    .hover-card:hover { box-shadow: 0 18px 40px rgba(67,39,25,.14) !important; border-color: rgba(212,167,44,.45) !important; }
+    #view-home .hover-card .text-slate-500 { color: #806a55 !important; }
+    #view-home .hover-card .text-green-600 { color: var(--premium-green) !important; }
+    #view-home .hover-card .text-green-500 { color: #4b966a !important; }
+    #view-home .hover-card .text-red-500 { color: #a34c3c !important; }
+    #view-home .hover-card .bg-green-50 { background: #edf7ef !important; }
+    #view-home .hover-card .bg-red-50 { background: #fbefeb !important; }
+
+    .notice-premium {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(212,167,44,.34) !important;
+        background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(255,250,240,.97)) !important;
+        box-shadow: 0 18px 50px rgba(67,39,25,.13), 0 2px 8px rgba(212,167,44,.08) !important;
+    }
+    .notice-premium::before { content:""; position:absolute; inset:0; pointer-events:none; background: radial-gradient(circle at 100% 0%, rgba(212,167,44,.18), transparent 28%), radial-gradient(circle at 0% 100%, rgba(67,39,25,.06), transparent 25%); z-index:0; }
+    .notice-premium > * { position:relative; z-index:1; }
+    .notice-premium-header {
+        background: linear-gradient(135deg, var(--premium-coffee-950), var(--premium-coffee-800)) !important;
+        border-bottom: 1px solid rgba(245,227,168,.22) !important;
+        color: #fff7df !important;
+        position:relative; overflow:hidden;
+    }
+    .notice-premium-header::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:linear-gradient(90deg, transparent, var(--premium-gold), transparent); }
+    .notice-premium-header h3 { color:#fff8e5 !important; letter-spacing:.2px; }
+    .notice-premium-header .notice-live-dot { width:12px !important; height:12px !important; background:#e9b52f !important; box-shadow:0 0 0 5px rgba(212,167,44,.12), 0 0 16px rgba(212,167,44,.45); }
+    .notice-premium-header .notice-live-ping { background:#e9b52f !important; }
+    .notice-premium-body { background:linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,250,240,.72)); }
+    #notice-display { color:var(--premium-navy) !important; }
+    #notice-display > div.relative.w-full { border:2px solid rgba(212,167,44,.48); box-shadow:0 14px 30px rgba(67,39,25,.14); border-radius:20px !important; background:var(--premium-coffee-900); padding:4px; }
+    #notice-display > div.relative.w-full > .slide-wrapper { border-radius:16px; overflow:hidden; }
+    #notice-display .animate-kenburns { border-radius:16px; }
+    #notice-display .prose { margin-top:8px; padding:15px 16px; border-radius:16px; background:rgba(255,255,255,.82); border:1px solid rgba(212,167,44,.20); box-shadow:inset 0 1px 0 rgba(255,255,255,.8); }
+    #notice-display .prose p { color:#3f332a; font-weight:500; line-height:1.8; margin:0 0 7px; }
+    #notice-display .prose p:last-child { margin-bottom:0; }
+    #notice-display a { margin-top:12px; border:1px solid var(--premium-gold) !important; background:linear-gradient(135deg, var(--premium-coffee-950), var(--premium-coffee-800)) !important; color:#ffe9a8 !important; border-radius:14px !important; padding:11px 16px !important; box-shadow:0 8px 18px rgba(67,39,25,.18); transition:transform .2s ease, box-shadow .2s ease, filter .2s ease; }
+    #notice-display a:hover { transform:translateY(-2px); box-shadow:0 12px 24px rgba(67,39,25,.24); filter:brightness(1.08); }
+    #notice-display .text-indigo-400 { color:var(--premium-gold) !important; }
+    #important-links-display > * { border-color:rgba(212,167,44,.22) !important; background:rgba(255,250,240,.9) !important; }
+    #member-list-cards > div { border-color:rgba(212,167,44,.22) !important; background:linear-gradient(145deg, rgba(255,255,255,.97), rgba(255,250,240,.94)) !important; box-shadow:0 10px 28px rgba(67,39,25,.08) !important; }
+    #member-list-cards > div:hover { border-color:rgba(212,167,44,.5) !important; box-shadow:0 18px 38px rgba(67,39,25,.14) !important; }
+    #member-list-cards .view-profile-btn { background:linear-gradient(135deg, var(--premium-coffee-950), var(--premium-coffee-800)) !important; border-color:var(--premium-gold) !important; color:#ffe7a0 !important; }
+    #member-list-cards .view-profile-btn:hover { background:linear-gradient(135deg, #51301e, #7a512e) !important; color:#fff8e5 !important; }
+    @media (max-width:640px) {
+        .notice-premium { border-radius:20px !important; box-shadow:0 12px 32px rgba(67,39,25,.11) !important; }
+        .notice-premium-header { padding:14px 15px !important; }
+        .notice-premium-body { padding:14px !important; }
+        #notice-display > div.relative.w-full { height:13.5rem !important; border-radius:17px !important; }
+        #notice-display .prose { padding:13px 14px; font-size:.86rem; }
+        #notice-display a { font-size:.88rem !important; }
+        .premium-logo-wrap { width:48px; height:48px; }
+        .premium-logo-wrap img { width:39px !important; height:39px !important; }
+        .notice-card-number-row { align-items:flex-start; }
+        .notice-card-number-value { font-size:.78rem; letter-spacing:.4px; }
+        .copy-card-btn { padding:6px 8px; }
+    }
+
+  
+
+    /* =========================================================
+       PREMIUM MEMBER PROFILE CARD — COFFEE / GOLDEN EDITION
+       Inspired by the supplied member-card reference image.
+       ========================================================= */
+    #member-list-cards > div.member-premium-card {
+        position: relative !important;
+        overflow: hidden !important;
+        isolation: isolate !important;
+        padding: 0 !important;
+        min-height: 440px;
+        border: 1px solid rgba(212,167,44,.72) !important;
+        border-radius: 24px !important;
+        background: #fff8e7 !important;
+        box-shadow: 0 12px 35px rgba(67,39,25,.14), 0 2px 0 rgba(255,255,255,.85) inset !important;
+        transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease !important;
+    }
+    #member-list-cards > div.member-premium-card:hover {
+        transform: translateY(-3px);
+        border-color: #f1cf65 !important;
+        box-shadow: 0 18px 45px rgba(67,39,25,.20), 0 2px 0 rgba(255,255,255,.9) inset !important;
+    }
+
+    .member-premium-card .mp-top {
+        position: relative;
+        min-height: 185px;
+        padding: 25px 26px 30px;
+        color: #fff7dc;
+        background:
+          radial-gradient(circle at 82% 20%, rgba(212,167,44,.18), transparent 20%),
+          radial-gradient(circle at 66% 85%, rgba(244,217,138,.08), transparent 28%),
+          linear-gradient(135deg, #2a170e 0%, #4a2a18 52%, #28160d 100%);
+        overflow: hidden;
+    }
+    .member-premium-card .mp-top::before {
+        content:"";
+        position:absolute;
+        inset:12px;
+        border:1px solid rgba(244,217,138,.28);
+        border-radius:18px;
+        pointer-events:none;
+    }
+    .member-premium-card .mp-top::after {
+        content:"";
+        position:absolute;
+        width:220px;
+        height:220px;
+        right:-95px;
+        top:-120px;
+        border-radius:50%;
+        border:1px solid rgba(244,217,138,.22);
+        box-shadow:0 0 0 12px rgba(212,167,44,.035), 0 0 0 26px rgba(212,167,44,.025);
+        pointer-events:none;
+    }
+    .member-premium-card .mp-top-wave {
+        position:absolute;
+        z-index:1;
+        left:-5%;
+        bottom:-58px;
+        width:110%;
+        height:105px;
+        background:#fff8e7;
+        border-top:3px solid #d4a72c;
+        border-radius:50% 50% 0 0 / 30% 30% 0 0;
+        transform:rotate(-1.3deg);
+        box-shadow:0 -2px 0 rgba(255,239,177,.7);
+    }
+    .member-premium-card .mp-top-wave::before {
+        content:"";
+        position:absolute;
+        left:0;
+        right:0;
+        top:-6px;
+        height:2px;
+        background:rgba(255,248,224,.9);
+    }
+
+    .member-premium-card .mp-photo-wrap {
+        position:relative;
+        z-index:3;
+        flex:0 0 auto;
+        width:94px;
+        height:94px;
+        border-radius:50%;
+        padding:4px;
+        background:linear-gradient(135deg,#fff4bd,#d4a72c 48%,#8f621f);
+        box-shadow:0 0 0 2px rgba(255,247,212,.95), 0 5px 20px rgba(0,0,0,.28), 0 0 18px rgba(212,167,44,.35);
+    }
+    .member-premium-card .mp-photo {
+        width:100%;
+        height:100%;
+        display:block;
+        object-fit:cover;
+        border-radius:50%;
+        border:2px solid #fff8e8;
+        background:#eadfca;
+    }
+    .member-premium-card .mp-crown-shield {
+        position:absolute;
+        z-index:5;
+        right:-11px;
+        bottom:-3px;
+        width:39px;
+        height:45px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#fff1a9;
+        font-size:18px;
+        background:linear-gradient(145deg,#6a421f,#2e190d);
+        border:2px solid #d4a72c;
+        clip-path:polygon(50% 0,92% 18%,85% 78%,50% 100%,15% 78%,8% 18%);
+        filter:drop-shadow(0 3px 5px rgba(0,0,0,.3));
+    }
+    .member-premium-card .mp-title {
+        min-width:0;
+        padding-top:2px;
+    }
+    .member-premium-card .mp-name {
+        color:#fff0ad;
+        font-size:clamp(20px,2.2vw,29px);
+        line-height:1.15;
+        font-weight:800;
+        letter-spacing:.1px;
+        text-shadow:0 2px 8px rgba(0,0,0,.35);
+    }
+    .member-premium-card .mp-laurel {
+        display:inline-flex;
+        margin-left:7px;
+        color:#f4d98a;
+        font-size:20px;
+        vertical-align:middle;
+        text-shadow:0 0 9px rgba(212,167,44,.7);
+    }
+    .member-premium-card .mp-contact-row {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        margin-top:10px;
+        color:#fffdf2;
+        font-size:13px;
+        font-weight:700;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+    .member-premium-card .mp-contact-icon {
+        width:28px;
+        height:28px;
+        flex:0 0 28px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border:1px solid #d4a72c;
+        border-radius:8px;
+        color:#ffe8a2;
+        background:rgba(44,24,14,.72);
+        box-shadow:inset 0 0 0 1px rgba(255,246,197,.08);
+    }
+    .member-premium-card .mp-contact-icon svg { width:15px; height:15px; }
+    .member-premium-card .mp-card-icon {
+        width:31px;
+        height:21px;
+        border-radius:4px;
+        position:relative;
+        background:linear-gradient(180deg,#f7d75d 0 30%,#fff1bd 31% 53%,#d9a72d 54% 100%);
+        border:1px solid rgba(255,245,197,.8);
+        box-shadow:0 2px 8px rgba(0,0,0,.22);
+    }
+    .member-premium-card .mp-card-icon::after {
+        content:"";
+        position:absolute;
+        left:5px;
+        right:5px;
+        bottom:4px;
+        height:3px;
+        border-radius:3px;
+        background:#79502b;
+        opacity:.7;
+    }
+    .member-premium-card .mp-vector-dots {
+        position:absolute;
+        z-index:2;
+        right:40px;
+        bottom:31px;
+        width:90px;
+        height:42px;
+        opacity:.48;
+        background-image:radial-gradient(circle,#d4a72c 1.7px,transparent 2px);
+        background-size:14px 14px;
+        mask-image:linear-gradient(90deg,transparent,#000 30%,#000);
+        -webkit-mask-image:linear-gradient(90deg,transparent,#000 30%,#000);
+    }
+
+    .member-premium-card .mp-body {
+        position:relative;
+        z-index:2;
+        padding:16px 26px 23px;
+        background:
+          radial-gradient(circle at 0 100%, rgba(212,167,44,.06), transparent 25%),
+          linear-gradient(180deg,#fff8e7,#fffdf7 72%,#fff7e5);
+    }
+    .member-premium-card .mp-rank-row {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        padding:11px 13px;
+        border:1px solid rgba(212,167,44,.34);
+        border-radius:14px;
+        background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(248,231,190,.48));
+        box-shadow:0 2px 0 rgba(255,255,255,.9) inset;
+    }
+    .member-premium-card .mp-rank {
+        display:flex;
+        align-items:center;
+        gap:9px;
+        min-width:0;
+        color:#3b2418;
+        font-weight:800;
+        font-size:15px;
+    }
+    .member-premium-card .mp-medal {
+        width:37px;
+        height:37px;
+        flex:0 0 37px;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:radial-gradient(circle at 35% 28%,#fff1a6,#d4a72c 58%,#80551e);
+        border:2px solid #f5df96;
+        box-shadow:0 2px 7px rgba(117,74,25,.2), inset 0 1px 0 rgba(255,255,255,.75);
+        font-size:18px;
+    }
+    .member-premium-card .mp-speed {
+        flex:0 0 auto;
+        padding:9px 13px;
+        border-radius:12px;
+        color:#3b2418;
+        font-weight:800;
+        font-size:12px;
+        background:linear-gradient(135deg,#f6dc77,#d4a72c 55%,#f1cf61);
+        border:1px solid #b98620;
+        box-shadow:0 2px 7px rgba(126,83,24,.18), inset 0 1px 0 rgba(255,255,255,.7);
+    }
+    .member-premium-card .mp-stat-row {
+        position:relative;
+        display:flex;
+        align-items:center;
+        gap:12px;
+        min-height:65px;
+        margin-top:12px;
+        padding:10px 13px;
+        border-radius:15px;
+        border:1px solid rgba(212,167,44,.42);
+        background:linear-gradient(135deg,#fffdf7,#f9edcf);
+        box-shadow:0 2px 0 rgba(255,255,255,.9) inset;
+        overflow:hidden;
+    }
+    .member-premium-card .mp-stat-row::after {
+        content:"❧";
+        position:absolute;
+        right:6px;
+        bottom:-7px;
+        font-size:37px;
+        color:rgba(212,167,44,.25);
+        transform:rotate(-12deg);
+    }
+    .member-premium-card .mp-stat-icon {
+        width:47px;
+        height:47px;
+        flex:0 0 47px;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#f8df80;
+        background:linear-gradient(145deg,#5a351d,#2c180e);
+        border:2px solid #d4a72c;
+        box-shadow:0 3px 9px rgba(77,45,22,.2), inset 0 1px 0 rgba(255,255,255,.1);
+        font-size:22px;
+    }
+    .member-premium-card .mp-stat-label {
+        color:#4b2b19;
+        font-size:15px;
+        font-weight:700;
+    }
+    .member-premium-card .mp-stat-value {
+        margin-left:auto;
+        padding-right:12px;
+        color:#3a2115;
+        font-size:clamp(18px,2.2vw,27px);
+        font-weight:900;
+        white-space:nowrap;
+    }
+    .member-premium-card .mp-loan .mp-stat-value { color:#8e2f1e; }
+    .member-premium-card .mp-action {
+        position:relative;
+        width:100%;
+        margin-top:14px;
+        min-height:48px;
+        border-radius:14px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:9px;
+        color:#ffe9a2 !important;
+        background:linear-gradient(135deg,#2a170e,#4a2a18 55%,#2c180f) !important;
+        border:1px solid #d4a72c !important;
+        box-shadow:0 5px 15px rgba(61,34,17,.2), inset 0 1px 0 rgba(255,245,194,.12);
+        font-size:14px;
+        font-weight:800;
+        transition:transform .2s ease, filter .2s ease, box-shadow .2s ease;
+    }
+    .member-premium-card .mp-action:hover {
+        filter:brightness(1.12);
+        transform:translateY(-1px);
+        box-shadow:0 8px 20px rgba(61,34,17,.26), 0 0 0 2px rgba(212,167,44,.10);
+    }
+    .member-premium-card .mp-action svg { width:19px; height:19px; }
+    .member-premium-card .mp-flourish {
+        position:absolute;
+        pointer-events:none;
+        opacity:.22;
+        color:#d4a72c;
+        font-size:46px;
+        line-height:1;
+    }
+    .member-premium-card .mp-flourish.left { left:5px; top:5px; transform:rotate(-18deg); }
+    .member-premium-card .mp-flourish.right { right:6px; bottom:8px; transform:rotate(14deg); }
+
+    @media (max-width: 640px) {
+        #member-list-cards > div.member-premium-card { min-height: 0; border-radius:20px !important; }
+        .member-premium-card .mp-top { padding:20px 18px 28px; min-height:172px; }
+        .member-premium-card .mp-body { padding:13px 18px 18px; }
+        .member-premium-card .mp-photo-wrap { width:78px; height:78px; }
+        .member-premium-card .mp-crown-shield { width:34px; height:39px; font-size:15px; }
+        .member-premium-card .mp-name { font-size:20px; }
+        .member-premium-card .mp-contact-row { font-size:11px; margin-top:7px; }
+        .member-premium-card .mp-contact-icon { width:25px; height:25px; flex-basis:25px; }
+        .member-premium-card .mp-card-icon { width:27px; height:19px; }
+        .member-premium-card .mp-rank { font-size:12px; }
+        .member-premium-card .mp-speed { padding:8px 9px; font-size:10px; }
+        .member-premium-card .mp-stat-label { font-size:13px; }
+        .member-premium-card .mp-stat-value { font-size:19px; }
+    }
+
+
+
+/* ===== HOME REFERENCE LAYOUT / PREMIUM BOTTOM NAV ===== */
+.home-app-drawer{display:none!important}
+.glass-header{height:112px!important;background:#3a2114!important;border-bottom:2px solid #d4a72c!important;box-shadow:0 8px 28px rgba(43,25,15,.35)!important}
+.glass-header::before{background-size:cover!important;background-position:center!important}
+.glass-header>div,.glass-header>div>div{height:100%!important}
+.glass-header h1{color:#3a2114!important;-webkit-text-fill-color:#3a2114!important;background:none!important;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.glass-header .text-slate-500{color:#6d4a2d!important}
+.premium-logo-wrap{width:70px!important;height:70px!important}.premium-logo-wrap img{width:58px!important;height:58px!important}
+#open-notif-btn{background:rgba(58,33,20,.82)!important;border:1px solid #d4a72c!important;color:#ffe7a0!important;border-radius:14px!important;box-shadow:0 0 0 2px rgba(255,238,170,.12),0 6px 18px rgba(0,0,0,.22)!important}#open-notif-btn svg{color:#ffe7a0!important}
+#view-home{gap:0!important}
+#view-home .hover-card{border:1px solid #d4a72c!important;border-radius:22px!important;background:linear-gradient(145deg,#fff9e9,#f6e6bb)!important;box-shadow:0 8px 22px rgba(58,33,20,.18),inset 0 1px 0 rgba(255,255,255,.95)!important;min-height:132px}
+#view-home .hover-card::after{content:"";position:absolute;inset:7px;border:1px solid rgba(212,167,44,.28);border-radius:17px;pointer-events:none}
+#view-home .hover-card .text-slate-500{color:#4b301f!important}#view-home .hover-card .text-slate-800{color:#2f1b12!important}#view-home .hover-card .text-green-600{color:#16824d!important}#view-home .hover-card .text-red-500{color:#ad3927!important}
+.notice-premium{margin-top:28px!important;border:2px solid #d4a72c!important;border-radius:24px!important;background:#fff8e7!important;box-shadow:0 14px 36px rgba(58,33,20,.25),0 0 0 1px #6f4528,inset 0 1px 0 #fff!important}
+.notice-premium-header{min-height:82px;padding:14px 20px!important;background:linear-gradient(135deg,#2d190f,#4c2b18 55%,#2d190f)!important;border-bottom:2px solid #d4a72c!important}
+.notice-premium-header h3{font-size:clamp(24px,5vw,40px)!important;color:#ffe8a1!important;text-shadow:0 2px 8px rgba(0,0,0,.4)}.notice-premium-header h3 .text-xl{font-size:30px!important}
+.notice-premium-body{padding:14px!important;background:linear-gradient(180deg,#fff8e7,#fffdf6)}
+#notice-display>div.relative.w-full{margin-bottom:0!important;border:2px solid #d4a72c!important;border-radius:20px!important;background:#4a2a18!important;box-shadow:0 0 0 1px #8a5b2f,0 8px 22px rgba(58,33,20,.22)!important;padding:5px!important}#notice-display .animate-kenburns{border-radius:15px!important}
+/* Scrolling title: text only, immediately below the notice image. */
+#notice-ticker-slot{display:block;width:100%;overflow:hidden;margin:7px 0 4px;border:1px solid rgba(212,167,44,.38);border-radius:10px;background:linear-gradient(90deg,#3b2113,#5a321a,#3b2113);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+#notice-ticker-slot.hidden{display:none!important}
+#notice-ticker-slot .ticker-scroll-wrapper{height:38px;display:flex;align-items:center;overflow:hidden;width:100%}
+#notice-ticker-slot .ticker-item{display:inline-block;flex-shrink:0;white-space:nowrap;padding-right:70px;animation:marquee 24s linear infinite;color:#ffe9a8!important;font-size:13px;font-weight:700;line-height:38px}
+#notice-ticker-slot .ticker-item span{color:#d4a72c!important;margin-left:30px;margin-right:30px}
+.premium-bottom-nav{position:fixed;left:0;right:0;bottom:0;height:72px;z-index:120;background:linear-gradient(180deg,#2d190f,#1f120c);border-top:1px solid #8a5b2f;box-shadow:0 -8px 28px rgba(0,0,0,.34);display:grid;grid-template-columns:repeat(5,1fr);padding:0 3px calc(4px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
+.pbn-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#d6ad5a!important;font-size:11px;font-weight:700;text-decoration:none;background:transparent;border:0;min-width:0;cursor:pointer}.pbn-item:hover{color:#ffe8a0!important}.pbn-icon{width:27px;height:27px;display:flex;align-items:center;justify-content:center}.pbn-icon svg{width:25px;height:25px}.pbn-notice{color:#f5d16d!important}.pbn-icon-featured{width:56px;height:56px;margin-top:-27px;border-radius:50%;background:radial-gradient(circle,#6a421f,#2b170d 68%);border:2px solid #d4a72c;box-shadow:0 0 0 3px rgba(255,228,143,.12),0 0 22px rgba(212,167,44,.45);color:#ffe8a0}.pbn-icon-featured svg{width:30px;height:30px}.pbn-item[data-nav="home"]::after,.pbn-item[data-nav="members"]::after,.pbn-item[data-nav="finance"]::after{content:"";position:absolute;bottom:0;width:0;height:2px;background:#d4a72c;transition:.2s}.pbn-item.is-active::after{width:26px}.pbn-item.is-active{color:#ffe8a0!important}
+.premium-menu-sheet{position:fixed;inset:0;z-index:200}.premium-menu-sheet.hidden{display:none}.premium-menu-backdrop{position:absolute;inset:0;background:rgba(15,8,4,.62);backdrop-filter:blur(3px)}.premium-menu-panel{position:absolute;left:0;right:0;bottom:0;padding:12px 16px calc(92px + env(safe-area-inset-bottom));border-radius:26px 26px 0 0;background:linear-gradient(160deg,#3a2114,#1f120c);border-top:1px solid #d4a72c;box-shadow:0 -18px 45px rgba(0,0,0,.45);animation:menuSheetIn .25s ease-out}.premium-menu-handle{width:48px;height:4px;border-radius:999px;background:#b98b39;margin:0 auto 14px}.menu-sheet-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:72px;border:1px solid rgba(212,167,44,.45);border-radius:15px;background:linear-gradient(145deg,#4a2a18,#2b180e);color:#ffe7a0!important;text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}.menu-sheet-item span{font-size:23px}.menu-sheet-item b{font-size:11px}@keyframes menuSheetIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+body{padding-bottom:88px!important}main{padding-bottom:96px!important}
+@media (min-width:641px){.glass-header{height:150px!important}.premium-logo-wrap{width:88px!important;height:88px!important}.premium-logo-wrap img{width:74px!important;height:74px!important}main{padding-top:166px!important}.premium-bottom-nav{height:76px}.pbn-item{font-size:12px}.notice-premium-header{min-height:92px}.notice-premium-body{padding:18px}.home-app-drawer{display:none!important}}
+@media (max-width:640px){main{padding-top:126px!important}.glass-header .max-w-7xl{padding-left:9px!important;padding-right:9px!important}.glass-header h1{font-size:13px!important;line-height:1.1!important}.glass-header h1+span{font-size:9px!important}.premium-logo-wrap{width:62px!important;height:62px!important}.premium-logo-wrap img{width:51px!important;height:51px!important}.glass-header .flex.items-center.gap-3.flex-1{gap:8px!important}.glass-header .flex.items-center.gap-3.shrink-0{gap:4px!important}.notice-premium{margin-top:22px!important}.notice-premium-header{padding:11px 13px!important;min-height:64px}.notice-premium-header h3{font-size:23px!important}.notice-premium-header h3 .text-xl{font-size:23px!important}.notice-premium-body{padding:9px!important}#notice-display>div.relative.w-full{height:15.3rem!important}#notice-ticker-slot .ticker-item{font-size:12px}.pbn-item{font-size:10px}.pbn-icon{height:25px}.pbn-icon-featured{width:54px;height:54px}.pbn-icon-featured svg{width:28px;height:28px}}
+
   </style>
 </head>
 <body class="text-slate-800 antialiased relative">
@@ -300,9 +917,10 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16 sm:h-20 gap-4">
           <div class="flex items-center gap-3 flex-1">
-            <a href="#" class="relative group cursor-pointer shrink-0" title="হোম পেইজে ফিরে যান">
-                <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
-                <img id="header-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS" alt="লোগো" class="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white object-cover bg-white shadow-sm">
+            <a href="#" class="premium-logo-wrap group cursor-pointer shrink-0" title="হোম পেইজে ফিরে যান" aria-label="হোম পেইজে ফিরে যান">
+                <span class="logo-sparkle one"></span>
+                <span class="logo-sparkle two"></span>
+                <img id="header-logo-img" src="https://placehold.co/48x48/FFFFFF/6366f1?text=ESCS" alt="লোগো" class="relative rounded-full object-cover bg-white">
             </a>
             <div class="flex flex-col flex-1">
               <h1 class="text-[15px] sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-pink-600 leading-tight">
@@ -354,22 +972,23 @@
           </div>
 
           <!-- Middle Section: Notice Board -->
-          <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden group hover:shadow-md transition duration-300">
-               <div class="bg-slate-50/80 backdrop-blur-sm border-b border-slate-100/50 p-4 flex items-center justify-between">
-                   <h3 class="font-bold text-slate-700 flex items-center gap-2">📢 নোটিশ বোর্ড</h3>
+          <div class="notice-premium bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100/50 overflow-hidden group hover:shadow-md transition duration-300">
+               <div class="notice-premium-header bg-slate-50/80 backdrop-blur-sm border-b border-slate-100/50 p-4 flex items-center justify-between">
+                   <h3 class="font-bold text-slate-700 flex items-center gap-2"><span class="text-xl">📢</span> নোটিশ বোর্ড</h3>
                    <span class="flex h-3 w-3 relative">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                      <span class="notice-live-ping animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span class="notice-live-dot relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                    </span>
                </div>
-               <div class="p-4">
+               <div class="notice-premium-body p-4">
                    <div id="important-links-display" class="hidden mb-4"></div>
                    <div id="notice-display" class="text-slate-600 text-sm"></div>
+                   <div id="notice-ticker-slot" class="hidden"></div>
                </div>
           </div>
 
           <!-- App Drawer / Icon Navigation Grid -->
-          <div class="pt-2">
+          <div class="pt-2 home-app-drawer">
               <h3 class="text-sm sm:text-base font-bold text-slate-700 flex items-center gap-2 mb-4 px-1">
                   <span class="w-1.5 h-5 bg-indigo-500 rounded-full"></span> 
                   মেনু
@@ -462,7 +1081,7 @@
         </div>
         
         <!-- Members Grid -->
-        <div id="member-list-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
+        <div id="member-list-cards" class="grid grid-cols-1 xl:grid-cols-2 gap-5 sm:gap-6"></div>
         
         <!-- Empty Placeholder -->
         <div id="member-list-placeholder" class="hidden py-16 bg-white/50 rounded-2xl border border-slate-100 flex flex-col items-center justify-center text-slate-400">
@@ -773,17 +1392,28 @@
     </footer>
 
     <!-- ================= END SITE BOTTOM BANNER ================= -->
+    <!-- Notice ticker is rendered directly below the notice image. -->
+    <div id="bottom-ticker" class="hidden" aria-hidden="true"><div id="ticker-wrapper"></div></div>
 
-    <!-- FIXED BOTTOM TICKER -->
-    <div id="bottom-ticker" class="fixed bottom-0 left-0 w-full bg-slate-900 text-white z-40 border-t-2 border-indigo-500 hidden shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
-        <div class="flex items-center h-10 sm:h-12 overflow-hidden relative">
-            <div class="bg-indigo-600 text-white px-4 h-full flex items-center font-bold z-10 shadow-lg whitespace-nowrap text-xs sm:text-sm tracking-wide">
-                📢 আপডেট:
-            </div>
-            <div class="w-full overflow-hidden relative h-full flex items-center bg-slate-800/50 backdrop-blur-sm">
-                <div id="ticker-wrapper" class="ticker-scroll-wrapper"></div>
-            </div>
+    <!-- PREMIUM MOBILE BOTTOM NAVIGATION -->
+    <nav id="premium-bottom-nav" class="premium-bottom-nav" aria-label="প্রধান নেভিগেশন">
+      <a href="#" class="pbn-item" data-nav="home" aria-label="হোম"><span class="pbn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5 12 3l9 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-5v-6h-5v6h-5A1.5 1.5 0 0 1 3 19.5v-9Z"/></svg></span><span>হোম</span></a>
+      <a href="#members" class="pbn-item" data-nav="members" aria-label="সদস্য"><span class="pbn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path stroke-linecap="round" d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>সদস্য</span></a>
+      <a href="#notice" class="pbn-item pbn-notice" data-nav="notice" aria-label="নোটিশ"><span class="pbn-icon pbn-icon-featured"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m3 11 18-6v14L3 13v-2Z"/><path stroke-linecap="round" d="M11 15.5 9.5 21H6l2-7"/></svg></span><span>নোটিশ</span></a>
+      <a href="#finance" class="pbn-item" data-nav="finance" aria-label="লেনদেন"><span class="pbn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h13l-3-3M17 17H4l3 3"/><path stroke-linecap="round" d="M20 7v4a2 2 0 0 1-2 2H7M4 17v-4a2 2 0 0 1 2-2h11"/></svg></span><span>লেনদেন</span></a>
+      <button type="button" class="pbn-item pbn-menu-btn" id="mobile-menu-open" aria-label="মেনু" aria-expanded="false"><span class="pbn-icon"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span>মেনু</span></button>
+    </nav>
+
+    <!-- PREMIUM MOBILE MENU SHEET -->
+    <div id="premium-menu-sheet" class="premium-menu-sheet hidden" aria-hidden="true">
+      <div class="premium-menu-backdrop" id="premium-menu-backdrop"></div>
+      <section class="premium-menu-panel" role="dialog" aria-modal="true" aria-label="মেনু">
+        <div class="premium-menu-handle"></div>
+        <div class="flex items-center justify-between mb-4"><div><h3 class="text-lg font-extrabold text-[#fff0ad]">প্রধান মেনু</h3><p class="text-xs text-[#d9b875] mt-0.5">দ্রুত প্রয়োজনীয় বিভাগে যান</p></div><button id="premium-menu-close" class="w-9 h-9 rounded-full border border-[#d4a72c]/60 text-[#ffe7a0] flex items-center justify-center">✕</button></div>
+        <div class="grid grid-cols-3 gap-3">
+          <a href="#ranking" class="menu-sheet-item"><span>🏆</span><b>র‌্যাংক</b></a><a href="#fund" class="menu-sheet-item"><span>💰</span><b>তহবিল</b></a><a href="#lottery" class="menu-sheet-item"><span>🎟️</span><b>লটারি</b></a><a href="#finance" class="menu-sheet-item"><span>📊</span><b>হিসাব</b></a><a href="#members" class="menu-sheet-item"><span>👥</span><b>সদস্য</b></a><a href="#" class="menu-sheet-item"><span>⌂</span><b>হোম</b></a>
         </div>
+      </section>
     </div>
 
     <!-- Sync Status -->
@@ -1216,7 +1846,28 @@
                 else { el.classList.add('hidden'); el.classList.remove('fade-in-up'); }
             }
         });
+        updatePremiumNav(viewId);
     }
+
+    // Premium bottom navigation active state + menu sheet.
+    function updatePremiumNav(viewId) {
+        const nav = document.getElementById('premium-bottom-nav');
+        if(!nav) return;
+        nav.querySelectorAll('[data-nav]').forEach(el => el.classList.remove('is-active'));
+        const map = {'view-home':'home','view-members':'members','view-finance':'finance'};
+        const key = map[viewId];
+        if(key) { const el = nav.querySelector(`[data-nav="${key}"]`); if(el) el.classList.add('is-active'); }
+        if(window.location.hash === '#notice') { const el=nav.querySelector('[data-nav="notice"]'); if(el) el.classList.add('is-active'); }
+    }
+
+    const premiumMenuSheet = document.getElementById('premium-menu-sheet');
+    const openPremiumMenu = () => { if(!premiumMenuSheet) return; premiumMenuSheet.classList.remove('hidden'); premiumMenuSheet.setAttribute('aria-hidden','false'); const b=document.getElementById('mobile-menu-open'); if(b) b.setAttribute('aria-expanded','true'); };
+    const closePremiumMenu = () => { if(!premiumMenuSheet) return; premiumMenuSheet.classList.add('hidden'); premiumMenuSheet.setAttribute('aria-hidden','true'); const b=document.getElementById('mobile-menu-open'); if(b) b.setAttribute('aria-expanded','false'); };
+    document.getElementById('mobile-menu-open')?.addEventListener('click', openPremiumMenu);
+    document.getElementById('premium-menu-close')?.addEventListener('click', closePremiumMenu);
+    document.getElementById('premium-menu-backdrop')?.addEventListener('click', closePremiumMenu);
+    document.querySelectorAll('#premium-menu-sheet a').forEach(a => a.addEventListener('click', closePremiumMenu));
+
 
     window.addEventListener('hashchange', () => {
         const h = window.location.hash;
@@ -1230,6 +1881,12 @@
             closeAllModals();
             switchView('view-members');
             window.scrollTo(0, 0);
+        } 
+        else if (h === '#notice') {
+            closeAllModals();
+            switchView('view-home');
+            window.scrollTo(0, 0);
+            updatePremiumNav('view-home'); const ne=document.querySelector('[data-nav="notice"]'); if(ne) ne.classList.add('is-active'); setTimeout(() => { const n = document.querySelector('.notice-premium'); if(n) n.scrollIntoView({behavior:'smooth',block:'start'}); }, 60);
         } 
         else if (h === '#finance') {
             closeAllModals();
@@ -2071,31 +2728,62 @@
                 }
 
                 const card = document.createElement('div');
-                card.className = 'bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-200 transition group flex flex-col h-full relative overflow-hidden';
+                card.className = 'member-premium-card group';
                 card.innerHTML = `
-                    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition text-6xl select-none">💳</div>
-                    <div class="flex items-start gap-4 mb-4 relative z-10">
-                        <img class="w-14 h-14 rounded-full object-cover border-2 border-indigo-100 shadow-sm mt-1" src="${m.photoUrl||ph}" onerror="this.src='${ph}'">
-                        <div class="overflow-hidden w-full">
-                            <h4 class="font-bold text-slate-800 truncate text-[18px] leading-tight">${m.name}</h4>
-                            ${achHtml}
-                            <div class="flex flex-col gap-1 text-[13px] text-slate-600 ${achHtml ? 'mt-2.5' : 'mt-1.5'}">
-                                <p class="text-indigo-600 font-semibold flex items-center gap-1.5"><span class="text-sm">💳</span> ${cardNum}</p>
-                                <p class="flex items-center gap-1.5"><span class="text-sm">📞</span> <span class="font-medium tracking-wide">${m.phone || 'N/A'}</span></p>
+                    <div class="mp-top">
+                        <div class="mp-top-wave"></div>
+                        <div class="mp-vector-dots" aria-hidden="true"></div>
+                        <div class="flex items-center gap-4 relative z-10">
+                            <div class="mp-photo-wrap">
+                                <img class="mp-photo" src="${m.photoUrl||ph}" onerror="this.src='${ph}'" alt="${m.name || 'সদস্য'}">
+                                <div class="mp-crown-shield" aria-hidden="true">♛</div>
+                            </div>
+                            <div class="mp-title flex-1 min-w-0">
+                                <h4 class="mp-name truncate" title="${m.name || ''}">${m.name || 'নাম নেই'} <span class="mp-laurel" aria-hidden="true">♛</span></h4>
+                                <div class="mp-contact-row" title="কার্ড নম্বর">
+                                    <span class="mp-card-icon" aria-hidden="true"></span>
+                                    <span class="truncate">${cardNum}</span>
+                                </div>
+                                <div class="mp-contact-row" title="ফোন নম্বর">
+                                    <span class="mp-contact-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"/></svg>
+                                    </span>
+                                    <span class="truncate">${m.phone || 'N/A'}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="bg-slate-50/70 rounded-lg p-2.5 mb-3 text-xs flex justify-between items-center relative z-10">
-                        <span class="font-semibold text-slate-600">${positionText}</span>
-                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${badge.cls}">${badge.text} ${speed !== 999 ? `(${getBengaliNumber(speed)} দিন)` : ''}</span>
-                    </div>
 
-                    <div class="mt-auto space-y-2 relative z-10">
-                        <div class="flex justify-between items-center text-[13px] bg-green-50/80 px-3 py-2 rounded-lg border border-green-100"><span class="text-green-700 font-semibold">মোট জমা</span><span class="font-bold text-green-700 text-sm">৳ ${getBengaliNumber(t.totalDeposit)}</span></div>
-                        <div class="flex justify-between items-center text-[13px] bg-red-50/80 px-3 py-2 rounded-lg border border-red-100"><span class="text-red-700 font-semibold">ঋণ</span><span class="font-bold text-red-700 text-sm">৳ ${getBengaliNumber(t.currentLoan)}</span></div>
+                    <div class="mp-body">
+                        <div class="mp-rank-row">
+                            <div class="mp-rank">
+                                <span class="mp-medal" aria-hidden="true">★</span>
+                                <span>${positionText}</span>
+                            </div>
+                            <span class="mp-speed">🚶 ${badge.text}${speed !== 999 ? ` (${getBengaliNumber(speed)} দিন)` : ''}</span>
+                        </div>
+
+                        ${achHtml ? `<div class="flex flex-wrap gap-1.5 mt-3">${achHtml.replace('mt-2','')}</div>` : ''}
+
+                        <div class="mp-stat-row">
+                            <span class="mp-stat-icon" aria-hidden="true">💰</span>
+                            <span class="mp-stat-label">মোট জমা</span>
+                            <span class="mp-stat-value">৳ ${getBengaliNumber(t.totalDeposit)}</span>
+                        </div>
+
+                        <div class="mp-stat-row mp-loan">
+                            <span class="mp-stat-icon" aria-hidden="true">৳</span>
+                            <span class="mp-stat-label">ঋণ</span>
+                            <span class="mp-stat-value">৳ ${getBengaliNumber(t.currentLoan)}</span>
+                        </div>
+
+                        <button class="view-profile-btn mp-action" data-id="${m.id}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.8"/></svg>
+                            <span>বিস্তারিত দেখুন</span>
+                        </button>
                     </div>
-                    <button class="view-profile-btn mt-4 w-full bg-slate-50/80 border border-indigo-100 text-indigo-600 py-2.5 rounded-lg text-[13px] font-bold hover:bg-indigo-600 hover:text-white transition-all shadow-sm" data-id="${m.id}">বিস্তারিত দেখুন</button>
+                    <span class="mp-flourish left" aria-hidden="true">❧</span>
+                    <span class="mp-flourish right" aria-hidden="true">❧</span>
                 `;
                 memberListCardContainer.appendChild(card);
             });
@@ -2207,23 +2895,24 @@
 
     const renderNoticeBoard = () => {
         const display = document.getElementById('notice-display'); display.innerHTML = '';
-        const ticker = document.getElementById('bottom-ticker');
-        const tickerWrapper = document.getElementById('ticker-wrapper');
-        
-        if (notice.scrollingText?.trim()) { 
-            ticker.classList.remove('hidden'); 
-            const text = notice.scrollingText;
-            const separator = '<span class="mx-8 text-indigo-400">❖</span>';
-            const fullText = (text + separator).repeat(Math.max(1, Math.ceil(window.innerWidth / (text.length * 10))));
-            tickerWrapper.innerHTML = `<div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div><div class="ticker-item text-xs sm:text-sm font-medium text-indigo-100">${fullText}</div>`;
-        } else ticker.classList.add('hidden');
+        const tickerSlot = document.getElementById('notice-ticker-slot');
+        if (tickerSlot) tickerSlot.innerHTML = '';
+        if (notice.scrollingText?.trim() && tickerSlot) {
+            tickerSlot.classList.remove('hidden');
+            const text = String(notice.scrollingText).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            const separator = '<span>✦</span>';
+            const fullText = (text + separator).repeat(Math.max(2, Math.ceil(window.innerWidth / Math.max(80, text.length * 8))));
+            tickerSlot.innerHTML = `<div class="ticker-scroll-wrapper"><div class="ticker-item">${fullText}</div><div class="ticker-item">${fullText}</div></div>`;
+        } else if (tickerSlot) tickerSlot.classList.add('hidden');
 
         if (noticeSlideInterval) clearInterval(noticeSlideInterval);
         const images = (Array.isArray(notice.imageUrls) ? notice.imageUrls : [notice.imageUrl]).filter(u => u);
 
         if (images.length > 0) {
             const slides = images.map((u,i) => `<div class="absolute inset-0 transition-opacity duration-1000 ${i===0?'opacity-100 z-10':'opacity-0 z-0'} slide-wrapper"><img src="${u}" class="w-full h-full object-cover animate-kenburns"><div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div></div>`).join('');
-            display.innerHTML += `<div class="relative w-full h-48 sm:h-64 rounded-xl overflow-hidden mb-4 shadow-sm group">${slides}</div>`;
+            display.innerHTML += `<div class="premium-notice-media relative w-full h-48 sm:h-64 rounded-xl overflow-hidden mb-0 shadow-sm group">${slides}</div>`;
+            const slot = document.getElementById('notice-ticker-slot');
+            if (slot) display.appendChild(slot);
             if (images.length > 1) {
                 let cur = 0;
                 const els = () => display.querySelectorAll('.slide-wrapper');
@@ -2231,9 +2920,77 @@
                 noticeSlideInterval = setInterval(next, 5000);
             }
         }
-        if (notice.text) display.innerHTML += `<div class="prose prose-sm prose-slate max-w-none mb-3">${notice.text.split('\n').map(p=>`<p>${p}</p>`).join('')}</div>`;
-        if (notice.linkUrl) display.innerHTML += `<a href="${notice.linkUrl}" target="_blank" class="block text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-lg hover:bg-slate-700 transition">🔗 ${notice.linkText||'বিস্তারিত দেখুন'}</a>`;
+        if (!images.length) {
+            const slot = document.getElementById('notice-ticker-slot');
+            if (slot) display.appendChild(slot);
+        }
+        if (notice.text) {
+            const noticeText = String(notice.text);
+            display.innerHTML += `<div class="prose prose-sm prose-slate max-w-none mb-3">${noticeText.split('\n').map(p=>`<p>${p}</p>`).join('')}</div>`;
+
+            // Detect a card/account number from the notice and provide a one-tap copy action.
+            // Supports the common 10-19 digit formats, including spaces/hyphens.
+            const labeledCardMatch = noticeText.match(/কার্ড\s*(?:নম্বর|নং)?\s*[:：-]?\s*(\d[\d\s-]{8,20}\d)/i);
+            const plainCardMatch = noticeText.match(/\b\d{16,19}\b/);
+            const rawCandidate = labeledCardMatch ? labeledCardMatch[1] : (plainCardMatch ? plainCardMatch[0] : '');
+            if (rawCandidate) {
+                const rawCard = rawCandidate.replace(/[\s-]/g, '');
+                if (rawCard.length >= 10 && rawCard.length <= 19) {
+                    const displayCard = rawCard.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+                    display.innerHTML += `
+                        <div class="notice-card-number-row" data-card-number="${rawCard}">
+                            <div class="min-w-0">
+                                <div class="text-[10px] font-bold text-[#8a5b2f] mb-0.5">💳 কার্ড নম্বর</div>
+                                <div class="notice-card-number-value">${displayCard}</div>
+                            </div>
+                            <button type="button" class="copy-card-btn" data-copy-card="${rawCard}" aria-label="কার্ড নম্বর কপি করুন">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M6 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"></path></svg>
+                                <span>কপি</span>
+                            </button>
+                        </div>`;
+                }
+            }
+        }
+        if (notice.linkUrl) display.innerHTML += `<a href="${notice.linkUrl}" target="_blank" rel="noopener noreferrer" class="block text-center bg-slate-800 text-white text-sm font-bold py-2 rounded-lg hover:bg-slate-700 transition">
+            <span class="inline-flex items-center justify-center gap-2">
+                <svg class="whatsapp-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.86 11.86 0 0 0 12.08 0C5.52 0 .19 5.33.19 11.89c0 2.1.55 4.15 1.6 5.96L.08 24l6.29-1.65a11.9 11.9 0 0 0 5.7 1.45h.01c6.55 0 11.88-5.33 11.88-11.89 0-3.17-1.23-6.15-3.46-8.41ZM12.08 21.8h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.73.98 1-3.64-.24-.37a9.86 9.86 0 0 1-1.52-5.29C2.17 6.42 6.61 1.98 12.09 1.98c2.66 0 5.16 1.04 7.04 2.93a9.9 9.9 0 0 1 2.91 7.05c0 5.49-4.45 9.94-9.96 9.94Zm5.45-7.45c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.74-1.64-2.03-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.05 1.03-1.05 2.5s1.08 2.9 1.23 3.1c.15.2 2.12 3.24 5.13 4.54.72.31 1.28.5 1.72.64.72.23 1.38.2 1.9.12.58-.09 1.76-.72 2.01-1.41.25-.69.25-1.28.17-1.41-.07-.12-.27-.2-.57-.35Z"/></svg>
+                <span>${notice.linkText||'যোগাযোগ করুন'}</span>
+            </span>
+        </a>`;
         if (!images.length && !notice.text) display.innerHTML = `<div class="text-center text-slate-400 py-6 italic">কোনো নোটিশ নেই</div>`;
+
+        display.querySelectorAll('[data-copy-card]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const number = btn.getAttribute('data-copy-card') || '';
+                let copied = false;
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(number);
+                        copied = true;
+                    }
+                } catch (_) {}
+                if (!copied) {
+                    const ta = document.createElement('textarea');
+                    ta.value = number;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    try { copied = document.execCommand('copy'); } catch (_) {}
+                    ta.remove();
+                }
+                if (copied) {
+                    btn.classList.add('copied');
+                    const span = btn.querySelector('span');
+                    if (span) { span.textContent = 'কপি হয়েছে ✓'; }
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        if (span) span.textContent = 'কপি';
+                    }, 1800);
+                }
+            });
+        });
     };
 
     const showProfile = (id, animate = true) => {
