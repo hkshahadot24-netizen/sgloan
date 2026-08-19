@@ -3559,7 +3559,7 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
         const images = (Array.isArray(notice.imageUrls) ? notice.imageUrls : [notice.imageUrl]).filter(u => u);
 
         if (images.length > 0) {
-            const slides = images.map((u,i) => `<div class="absolute inset-0 transition-opacity duration-1000 ${i===0?'opacity-100 z-10':'opacity-0 z-0'} slide-wrapper"><img src="${u}" class="w-full h-full object-cover animate-kenburns"><div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div></div>`).join('');
+            const slides = images.map((u,i) => `<div class="absolute inset-0 transition-opacity duration-1000 ${i===0?'opacity-100 z-10':'opacity-0 z-0'} slide-wrapper"><img src="${u}" class="w-full h-full object-cover animate-kenburns" style="filter:none; opacity:1;"></div>`).join('');
             display.innerHTML += `<div class="premium-notice-media relative w-full h-48 sm:h-64 rounded-xl overflow-hidden mb-0 shadow-sm group">${slides}</div>`;
             const slot = document.getElementById('notice-ticker-slot');
             if (slot) display.appendChild(slot);
