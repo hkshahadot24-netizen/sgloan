@@ -3,7 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>একতা সঞ্চয় কো-অপারেটিভ সোসাইটি (ইএসসিএস)</title>
+  <title>ESCS | একতা সঞ্চয় কো-অপারেটিভ সোসাইটি</title>
+  <meta name="description" content="ESCS (একতা সঞ্চয় কো-অপারেটিভ সোসাইটি) এর সদস্য, সঞ্চয়, লেনদেন, মাসিক জমার হিসাব ও সদস্যভিত্তিক তথ্য দেখুন।">
+  <meta name="keywords" content="ESCS, একতা সঞ্চয়, একতা সঞ্চয় কো-অপারেটিভ সোসাইটি, সঞ্চয় সমিতি, সদস্য, লেনদেন, মাসিক জমা">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ESCS | একতা সঞ্চয় কো-অপারেটিভ সোসাইটি">
+  <meta property="og:description" content="ESCS এর সদস্য, সঞ্চয়, লেনদেন ও মাসিক জমার তথ্য।">
+  <meta property="og:site_name" content="ESCS">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ESCS | একতা সঞ্চয় কো-অপারেটিভ সোসাইটি">
+  <meta name="twitter:description" content="ESCS এর সদস্য, সঞ্চয়, লেনদেন ও মাসিক জমার তথ্য।">
+  <script type="application/ld+json">{
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"ESCS",
+    "alternateName":"একতা সঞ্চয় কো-অপারেটিভ সোসাইটি",
+    "description":"ESCS এর সদস্য, সঞ্চয়, লেনদেন ও মাসিক জমার তথ্য।"
+  }</script>
   
   <!-- Favicon -->
   <link id="favicon" rel="icon" type="image/png" href="https://placehold.co/64x64/FFFFFF/6366f1?text=ESCS">
@@ -842,7 +860,419 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
 @media (min-width:641px){.glass-header{height:150px!important}.premium-logo-wrap{width:88px!important;height:88px!important}.premium-logo-wrap img{width:74px!important;height:74px!important}main{padding-top:166px!important}.premium-bottom-nav{height:76px}.pbn-item{font-size:12px}.notice-premium-header{min-height:92px}.notice-premium-body{padding:18px}.home-app-drawer{display:none!important}}
 @media (max-width:640px){main{padding-top:126px!important}.glass-header .max-w-7xl{padding-left:9px!important;padding-right:9px!important}.glass-header h1{font-size:13px!important;line-height:1.1!important}.glass-header h1+span{font-size:9px!important}.premium-logo-wrap{width:62px!important;height:62px!important}.premium-logo-wrap img{width:51px!important;height:51px!important}.glass-header .flex.items-center.gap-3.flex-1{gap:8px!important}.glass-header .flex.items-center.gap-3.shrink-0{gap:4px!important}.notice-premium{margin-top:22px!important}.notice-premium-header{padding:11px 13px!important;min-height:64px}.notice-premium-header h3{font-size:23px!important}.notice-premium-header h3 .text-xl{font-size:23px!important}.notice-premium-body{padding:9px!important}#notice-display>div.relative.w-full{height:15.3rem!important}#notice-ticker-slot .ticker-item{font-size:12px}.pbn-item{font-size:10px}.pbn-icon{height:25px}.pbn-icon-featured{width:54px;height:54px}.pbn-icon-featured svg{width:28px;height:28px}}
 
+
+    /* --- Transaction Ledger: full-width, search stays after all transaction content --- */
+    #monthly-deposit-ledger{width:100%;margin-top:24px!important;border-top:2px solid rgba(214,173,87,.35)!important;padding-top:18px!important;}
+    #monthly-deposit-ledger .ledger-results-first{order:1;}
+    #monthly-deposit-ledger .ledger-search-after{order:2;}
+    .deposit-history-filter{margin-top:12px;}
+    .monthly-rank-badge{display:inline-flex;align-items:center;justify-content:center;min-width:58px;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:900;line-height:1;background:linear-gradient(135deg,#f7df9a,#d4af55);color:#5b3518;border:1px solid rgba(111,69,40,.35);box-shadow:0 2px 7px rgba(91,52,22,.12);white-space:nowrap;}
+    .monthly-rank-badge.first{background:linear-gradient(135deg,#ffe99b,#d7aa2e);}
+    .monthly-rank-badge.second{background:linear-gradient(135deg,#f0f0f0,#b9b9b9);}
+    .monthly-rank-badge.third{background:linear-gradient(135deg,#f2c49b,#b8753c);}
+    .smart-tx-row{min-width:0;}
+    @media (max-width:640px){
+      #monthly-deposit-ledger{margin-top:18px!important;padding:12px 0 0!important;}
+      #monthly-deposit-ledger .smart-month-card{border-radius:14px;}
+      #monthly-deposit-ledger .smart-month-head{padding:9px 10px;}
+      #monthly-deposit-ledger .smart-month-head .month-title{font-size:12px;}
+      #monthly-deposit-ledger .smart-month-head .month-meta{font-size:9px;}
+      #monthly-deposit-ledger .smart-tx-row{grid-template-columns:30px minmax(0,1fr) auto!important;gap:6px!important;padding:8px 9px!important;}
+      #monthly-deposit-ledger .smart-tx-member{grid-column:2/4!important;}
+      #monthly-deposit-ledger .smart-tx-id-wrap{grid-column:2/3!important;min-width:0;}
+      #monthly-deposit-ledger .smart-tx-amount{grid-column:3!important;grid-row:2!important;font-size:11px;}
+      #monthly-deposit-ledger .smart-delay{grid-column:1/4!important;justify-self:stretch!important;text-align:center!important;font-size:8px!important;padding:4px 6px!important;}
+      #monthly-deposit-ledger .smart-tx-name{font-size:11px;}
+      #monthly-deposit-ledger .smart-tx-sub,#monthly-deposit-ledger .smart-tx-id{font-size:8px;}
+      #monthly-deposit-ledger .smart-tx-avatar{width:30px;height:30px;}
+      #monthly-deposit-ledger .monthly-rank-badge{min-width:50px;font-size:9px;padding:4px 7px;}
+      #monthly-deposit-ledger .deposit-history-filter{grid-template-columns:1fr 1fr!important;}
+      #monthly-deposit-ledger .deposit-filter-search{grid-column:1/-1!important;width:100%!important;}
+    }
+
+    /* --- Deposit history dropdown search --- */
+    .deposit-history-filter{
+        display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px;align-items:end;
+        padding:10px;border:1px solid rgba(212,167,44,.28);border-radius:14px;
+        background:linear-gradient(135deg,#fffdf7,#fff4d8);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+    }
+    .deposit-filter-field{min-width:0;}
+    .deposit-filter-field label{display:block;font-size:10px;font-weight:800;color:#6f4528;margin:0 0 5px 2px;}
+    .deposit-filter-select{
+        width:100%;height:38px;padding:0 32px 0 10px;border:1px solid #d6ad57;border-radius:10px;
+        background:#fffdf7;color:#4b2a16;font-size:12px;font-weight:700;outline:none;
+        box-shadow:0 2px 8px rgba(91,52,22,.06);cursor:pointer;
+    }
+    .deposit-filter-select:focus{border-color:#a87320;box-shadow:0 0 0 3px rgba(212,167,44,.15);}
+    .deposit-filter-search{
+        height:38px;padding:0 14px;border:1px solid #d4a72c;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+        background:linear-gradient(135deg,#4b2a16,#7b4b24);color:#ffe9a8;font-size:11px;font-weight:900;white-space:nowrap;
+        box-shadow:0 5px 14px rgba(75,42,22,.18);cursor:pointer;transition:.2s;
+    }
+    .deposit-filter-search:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 7px 18px rgba(75,42,22,.24);}
+    .deposit-filter-search:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;}
+    .deposit-history-placeholder{padding:24px 12px;text-align:center;border:1px dashed rgba(138,91,47,.28);border-radius:14px;color:#927b68;background:rgba(255,251,239,.7);font-size:12px;}
+    .deposit-history-placeholder p{margin-top:7px;font-weight:700;color:#6f4528;}
+    .deposit-history-placeholder small{display:block;margin-top:3px;font-size:10px;color:#a68b73;}
+    .deposit-history-placeholder.compact{border:0;border-radius:0;background:transparent;padding:24px 12px;}
+    .smart-ledger-table-head{
+        display:grid;grid-template-columns:32px minmax(150px,1.25fr) minmax(150px,1fr) auto minmax(150px,1.15fr);
+        gap:8px;align-items:center;padding:7px 12px;background:#fff4d3;color:#7a522b;font-size:9px;font-weight:900;border-bottom:1px solid rgba(170,123,49,.2);
+    }
+    .smart-tx-rank{font-size:10px;font-weight:900;color:#9a6a2d;text-align:center;}
+    .smart-tx-member{display:flex;align-items:center;gap:8px;min-width:0;}
+    .smart-tx-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid #d4a72c;background:#fff;flex:0 0 auto;}
+    .smart-tx-date{font-size:9px;color:#7f6854;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .smart-tx-id-wrap{min-width:0;}
+    .smart-tx-label{font-size:8px;color:#a07d59;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
+    @media (max-width:700px){
+        .deposit-history-filter{grid-template-columns:1fr 1fr;}
+        .deposit-filter-search{grid-column:1 / -1;width:100%;}
+        .smart-ledger-table-head{display:none;}
+        .smart-tx-row{grid-template-columns:26px minmax(0,1fr) auto;gap:7px 8px;}
+        .smart-tx-member{grid-column:2 / 4;}
+        .smart-tx-id-wrap{grid-column:2 / 3;}
+        .smart-tx-amount{grid-column:3;grid-row:2;}
+        .smart-delay{grid-column:1 / -1;}
+    }
+
+    /* --- Smart Monthly Deposit Ledger --- */
+    .smart-ledger-icon{
+        width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;
+        border-radius:9px;color:#fff;background:linear-gradient(135deg,#4b2a16,#9a642c 58%,#d4af55);
+        box-shadow:0 4px 12px rgba(91,52,22,.18);font-weight:900;font-size:16px;
+    }
+    .smart-ledger-badge{
+        flex:0 0 auto;padding:4px 9px;border-radius:999px;font-size:9px;font-weight:900;
+        letter-spacing:.12em;color:#5b3518;background:linear-gradient(135deg,#f7df9a,#d4af55);
+        border:1px solid rgba(111,69,40,.35);box-shadow:0 2px 8px rgba(91,52,22,.12);
+    }
+    .smart-month-card{
+        border:1px solid rgba(170,123,49,.42);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#fffdf7,#fff8e8);
+        box-shadow:0 5px 18px rgba(71,42,20,.07);
+    }
+    .smart-month-head{
+        display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;
+        background:linear-gradient(135deg,#3a2113,#6b421f);color:#fff7df;
+    }
+    .smart-month-head .month-title{font-weight:800;font-size:13px;}
+    .smart-month-head .month-meta{font-size:10px;color:#f6df9a;text-align:right;}
+    .smart-tx-row{
+        display:grid;grid-template-columns:32px minmax(150px,1.25fr) minmax(150px,1fr) auto minmax(155px,1.15fr);
+        gap:8px;align-items:center;padding:10px 12px;border-top:1px dashed rgba(138,91,47,.22);
+    }
+    .smart-tx-row:first-child{border-top:0;}
+    .smart-tx-name{font-size:12px;font-weight:800;color:#4b2a16;min-width:0;}
+    .smart-tx-sub{font-size:9px;color:#8a5b2f;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .smart-tx-id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9px;font-weight:800;color:#72502d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .smart-tx-time{font-size:10px;color:#5b4636;white-space:nowrap;}
+    .smart-tx-amount{font-size:12px;font-weight:900;color:#147a43;text-align:right;white-space:nowrap;}
+    .smart-delay{justify-self:end;padding:5px 8px;border-radius:9px;background:#fff0c4;border:1px solid #e4c36d;color:#6b451e;font-size:9px;font-weight:800;text-align:right;line-height:1.35;}
+    .smart-delay.fast{background:#e7f7ec;border-color:#a9d8b7;color:#17683a;}
+    .smart-delay.before{background:#f9e9e6;border-color:#e5b7ad;color:#8d3f31;}
+    .smart-delay.missing{background:#f2f2f2;border-color:#ddd;color:#777;}
+    .smart-ledger-empty{padding:22px 12px;text-align:center;border:1px dashed rgba(138,91,47,.25);border-radius:14px;color:#927b68;font-size:12px;background:rgba(255,251,239,.7);}
+    .smart-ledger-note{padding:8px 10px;font-size:9px;color:#8a5b2f;background:#fff9e9;border-top:1px solid rgba(170,123,49,.18);}
+    @media (max-width:700px){
+        .smart-month-head{align-items:flex-start;}
+        .smart-delay{justify-self:stretch;text-align:center;}
+    }
+
   </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style id="escs-profile-premium">
+:root{
+  --escs-brown:#4b2a16;
+  --escs-brown-2:#6b3f21;
+  --escs-gold:#d6ad57;
+  --escs-gold-2:#f3d58a;
+  --escs-cream:#fffaf0;
+}
+.escs-profile-premium{
+  background:linear-gradient(145deg,#fffdf8 0%,#fff8e8 45%,#f8ead0 100%);
+  border:1px solid rgba(214,173,87,.45)!important;
+  box-shadow:0 24px 70px rgba(75,42,22,.22),0 4px 18px rgba(214,173,87,.16)!important;
+  overflow:hidden;
+}
+.escs-profile-cover{
+  position:relative;height:170px;
+  background:
+    radial-gradient(circle at 15% 20%,rgba(243,213,138,.35),transparent 28%),
+    radial-gradient(circle at 85% 25%,rgba(214,173,87,.24),transparent 30%),
+    linear-gradient(135deg,#351b0d,#6b3f21 50%,#3e210f);
+  overflow:hidden;
+}
+.escs-profile-cover:before{
+  content:"";position:absolute;inset:-60%;
+  background:conic-gradient(from 0deg,transparent 0 28%,rgba(243,213,138,.22) 35%,transparent 43% 67%,rgba(214,173,87,.18) 75%,transparent 83%);
+  animation:escsCoverSpin 12s linear infinite;
+}
+.escs-profile-cover:after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 45%,rgba(45,22,8,.72));
+}
+@keyframes escsCoverSpin{to{transform:rotate(360deg)}}
+.escs-profile-photo-wrap{
+  position:relative;margin:-66px auto 0;width:126px;height:126px;z-index:5;
+}
+.escs-profile-photo-ring{
+  position:absolute;inset:-9px;border-radius:50%;
+  background:conic-gradient(from 0deg,#8d5b20,#f7dc91,#b57b2d,#fff1b5,#8d5b20);
+  animation:escsGoldRing 3.2s linear infinite;
+  box-shadow:0 0 0 3px rgba(255,250,240,.95),0 0 28px rgba(214,173,87,.75);
+}
+.escs-profile-photo-ring:after{
+  content:"";position:absolute;inset:4px;border-radius:50%;
+  border:2px dashed rgba(255,248,214,.9);
+  animation:escsGoldRingReverse 5s linear infinite;
+}
+@keyframes escsGoldRing{to{transform:rotate(360deg)}}
+@keyframes escsGoldRingReverse{to{transform:rotate(-360deg)}}
+.escs-profile-photo{
+  position:relative;width:126px;height:126px;border-radius:50%;object-fit:cover;
+  border:6px solid #fffaf0;z-index:2;
+  box-shadow:0 10px 28px rgba(75,42,22,.28);
+}
+.escs-profile-gold-btn{
+  background:linear-gradient(135deg,#8b5a20,#d6ad57 52%,#f0d17e);
+  color:#3d210e;border:1px solid #f2d890;
+  box-shadow:0 7px 18px rgba(107,63,33,.22);
+}
+.escs-profile-gold-btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.escs-profile-stat{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(214,173,87,.35);
+  border-radius:16px;padding:12px;
+}
+.escs-profile-premium .escs-section-title{
+  color:var(--escs-brown);font-weight:900;
+  border-left:4px solid var(--escs-gold);padding-left:10px;
+}
+@media(max-width:640px){
+  .escs-profile-cover{height:145px}
+  .escs-profile-photo-wrap{width:108px;height:108px;margin-top:-54px}
+  .escs-profile-photo{width:108px;height:108px}
+  .escs-profile-photo-ring{inset:-8px}
+}
+</style>
+
+
+<style id="escs-profile-fix">
+/* ===== MEMBER PROFILE: BROWN + GOLDEN ANIMATED EDITION ===== */
+#profile-modal{
+  background:rgba(30,16,9,.78)!important;
+  backdrop-filter:blur(8px)!important;
+}
+#profile-modal-box.escs-profile-premium{
+  border:2px solid #d6ad57!important;
+  background:linear-gradient(145deg,#fffdf8,#fff7e6)!important;
+  box-shadow:0 28px 90px rgba(40,20,8,.42),0 0 0 1px rgba(255,231,160,.3),0 0 40px rgba(214,173,87,.18)!important;
+}
+#profile-modal-box .escs-profile-cover{
+  min-height:215px!important;
+  background:
+    radial-gradient(circle at 18% 20%,rgba(243,213,138,.25),transparent 24%),
+    radial-gradient(circle at 82% 22%,rgba(214,173,87,.24),transparent 26%),
+    linear-gradient(135deg,#24140c 0%,#4b2a16 48%,#6b3f21 72%,#2a170e 100%)!important;
+}
+#profile-modal-box .escs-profile-cover::before{
+  content:""!important;
+  position:absolute!important;
+  inset:-80%!important;
+  background:conic-gradient(from 0deg,transparent 0 24%,rgba(255,231,160,.18) 30%,transparent 37% 58%,rgba(214,173,87,.18) 66%,transparent 74%)!important;
+  animation:escsProfileCoverSpin 11s linear infinite!important;
+}
+#profile-modal-box .escs-profile-cover::after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:
+    radial-gradient(circle at 50% 30%,transparent 0 26%,rgba(255,239,177,.07) 27% 27.5%,transparent 28%),
+    linear-gradient(180deg,transparent 30%,rgba(25,12,6,.6) 100%)!important;
+  pointer-events:none!important;
+}
+@keyframes escsProfileCoverSpin{to{transform:rotate(360deg)}}
+#profile-modal-box .escs-profile-photo-wrap{
+  width:126px!important;height:126px!important;
+  margin:0 auto 12px!important;
+}
+#profile-modal-box .escs-profile-photo{
+  width:126px!important;height:126px!important;
+  border:6px solid #fffaf0!important;
+  box-shadow:0 8px 28px rgba(0,0,0,.34)!important;
+}
+#profile-modal-box .escs-profile-photo-ring{
+  inset:-10px!important;
+  background:conic-gradient(from 0deg,#8d5b20,#f7dc91,#b57b2d,#fff4bd,#8d5b20)!important;
+  box-shadow:0 0 0 3px rgba(255,250,240,.95),0 0 30px rgba(214,173,87,.8)!important;
+  animation:escsGoldRing 2.8s linear infinite!important;
+}
+#profile-modal-box .escs-profile-photo-ring::before{
+  content:""!important;position:absolute!important;inset:-7px!important;border-radius:50%!important;
+  border:1px dotted rgba(255,235,164,.85)!important;
+  animation:escsGoldRingReverse 4.5s linear infinite!important;
+}
+#profile-modal-box .profile-tab{
+  color:#795333!important;
+}
+#profile-modal-box .profile-tab:hover{
+  background:#fff8e7!important;color:#4b2a16!important;
+}
+#profile-modal-box .tab-active{
+  color:#4b2a16!important;
+  border-bottom:3px solid #d6ad57!important;
+  background:#fff8e7!important;
+}
+#profile-content-container{
+  background:linear-gradient(180deg,#fffdf8,#f8ead0)!important;
+}
+.escs-profile-download-row{
+  display:flex!important;
+  justify-content:flex-end!important;
+  align-items:center!important;
+  width:100%!important;
+  margin:0 0 10px!important;
+}
+.escs-profile-download-btn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:5px!important;
+  height:34px!important;
+  padding:0 11px!important;
+  border-radius:9px!important;
+  border:1px solid #c8972e!important;
+  background:linear-gradient(135deg,#4b2a16,#754723)!important;
+  color:#ffe9a8!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  cursor:pointer!important;
+  box-shadow:0 4px 10px rgba(75,42,22,.16)!important;
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease!important;
+}
+.escs-profile-download-btn:hover{
+  transform:translateY(-1px)!important;
+  filter:brightness(1.1)!important;
+  box-shadow:0 7px 15px rgba(75,42,22,.24)!important;
+}
+.escs-profile-download-btn:active{transform:scale(.97)!important}
+#profile-content-container > #profile-content-details,
+#profile-content-container > #profile-content-transactions > div,
+#profile-content-container > #profile-content-summary .bg-white,
+#profile-content-container > #profile-content-achievements > div{
+  border-color:rgba(214,173,87,.4)!important;
+}
+@media(max-width:640px){
+  #profile-modal-box .escs-profile-cover{min-height:190px!important}
+  #profile-modal-box .escs-profile-photo-wrap,
+  #profile-modal-box .escs-profile-photo{width:104px!important;height:104px!important}
+  #profile-modal-box .escs-profile-photo-ring{inset:-8px!important}
+  .escs-profile-download-row{margin-bottom:8px!important}
+  .escs-profile-download-btn{height:32px!important;padding:0 9px!important;font-size:9px!important}
+}
+</style>
+
+
+<style id="escs-profile-loading-mobile-fix">
+/* PDF generation loading state */
+.escs-pdf-loading{
+  position:fixed;inset:0;z-index:99999;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(35,18,8,.72);backdrop-filter:blur(6px);
+  padding:20px;
+}
+.escs-pdf-loading.is-active{display:flex}
+.escs-pdf-loading-card{
+  width:min(300px,92vw);padding:24px 20px;text-align:center;
+  border-radius:18px;border:1px solid #d6ad57;
+  background:linear-gradient(145deg,#fffdf8,#fff4d9);
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+  color:#4b2a16;
+}
+.escs-pdf-spinner{
+  width:42px;height:42px;margin:0 auto 13px;border-radius:50%;
+  border:4px solid rgba(214,173,87,.25);
+  border-top-color:#b57b2d;border-right-color:#f0cf7a;
+  animation:escsPdfSpin .8s linear infinite;
+}
+@keyframes escsPdfSpin{to{transform:rotate(360deg)}}
+.escs-pdf-loading-title{font-size:16px;font-weight:900}
+.escs-pdf-loading-text{font-size:11px;color:#806044;margin-top:5px}
+
+/* Mobile profile cover: keep all header content inside the cover */
+#profile-modal-box .escs-profile-cover{
+  height:auto!important;
+  min-height:205px!important;
+  padding:24px 12px 18px!important;
+  box-sizing:border-box!important;
+}
+#profile-modal-box .escs-profile-cover > .relative.z-10{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+#profile-modal-box #profile-header-name{
+  max-width:100%!important;
+  text-align:center!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+  line-height:1.25!important;
+}
+#profile-modal-box #profile-header-phone,
+#profile-modal-box #profile-header-card,
+#profile-modal-box #profile-id{
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+}
+#profile-modal-box .escs-profile-cover .flex.flex-wrap{
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  flex-wrap:wrap!important;
+  overflow:hidden!important;
+  padding:0 4px!important;
+}
+@media(max-width:640px){
+  #profile-modal-box .escs-profile-cover{
+    min-height:230px!important;
+    padding:18px 10px 16px!important;
+  }
+  #profile-modal-box .escs-profile-photo-wrap,
+  #profile-modal-box .escs-profile-photo{
+    width:94px!important;height:94px!important;
+  }
+  #profile-modal-box .escs-profile-photo-ring{inset:-8px!important}
+  #profile-modal-box #profile-header-name{
+    font-size:20px!important;
+    margin-bottom:4px!important;
+  }
+  #profile-modal-box .escs-profile-cover .flex.flex-wrap{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:5px!important;
+    justify-items:center!important;
+  }
+  #profile-modal-box #profile-id,
+  #profile-modal-box #profile-header-phone,
+  #profile-modal-box #profile-header-card{
+    display:block!important;
+    width:auto!important;
+    max-width:92vw!important;
+    text-align:center!important;
+    padding:4px 8px!important;
+    line-height:1.25!important;
+  }
+}
+</style>
+
 </head>
 <body class="text-slate-800 antialiased relative">
 
@@ -1095,7 +1525,7 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
       <!-- ================= FINANCE CHARTS VIEW ================= -->
       <div id="view-finance" class="hidden space-y-4 fade-in-up">
           <!-- View Header -->
-          <div class="flex items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-slate-100/50">
+          <div class="flex items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-slate-100/50" itemscope itemtype="https://schema.org/FinancialProduct">
               <a href="#" class="w-10 h-10 flex shrink-0 items-center justify-center bg-slate-100 hover:bg-emerald-100 hover:text-emerald-600 rounded-full transition-colors text-slate-600">
                   <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
               </a>
@@ -1113,9 +1543,9 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
                     <canvas id="financeChart"></canvas>
                 </div>
              </div>
-             <div class="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100/50 flex flex-col h-[350px]">
+             <div class="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-100/50 flex flex-col min-h-[350px] h-auto">
                 <h3 class="text-slate-700 font-bold mb-4 flex items-center gap-2"><span class="w-2 h-6 bg-indigo-500 rounded-full"></span>মাসিক জমার হার</h3>
-                <div class="flex-grow relative w-full">
+                <div class="relative w-full h-[250px] sm:h-[270px] shrink-0">
                     <canvas id="trendChart"></canvas>
                 </div>
              </div>
@@ -1131,6 +1561,55 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
                     <canvas id="memberInteractiveChart"></canvas>
                 </div>
              </div>
+          </div>
+
+          <!-- Transaction ledger is intentionally below ALL finance/chart content. -->
+          <div id="monthly-deposit-ledger" class="bg-white/95 backdrop-blur-md rounded-2xl shadow-sm border border-[#d6ad57]/40 p-4 sm:p-5" aria-label="মাসিক লেনদেন ও জমার ইতিহাস">
+              <div class="flex flex-col gap-3">
+                  <div class="flex items-start justify-between gap-3">
+                      <div>
+                          <h3 class="text-base sm:text-lg font-extrabold text-[#4b2a16] flex items-center gap-2">
+                              <span class="smart-ledger-icon">↕</span> লেনদেন ও মাসিক জমার ইতিহাস
+                          </h3>
+                          <p class="text-[10px] sm:text-xs text-[#8a5b2f] mt-0.5">প্রথমে নির্বাচিত মাসের সকল লেনদেন দেখা যাবে। একই মাসে যে সদস্য আগে টাকা জমা দিয়েছেন, তিনি আগে থাকবেন।</p>
+                      </div>
+                      <span class="smart-ledger-badge">ESCS</span>
+                  </div>
+
+                  <div id="monthly-deposit-ledger-list" class="ledger-results-first space-y-3">
+                      <div class="deposit-history-placeholder">
+                          <span class="text-3xl">📅</span>
+                          <p>বছর ও মাস নির্বাচন করে <b>সার্চ করুন</b>।</p>
+                          <small>সার্চ করার পর নির্বাচিত মাসের সকল জমা এখানে দেখাবে।</small>
+                      </div>
+                  </div>
+
+                  <div class="ledger-search-after border-t border-[#d6ad57]/25 pt-4">
+                      <div class="flex items-center justify-between gap-2 mb-2">
+                          <div>
+                              <h4 class="text-sm font-extrabold text-[#4b2a16]">মাস অনুযায়ী লেনদেন সার্চ</h4>
+                              <p class="text-[10px] text-[#8a5b2f]">বছর ও মাস নির্বাচন করে শুধু সেই মাসের জমার ইতিহাস দেখুন।</p>
+                          </div>
+                          <span class="text-[9px] font-bold text-[#8a5b2f]">১ম · ২য় · ৩য়</span>
+                      </div>
+                      <div class="deposit-history-filter">
+                          <div class="deposit-filter-field">
+                              <label for="deposit-history-year">বছর</label>
+                              <select id="deposit-history-year" class="deposit-filter-select">
+                                  <option value="">বছর নির্বাচন করুন</option>
+                              </select>
+                          </div>
+                          <div class="deposit-filter-field">
+                              <label for="deposit-history-month">মাস</label>
+                              <select id="deposit-history-month" class="deposit-filter-select">
+                                  <option value="">মাস নির্বাচন করুন</option>
+                                  <option value="01">জানুয়ারি</option><option value="02">ফেব্রুয়ারি</option><option value="03">মার্চ</option><option value="04">এপ্রিল</option><option value="05">মে</option><option value="06">জুন</option><option value="07">জুলাই</option><option value="08">আগস্ট</option><option value="09">সেপ্টেম্বর</option><option value="10">অক্টোবর</option><option value="11">নভেম্বর</option><option value="12">ডিসেম্বর</option>
+                              </select>
+                          </div>
+                          <button type="button" id="deposit-history-search" class="deposit-filter-search" disabled><span>🔎</span> সার্চ করুন</button>
+                      </div>
+                  </div>
+              </div>
           </div>
       </div>
       <!-- ================= END FINANCE VIEW ================= -->
@@ -1555,24 +2034,23 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
 
   <!-- Profile Modal -->
   <div id="profile-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 justify-center items-center p-0 sm:p-4">
-    <div id="profile-modal-box" class="bg-white/95 backdrop-blur-xl sm:rounded-2xl shadow-2xl w-full max-w-6xl h-full sm:h-[90vh] flex flex-col relative overflow-hidden modal-exit border border-white/20">
+    <div id="profile-modal-box" class="bg-white/95 backdrop-blur-xl sm:rounded-2xl shadow-2xl w-full max-w-6xl h-full sm:h-[90vh] flex flex-col relative overflow-hidden modal-exit border border-white/20 escs-profile-premium"">
       
-      <!-- Modal Header -->
-      <div class="relative bg-slate-800 text-white p-6 sm:p-8 flex flex-col items-center justify-center shrink-0 overflow-hidden">
-           <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 opacity-90"></div>
+      <!-- Premium Brown + Golden Animated Profile Header -->
+      <div class="escs-profile-cover relative flex flex-col items-center justify-center shrink-0 overflow-hidden">
            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
            <button id="close-profile" class="absolute top-4 right-4 text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-2 transition z-20">&times;</button>
            
            <div class="relative z-10 flex flex-col items-center">
                <div class="relative">
                    <img id="profile-header-img" src="" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-white/20 shadow-xl mb-3 bg-slate-200">
-                   <div class="absolute bottom-4 right-0 w-6 h-6 bg-green-500 border-4 border-slate-800 rounded-full"></div>
+                   <div class="absolute bottom-1 right-0 w-6 h-6 bg-green-500 border-4 border-[#4b2a16] rounded-full shadow-lg"></div>
                </div>
-               <h2 id="profile-header-name" class="text-2xl sm:text-3xl font-bold text-white tracking-wide mb-1">সদস্যের নাম</h2>
+               <h2 id="profile-header-name" class="text-2xl sm:text-3xl font-bold text-[#ffe9a8] tracking-wide mb-1 drop-shadow-lg">সদস্যের নাম</h2>
                <div class="flex flex-wrap justify-center items-center gap-2 mt-2">
-                   <span id="profile-id" class="text-indigo-100 text-xs font-mono bg-white/10 px-2 py-1 rounded-md border border-white/20 shadow-sm">ID: ---</span>
-                   <span id="profile-header-phone" class="text-indigo-100 text-xs font-mono bg-white/10 px-2 py-1 rounded-md border border-white/20 shadow-sm">📞 ---</span>
-                   <span id="profile-header-card" class="text-indigo-100 text-xs font-mono bg-white/10 px-2 py-1 rounded-md border border-white/20 shadow-sm">💳 ---</span>
+                   <span id="profile-id" class="text-[#ffe9a8] text-xs font-mono bg-[#2f1b12]/70 px-2 py-1 rounded-md border border-[#d6ad57]/50 shadow-sm">ID: ---</span>
+                   <span id="profile-header-phone" class="text-[#ffe9a8] text-xs font-mono bg-[#2f1b12]/70 px-2 py-1 rounded-md border border-[#d6ad57]/50 shadow-sm">📞 ---</span>
+                   <span id="profile-header-card" class="text-[#ffe9a8] text-xs font-mono bg-[#2f1b12]/70 px-2 py-1 rounded-md border border-[#d6ad57]/50 shadow-sm">💳 ---</span>
                </div>
            </div>
       </div>
@@ -1586,6 +2064,12 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
 
       <!-- Content Area -->
       <div id="profile-content-container" class="overflow-y-auto flex-grow bg-slate-50/30 p-4 sm:p-8">
+          <div class="escs-profile-download-row">
+              <button id="profile-download-btn" type="button" class="escs-profile-download-btn" title="সদস্যের তথ্য PDF হিসেবে ডাউনলোড করুন">
+                  <span aria-hidden="true">⬇</span>
+                  <span>তথ্য ডাউনলোড করুন</span>
+              </button>
+          </div>
           <!-- Details -->
           <div id="profile-content-details" class="hidden max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-sm border border-slate-100">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1749,6 +2233,7 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
 
     let app, db, auth;
     let members = [], fundDistribution = {}, notice = { text: '', imageUrls: [], linkText: '', linkUrl: '', scrollingText: '' }, logoUrl = '', importantLinks = [], lottery = { participants: [], history: [], liveDraw: null };
+    let selectedDepositHistory = { year: '', month: '' };
     let activityLog = []; 
     let appDownloadUrl = ''; 
     let activeMember = null, searchQuery = '';
@@ -2468,6 +2953,166 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
         } 
     });
 
+
+    const formatSmartDateTime = (dateValue) => {
+        if (!dateValue) return 'সময় পাওয়া যায়নি';
+        const d = new Date(dateValue);
+        if (Number.isNaN(d.getTime())) return 'সময় পাওয়া যায়নি';
+        try {
+            return d.toLocaleString('bn-BD', {
+                day:'2-digit', month:'short', year:'numeric',
+                hour:'2-digit', minute:'2-digit', hour12:true
+            });
+        } catch (_) {
+            return formatDate(dateValue);
+        }
+    };
+
+    const getLotteryDrawDate = (monthKey) => {
+        const dist = fundDistribution[monthKey];
+        if (!dist) return null;
+        const value = dist.date || dist.ts || dist.timestamp || dist.drawDate || dist.drawTime;
+        if (!value) return null;
+        const d = new Date(value);
+        return Number.isNaN(d.getTime()) ? null : d;
+    };
+
+    const formatElapsedFromDraw = (depositDate, lotteryDate) => {
+        if (!lotteryDate) return { text:'লটারি ড্র সময় পাওয়া যায়নি', cls:'missing' };
+        const pay = new Date(depositDate);
+        if (Number.isNaN(pay.getTime())) return { text:'জমার সময় পাওয়া যায়নি', cls:'missing' };
+        const diff = pay.getTime() - lotteryDate.getTime();
+        if (diff < 0) {
+            const mins = Math.max(1, Math.round(Math.abs(diff) / 60000));
+            const days = Math.floor(mins / 1440);
+            const hrs = Math.floor((mins % 1440) / 60);
+            const mm = mins % 60;
+            let t = 'ড্র-এর আগে ';
+            if (days) t += `${getBengaliNumber(days)} দিন `;
+            if (hrs) t += `${getBengaliNumber(hrs)} ঘণ্টা `;
+            if (mm || (!days && !hrs)) t += `${getBengaliNumber(mm)} মিনিট`;
+            return { text:t.trim(), cls:'before' };
+        }
+        let mins = Math.floor(diff / 60000);
+        const days = Math.floor(mins / 1440); mins %= 1440;
+        const hrs = Math.floor(mins / 60); mins %= 60;
+        let text = 'ড্র-এর পরে ';
+        if (days) text += `${getBengaliNumber(days)} দিন `;
+        if (hrs) text += `${getBengaliNumber(hrs)} ঘণ্টা `;
+        if (mins || (!days && !hrs)) text += `${getBengaliNumber(mins)} মিনিট`;
+        const totalMinutes = Math.floor(diff / 60000);
+        return { text:text.trim(), cls: totalMinutes <= 24*60 ? 'fast' : '' };
+    };
+
+    const makeSmartTxId = (member, tx) => {
+        const existing = tx.txId || tx.id;
+        if (existing) return String(existing);
+        const d = new Date(tx.date);
+        if (Number.isNaN(d.getTime())) return `DEP-${String(member.id||'M').slice(-6).toUpperCase()}`;
+        const memberKey = String(member.id || member.name || 'M').replace(/[^a-zA-Z0-9]/g,'').slice(-5).toUpperCase() || 'MEM';
+        const stamp = `${String(d.getFullYear()).slice(-2)}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}`;
+        const amount = String(Math.round(Number(tx.amount)||0)).slice(-4).padStart(4,'0');
+        return `DEP-${memberKey}-${stamp}-${amount}`;
+    };
+
+    const getDepositHistoryYears = () => {
+        const years = new Set();
+        members.forEach(member => {
+            (member.transactions || []).forEach(tx => {
+                if (tx.type !== 'deposit' || !tx.date) return;
+                const d = new Date(tx.date);
+                if (!Number.isNaN(d.getTime())) years.add(String(d.getFullYear()));
+            });
+        });
+        return [...years].sort((a,b) => Number(b) - Number(a));
+    };
+
+    const updateDepositHistoryControls = () => {
+        const yearSelect = document.getElementById('deposit-history-year');
+        const monthSelect = document.getElementById('deposit-history-month');
+        const searchBtn = document.getElementById('deposit-history-search');
+        if (!yearSelect || !monthSelect || !searchBtn) return;
+
+        const currentValue = yearSelect.value;
+        const years = getDepositHistoryYears();
+        yearSelect.innerHTML = '<option value="">বছর নির্বাচন করুন</option>' + years.map(y => `<option value="${y}">${getBengaliNumber(y)}</option>`).join('');
+        if (years.includes(currentValue)) yearSelect.value = currentValue;
+
+        searchBtn.disabled = !(yearSelect.value && monthSelect.value);
+    };
+
+    const renderSelectedDepositLedger = (year, month) => {
+        const container = document.getElementById('monthly-deposit-ledger-list');
+        if (!container) return;
+        if (!year || !month) {
+            container.innerHTML = `<div class="deposit-history-placeholder"><span class="text-3xl">📅</span><p>বছর ও মাস নির্বাচন করে <b>সার্চ করুন</b>।</p><small>সার্চ করার আগে জমার ইতিহাস এখানে লোড হবে না।</small></div>`;
+            return;
+        }
+
+        const monthKey = `${year}-${month}`;
+        const rows = [];
+        members.forEach(member => {
+            (member.transactions || []).forEach(tx => {
+                if (tx.type !== 'deposit' || !tx.date) return;
+                const d = new Date(tx.date);
+                if (Number.isNaN(d.getTime())) return;
+                const txMonthKey = tx.date.substring(0,7);
+                if (txMonthKey !== monthKey) return;
+                rows.push({ member, tx, date:d });
+            });
+        });
+        // The member who deposited first in the selected month always comes first.
+        rows.sort((a,b) => a.date - b.date);
+
+        const monthName = new Date(`${monthKey}-01T00:00:00`).toLocaleString('bn-BD', {month:'long', year:'numeric'});
+        const dist = fundDistribution[monthKey];
+        let draw = null;
+        if (dist) {
+            if (dist.date) draw = parseValidDate(dist.date);
+            else if (dist.ts) draw = parseValidDate(dist.ts);
+        }
+        const total = rows.reduce((sum, r) => sum + (Number(r.tx.amount) || 0), 0);
+
+        if (!rows.length) {
+            container.innerHTML = `<section class="smart-month-card"><div class="smart-month-head"><div class="month-title">📅 ${monthName}</div><div class="month-meta">কোনো জমার তথ্য নেই</div></div><div class="deposit-history-placeholder compact"><span class="text-3xl">📭</span><p>এই মাসে কোনো সঞ্চয় জমার রেকর্ড পাওয়া যায়নি।</p></div></section>`;
+            return;
+        }
+
+        const drawText = draw ? `ড্র: ${formatSmartDateTime(draw)}` : 'ড্র সময়: তথ্য নেই';
+        const body = rows.map((r, index) => {
+            const amount = getBengaliNumber(r.tx.amount);
+            const smartId = makeSmartTxId(r.member, r.tx);
+            const delay = formatElapsedFromDraw(r.tx.date, draw);
+            return `
+            <div class="smart-tx-row">
+                <div class="smart-tx-rank">${index === 0 ? '<span class="monthly-rank-badge first">১ম</span>' : index === 1 ? '<span class="monthly-rank-badge second">২য়</span>' : index === 2 ? '<span class="monthly-rank-badge third">৩য়</span>' : getBengaliNumber(index + 1)}</div>
+                <div class="smart-tx-member">
+                    <img src="${r.member.photoUrl || 'https://placehold.co/48x48'}" alt="" class="smart-tx-avatar">
+                    <div class="min-w-0">
+                        <div class="smart-tx-name">${r.member.name || 'নাম নেই'}</div>
+                        <div class="smart-tx-date">${formatSmartDateTime(r.tx.date)}</div>
+                    </div>
+                </div>
+                <div class="smart-tx-id-wrap">
+                    <div class="smart-tx-label">Transaction ID</div>
+                    <div class="smart-tx-id" title="${smartId}">${smartId}</div>
+                </div>
+                <div class="smart-tx-amount">৳ ${amount}</div>
+                <div class="smart-delay ${delay.cls}">⏱ ${delay.text}</div>
+            </div>`;
+        }).join('');
+
+        container.innerHTML = `<section class="smart-month-card">
+            <div class="smart-month-head">
+                <div class="month-title">📅 ${monthName}</div>
+                <div class="month-meta">${drawText}<br>মোট জমা: ৳ ${getBengaliNumber(total)} · ${getBengaliNumber(rows.length)}টি</div>
+            </div>
+            <div class="smart-ledger-table-head"><span>র‌্যাংক</span><span>সদস্য ও জমার সময়</span><span>Transaction ID</span><span>পরিমাণ</span><span>ড্র-এর পর সময়</span></div>
+            ${body}
+            <div class="smart-ledger-note">🏆 একই মাসে টাকা জমার সময় অনুযায়ী ক্রম: <b>১ম</b> = সবার আগে, <b>২য়</b> = পরের জন, <b>৩য়</b> = তৃতীয় জন। এরপর একইভাবে পর্যায়ক্রমে নাম দেখানো হয়।<br>💡 সময়ের পার্থক্য সংরক্ষিত লটারি ড্র-এর সময় এবং সংশ্লিষ্ট জমার সময় থেকে হিসাব করা হয়েছে।</div>
+        </section>`;
+    };
+
     const renderCharts = (td, tlt, tlr) => {
         const ctxF = document.getElementById('financeChart').getContext('2d');
         if (financeChartInstance) financeChartInstance.destroy();
@@ -2488,6 +3133,11 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
             data: { labels: labels, datasets: [{ label: 'জমা', data: data, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', borderWidth: 3, tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#ffffff', pointBorderColor: '#6366f1', pointBorderWidth: 2 }] }, 
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ৳ ${getBengaliNumber(c.raw)}` } } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9', borderDash: [5, 5] } }, x: { grid: { display: false } } } } 
         });
+
+        updateDepositHistoryControls();
+        if (selectedDepositHistory.year && selectedDepositHistory.month) {
+            renderSelectedDepositLedger(selectedDepositHistory.year, selectedDepositHistory.month);
+        }
 
         const ctxM = document.getElementById('memberInteractiveChart').getContext('2d');
         if (memberChartInstance) memberChartInstance.destroy();
@@ -2995,7 +3645,7 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
 
     const showProfile = (id, animate = true) => {
         if(animate) window.location.hash = 'profile'; 
-        const m = members.find(x => x.id === id); activeMember = m; if(!m) return;
+        const m = members.find(x => x.id === id); activeMember = m; window.activeMember = m; if(!m) return;
         const t = calculateMemberTotals(m);
         const ph = m.photoUrl || `https://placehold.co/96x96/e2e8f0/64748b?text=${encodeURIComponent(m.name?.charAt(0)||'?')}`;
         
@@ -3079,7 +3729,7 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
         }
         const box = document.getElementById('profile-modal-box');
         box.classList.add('modal-exit');
-        setTimeout(() => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); box.classList.remove('modal-exit'); activeMember = null; }, 200);
+        setTimeout(() => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); box.classList.remove('modal-exit'); activeMember = null; window.activeMember = null; }, 200);
     };
 
     const renderFundModal = () => {
@@ -3136,7 +3786,8 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
                 m.transactions.forEach(t => { if(t.type === 'deposit' && t.date.startsWith(monthKey)) { monthlyDeposits.push({ name: m.name, photo: m.photoUrl, date: t.date, amount: Number(t.amount) || 0 }); } });
             }
         });
-        monthlyDeposits.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Earliest deposit first, matching the monthly transaction ranking.
+        monthlyDeposits.sort((a, b) => new Date(a.date) - new Date(b.date));
         const total = monthlyDeposits.reduce((sum, item) => sum + item.amount, 0);
         totalEl.textContent = `৳ ${getBengaliNumber(total)}`;
         
@@ -3288,7 +3939,8 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
                     // Re-render UI when relevant data changes
                     if (newMembersState !== cachedMembersState || newFundDistState !== JSON.stringify(fundDistribution)) {
                         cachedMembersState = newMembersState;
-                        renderUI(); 
+                        renderUI();
+                        setupDepositHistorySearch();
                     }
                     if (newNoticeState !== cachedNoticeState) {
                         cachedNoticeState = newNoticeState;
@@ -3314,7 +3966,40 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
             } else { try { await signInAnonymously(auth); } catch(e){console.error(e);} }
         });
     };
+    const setupDepositHistorySearch = () => {
+        const yearSelect = document.getElementById('deposit-history-year');
+        const monthSelect = document.getElementById('deposit-history-month');
+        const searchBtn = document.getElementById('deposit-history-search');
+        if (!yearSelect || !monthSelect || !searchBtn || searchBtn.dataset.ready) return;
+        searchBtn.dataset.ready = '1';
+
+        const syncButton = () => { searchBtn.disabled = !(yearSelect.value && monthSelect.value); };
+        yearSelect.addEventListener('change', syncButton);
+        monthSelect.addEventListener('change', syncButton);
+        searchBtn.addEventListener('click', () => {
+            if (!yearSelect.value || !monthSelect.value) return;
+            selectedDepositHistory = { year: yearSelect.value, month: yearSelect.value ? monthSelect.value : '' };
+            renderSelectedDepositLedger(selectedDepositHistory.year, selectedDepositHistory.month);
+        });
+        updateDepositHistoryControls();
+    };
+
+    setupDepositHistorySearch();
+
     initFirebase();
+
+    
+    const profileDownloadBtn = document.getElementById('profile-download-btn');
+    if (profileDownloadBtn) {
+        profileDownloadBtn.addEventListener('click', function () {
+            const member = window.activeMember || activeMember;
+            if (typeof window.downloadMemberInfoPDF === 'function') {
+                window.downloadMemberInfoPDF(member);
+            } else {
+                alert('PDF ফিচারটি এখনো প্রস্তুত হচ্ছে।');
+            }
+        });
+    }
 
     document.addEventListener('click', e => {
         const t = e.target.closest('button, a, .view-profile-btn, [data-notification-msg], .fund-card');
@@ -3366,5 +4051,100 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
 
     document.getElementById('search-member-input').addEventListener('input', e => { searchQuery = e.target.value; renderUI(); });
   </script>
+
+<script id="escs-profile-pdf">
+(function(){
+  function escsSafe(v){ return String(v ?? '').replace(/[<>]/g,''); }
+
+  function setPdfLoading(active){
+    const el = document.getElementById('escs-pdf-loading');
+    if(!el) return;
+    el.classList.toggle('is-active', !!active);
+    el.setAttribute('aria-hidden', active ? 'false' : 'true');
+    document.body.style.overflow = active ? 'hidden' : '';
+  }
+
+  window.downloadMemberInfoPDF = async function(member){
+    setPdfLoading(true);
+    try{
+      member = member || window.activeMember;
+      if(!member){ throw new Error('সদস্যের তথ্য পাওয়া যায়নি।'); }
+
+      const { jsPDF } = window.jspdf || {};
+      if(!jsPDF){ throw new Error('PDF লাইব্রেরি লোড হয়নি।'); }
+      if(typeof html2canvas !== 'function'){ throw new Error('PDF rendering library লোড হয়নি।'); }
+
+      const tx = Array.isArray(member.transactions) ? member.transactions : [];
+      const deposits = tx.filter(x=>x.type==='deposit').reduce((s,x)=>s+(Number(x.amount)||0),0);
+      const loans = tx.filter(x=>x.type==='loanTaken').reduce((s,x)=>s+(Number(x.amount)||0),0);
+      const repayments = tx.filter(x=>x.type!=='deposit' && x.type!=='loanTaken').reduce((s,x)=>s+(Number(x.amount)||0),0);
+      const outstanding = Math.max(0, loans-repayments);
+      const totalTransactions = tx.length;
+
+      const slip = document.createElement('div');
+      slip.style.cssText='position:fixed;left:-10000px;top:0;width:794px;background:#fffaf0;color:#3b2415;font-family:Arial,sans-serif;padding:42px;box-sizing:border-box;';
+      const logo = (document.querySelector('img[alt*="logo" i]') || document.querySelector('header img'))?.src || '';
+      const photo = member.photoUrl || 'https://placehold.co/180x180';
+
+      slip.innerHTML = `
+        <div style="border:2px solid #d6ad57;border-radius:22px;padding:28px;background:linear-gradient(145deg,#fffdf8,#fff7e4);">
+          <div style="display:flex;align-items:center;gap:18px;border-bottom:1px solid #dfc27e;padding-bottom:18px;">
+            ${logo?`<img src="${logo}" crossorigin="anonymous" style="width:70px;height:70px;object-fit:contain;">`:''}
+            <div style="flex:1"><div style="font-size:28px;font-weight:900;color:#4b2a16;">ESCS</div>
+            <div style="font-size:13px;color:#8a5b2f;">সদস্য তথ্য ও লেনদেন বিবরণী</div></div>
+            <div style="font-size:11px;color:#8a5b2f;text-align:right;">তৈরির তারিখ<br><b>${new Date().toLocaleDateString('bn-BD')}</b></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:22px;padding:24px 0;">
+            <img src="${photo}" crossorigin="anonymous" style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:7px solid #d6ad57;box-shadow:0 0 0 4px #fff8e8;">
+            <div><div style="font-size:24px;font-weight:900;color:#4b2a16;">${escsSafe(member.name||'নাম নেই')}</div>
+            <div style="margin-top:7px;color:#7b5537;font-size:13px;">সদস্য আইডি: ${escsSafe(member.id||'N/A')}</div>
+            <div style="margin-top:5px;color:#7b5537;font-size:13px;">মোবাইল: ${escsSafe(member.phone||member.mobile||'তথ্য নেই')}</div></div>
+          </div>
+          <div style="font-size:17px;font-weight:900;color:#4b2a16;border-left:4px solid #d6ad57;padding-left:10px;margin:8px 0 12px;">আর্থিক সারসংক্ষেপ</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+            <div style="padding:14px;border:1px solid #ead6a4;border-radius:14px;background:#fff;"><small>মোট লেনদেন</small><div style="font-size:20px;font-weight:900;">${totalTransactions}</div></div>
+            <div style="padding:14px;border:1px solid #ead6a4;border-radius:14px;background:#fff;"><small>মোট জমা</small><div style="font-size:20px;font-weight:900;color:#39733f;">৳ ${deposits.toLocaleString('bn-BD')}</div></div>
+            <div style="padding:14px;border:1px solid #ead6a4;border-radius:14px;background:#fff;"><small>মোট ঋণ</small><div style="font-size:20px;font-weight:900;color:#6b3f21;">৳ ${loans.toLocaleString('bn-BD')}</div></div>
+            <div style="padding:14px;border:1px solid #ead6a4;border-radius:14px;background:#fff;"><small>ঋণ পরিশোধ</small><div style="font-size:20px;font-weight:900;">৳ ${repayments.toLocaleString('bn-BD')}</div></div>
+          </div>
+          <div style="margin-top:12px;padding:18px;border-radius:16px;background:#4b2a16;color:#fff;">
+            <div style="font-size:12px;opacity:.8;">বর্তমান বকেয়া ঋণ</div>
+            <div style="font-size:28px;font-weight:900;color:#f3d58a;">৳ ${outstanding.toLocaleString('bn-BD')}</div>
+          </div>
+          <div style="margin-top:24px;font-size:11px;color:#8a5b2f;text-align:center;">এই স্লিপটি ESCS সদস্য তথ্য সিস্টেম থেকে তৈরি করা হয়েছে।</div>
+        </div>`;
+
+      document.body.appendChild(slip);
+
+      // Let the loading overlay paint before the heavier canvas operation begins.
+      await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 80)));
+
+      const canvas = await html2canvas(slip,{scale:2,useCORS:true,backgroundColor:'#fffaf0'});
+      const img = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p','mm','a4');
+      const pw=210, ph=(canvas.height*pw/canvas.width);
+      pdf.addImage(img,'PNG',0,0,pw,Math.min(ph,297));
+      pdf.save('ESCS-'+String(member.name||'Member').replace(/\s+/g,'-')+'-Information.pdf');
+
+      slip.remove();
+    }catch(err){
+      console.error(err);
+      alert(err?.message || 'PDF তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+    }finally{
+      setPdfLoading(false);
+    }
+  };
+})();
+</script>
+
+
+<div id="escs-pdf-loading" class="escs-pdf-loading" aria-hidden="true">
+  <div class="escs-pdf-loading-card">
+    <div class="escs-pdf-spinner" aria-hidden="true"></div>
+    <div class="escs-pdf-loading-title">PDF তৈরি হচ্ছে...</div>
+    <div class="escs-pdf-loading-text">সদস্যের তথ্য প্রস্তুত করা হচ্ছে। অনুগ্রহ করে একটু অপেক্ষা করুন।</div>
+  </div>
+</div>
+
 </body>
 </html>
