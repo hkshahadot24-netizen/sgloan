@@ -43,15 +43,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="dns-prefetch" href="//firestore.googleapis.com">
+  <link rel="dns-prefetch" href="//identitytoolkit.googleapis.com">
+  <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="//i.postimg.cc">
 
   <!-- Tailwind CSS with Typography Plugin -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
+    html { text-rendering: optimizeSpeed; }
+    img { content-visibility: auto; }
+    #confirmation-modal[aria-hidden="true"] { pointer-events:none; }
+    #confirmation-modal[aria-hidden="false"] { pointer-events:auto; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+    }
     /* --- Base Styles & Texture Background --- */
     body { 
         font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif; 
@@ -979,8 +988,6 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
     }
 
   </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style id="escs-profile-premium">
 :root{
@@ -2231,6 +2238,11 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
     const appId = 'default-samiti-app-id'; 
     const firebaseConfig = { apiKey: "AIzaSyBdfxO5LL9KfzJe-PhvaRbhDhz9G-QH1aE", authDomain: "sg-loan-online.firebaseapp.com", projectId: "sg-loan-online", storageBucket: "sg-loan-online.firebasestorage.app", messagingSenderId: "933667418231", appId: "1:933667418231:web:11c24150426bf869381672" };
 
+    // Fast Gateway: optional initial-read/cache layer only. Firebase remains the source of truth.
+    const ESCS_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbyXz8f1bLcVO41u05J9uI0BRTLGDK-vkxVUnbD_isfp9_1XUUNwo-eh5oa2hCPHZ6UY/exec";
+    const ESCS_CACHE_KEY = 'escs_main_cache_v2';
+    const ESCS_GATEWAY_TIMEOUT_MS = 4500;
+
     let app, db, auth;
     let members = [], fundDistribution = {}, notice = { text: '', imageUrls: [], linkText: '', linkUrl: '', scrollingText: '' }, logoUrl = '', importantLinks = [], lottery = { participants: [], history: [], liveDraw: null };
     let selectedDepositHistory = { year: '', month: '' };
@@ -2246,6 +2258,7 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
     let isFirstSnapshot = true;
     let initialLoadComplete = false;
     let visitorLogged = false;
+    let firebaseSnapshotReceived = false;
 
     // --- PWA Feature & App State Trackers ---
     let deferredPrompt;
@@ -2377,11 +2390,12 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
             closeAllModals();
             switchView('view-finance');
             window.scrollTo(0, 0);
-            setTimeout(() => {
+            requestAnimationFrame(() => {
+                renderChartsForCurrentData();
                 if (financeChartInstance) financeChartInstance.resize();
                 if (trendChartInstance) trendChartInstance.resize();
                 if (memberChartInstance) memberChartInstance.resize();
-            }, 50);
+            });
         } 
         else if (h === '#ranking') {
             closeAllModals();
@@ -2508,28 +2522,100 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
       box.classList.remove('opacity-0'); setTimeout(() => box.classList.add('opacity-0'), 3000);
     };
 
-    const showConfirmation = (msg) => new Promise(res => { 
+    // Robust confirmation modal: race-safe close/open lifecycle; never leaves a fullscreen lock.
+    let activeConfirmationResolve = null;
+    let confirmationCloseTimer = null;
+    let confirmationRequestId = 0;
+
+    const forceCloseConfirmationUI = () => {
         const m = document.getElementById('confirmation-modal');
         const box = document.getElementById('confirmation-modal-box');
-        document.getElementById('confirmation-message').textContent = msg; 
-        
-        const y = document.getElementById('confirm-yes'), n = document.getElementById('confirm-no'); 
-        const cl = (v) => { 
+        if (!m || !box) return;
+        if (confirmationCloseTimer) {
+            clearTimeout(confirmationCloseTimer);
+            confirmationCloseTimer = null;
+        }
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+        m.setAttribute('aria-hidden', 'true');
+        m.style.pointerEvents = 'none';
+        box.classList.remove('scale-100', 'opacity-100');
+        box.classList.add('scale-95', 'opacity-0');
+        document.body.classList.remove('overflow-hidden');
+    };
+
+    const closeConfirmation = (value = false) => {
+        const m = document.getElementById('confirmation-modal');
+        const box = document.getElementById('confirmation-modal-box');
+        if (!m || !box) return;
+
+        const requestId = confirmationRequestId;
+        const resolve = activeConfirmationResolve;
+        activeConfirmationResolve = null;
+
+        // Unlock immediately; the visual fade must never hold the page hostage.
+        m.style.pointerEvents = 'none';
+        document.body.classList.remove('overflow-hidden');
+        box.classList.remove('scale-100', 'opacity-100');
+        box.classList.add('scale-95', 'opacity-0');
+
+        if (resolve) resolve(value);
+
+        if (confirmationCloseTimer) clearTimeout(confirmationCloseTimer);
+        confirmationCloseTimer = window.setTimeout(() => {
+            confirmationCloseTimer = null;
+            if (requestId !== confirmationRequestId) return; // a newer modal already opened
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+            m.setAttribute('aria-hidden', 'true');
+            m.style.pointerEvents = 'none';
             box.classList.remove('scale-100', 'opacity-100');
             box.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); res(v); }, 300); 
-        }; 
-        const hy = () => { cleanup(); cl(true); };
-        const hn = () => { cleanup(); cl(false); };
-        const cleanup = () => { y.removeEventListener('click', hy); n.removeEventListener('click', hn); }; 
-        
-        y.addEventListener('click', hy); n.addEventListener('click', hn); 
-        
-        m.classList.remove('hidden'); 
-        m.classList.add('flex'); 
-        void m.offsetWidth; // trigger reflow
+            document.body.classList.remove('overflow-hidden');
+        }, 180);
+    };
+
+    const showConfirmation = (msg) => new Promise(resolve => {
+        const m = document.getElementById('confirmation-modal');
+        const box = document.getElementById('confirmation-modal-box');
+        const y = document.getElementById('confirm-yes');
+        const n = document.getElementById('confirm-no');
+        const message = document.getElementById('confirmation-message');
+        if (!m || !box || !y || !n) return resolve(false);
+
+        // Resolve/close any previous request before opening a new one.
+        if (activeConfirmationResolve) {
+            const previous = activeConfirmationResolve;
+            activeConfirmationResolve = null;
+            previous(false);
+        }
+        forceCloseConfirmationUI();
+
+        confirmationRequestId += 1;
+        activeConfirmationResolve = resolve;
+
+        if (message) message.textContent = msg || 'আপনি কি নিশ্চিত?';
+        m.setAttribute('aria-hidden', 'false');
+        m.style.pointerEvents = 'auto';
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
+
+        // Flush the hidden state before starting the transition.
+        void m.offsetWidth;
         box.classList.remove('scale-95', 'opacity-0');
         box.classList.add('scale-100', 'opacity-100');
+
+        y.onclick = () => closeConfirmation(true);
+        n.onclick = () => closeConfirmation(false);
+        m.onclick = (e) => { if (e.target === m) closeConfirmation(false); };
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const m = document.getElementById('confirmation-modal');
+            if (m && !m.classList.contains('hidden')) closeConfirmation(false);
+        }
     });
 
     const calculateMemberTotals = (m) => {
@@ -3113,7 +3199,62 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
         </section>`;
     };
 
+    let chartJsPromise = null;
+
+
+    const ensureChartJs = () => {
+
+
+        if (window.Chart) return Promise.resolve(window.Chart);
+
+
+        if (chartJsPromise) return chartJsPromise;
+
+
+        chartJsPromise = new Promise((resolve, reject) => {
+
+
+            const s = document.createElement('script');
+
+
+            s.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+
+
+            s.async = true;
+
+
+            s.onload = () => resolve(window.Chart);
+
+
+            s.onerror = reject;
+
+
+            document.head.appendChild(s);
+
+
+        });
+
+
+        return chartJsPromise;
+
+
+    };
+
+
+
     const renderCharts = (td, tlt, tlr) => {
+
+
+        if (!window.Chart) {
+
+
+            ensureChartJs().then(() => renderCharts(td, tlt, tlr)).catch(console.error);
+
+
+            return;
+
+
+        }
         const ctxF = document.getElementById('financeChart').getContext('2d');
         if (financeChartInstance) financeChartInstance.destroy();
         financeChartInstance = new Chart(ctxF, { 
@@ -3275,6 +3416,17 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
         });
     };
 
+    const renderChartsForCurrentData = () => {
+        let td = 0, tlt = 0, tlr = 0;
+        members.forEach(m => {
+            const t = calculateMemberTotals(m);
+            td += t.totalDeposit;
+            tlt += t.totalLoanTaken;
+            tlr += t.totalLoanRepaid;
+        });
+        renderCharts(td, tlt, tlr);
+    };
+
     const renderHeaderLogo = () => {
         const img = document.getElementById('header-logo-img');
         const footerImg = document.getElementById('footer-logo-img');
@@ -3339,7 +3491,10 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
         document.getElementById('total-paid').textContent = `৳ ${getBengaliNumber(td)}`;
         document.getElementById('total-loan-given').textContent = `৳ ${getBengaliNumber(tlt)}`;
         
-        renderCharts(td, tlt, tlr);
+        // Chart.js is intentionally lazy: the home/members first paint does not load it.
+        if (window.location.hash === '#finance' || !document.getElementById('view-finance')?.classList.contains('hidden')) {
+            renderCharts(td, tlt, tlr);
+        }
         
         memberListCardContainer.innerHTML = ''; memberListPlaceholder.classList.add('hidden');
         
@@ -3875,40 +4030,186 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
     };
     const startConfetti = () => { parts=[]; for(let i=0;i<150;i++) parts.push({x:canvas.width/2, y:canvas.height/2, vx:(Math.random()-.5)*25, vy:(Math.random()-.5)*25, c:`hsl(${Math.random()*360},70%,50%)`}); updateConfetti(); };
 
-    const initFirebase = async () => {
-        const cachedLogo = localStorage.getItem('cached_logo_url');
-        const favicon = document.getElementById('favicon');
-        if(cachedLogo) { 
-            const loaderImg = document.getElementById('loader-logo-img'); if(loaderImg) loaderImg.src = cachedLogo; 
-            const pwaImgCached = document.getElementById('pwa-logo-img'); if(pwaImgCached) pwaImgCached.src = cachedLogo;
-            if(favicon) favicon.href = cachedLogo; 
+    const hydrateFastCache = () => {
+        try {
+            const raw = localStorage.getItem(ESCS_CACHE_KEY);
+            if (!raw) return false;
+            const d = JSON.parse(raw);
+            if (!d || typeof d !== 'object') return false;
+
+            members = Array.isArray(d.members) ? d.members : [];
+            fundDistribution = d.fundDistribution || {};
+            notice = typeof d.notice === 'string' ? {text:d.notice} : (d.notice || {});
+            logoUrl = d.logoUrl || '';
+            importantLinks = Array.isArray(d.importantLinks) ? d.importantLinks : [];
+            appDownloadUrl = d.appDownloadUrl || '';
+            activityLog = Array.isArray(d.activityLog) ? d.activityLog : [];
+            lottery = {
+                participants: d.lottery?.participants || [],
+                history: d.lottery?.history || [],
+                liveDraw: d.lottery?.liveDraw
+            };
+
+            cachedMembersState = JSON.stringify(members);
+            cachedNoticeState = JSON.stringify(notice);
+            cachedLeaderboardState = JSON.stringify(lottery);
+
+            mainAppContent.classList.remove('hidden');
+            document.getElementById('app-loader')?.classList.add('opacity-0');
+            switchView(window.location.hash ? ({
+                '#members':'view-members','#finance':'view-finance','#ranking':'view-ranking',
+                '#fund':'view-fund','#lottery':'view-lottery'
+            }[window.location.hash] || 'view-home') : 'view-home');
+
+            renderUI();
+            renderNoticeBoard();
+            renderHeaderLogo();
+            renderImportantLinks();
+            renderNotifications();
+            return true;
+        } catch (err) {
+            console.warn('Fast cache ignored:', err);
+            return false;
         }
-        
-        try { 
-            app = initializeApp(firebaseConfig); 
-            db = getFirestore(app); 
-            auth = getAuth(app); 
+    };
 
-            try {
-                await enableMultiTabIndexedDbPersistence(db);
+    const writeMainCache = (d) => {
+        try {
+            localStorage.setItem(ESCS_CACHE_KEY, JSON.stringify({
+                version: 2,
+                cachedAt: Date.now(),
+                members: d.members || [],
+                fundDistribution: d.fundDistribution || {},
+                notice: d.notice || {},
+                logoUrl: d.logoUrl || '',
+                importantLinks: d.importantLinks || [],
+                appDownloadUrl: d.appDownloadUrl || '',
+                activityLog: d.activityLog || [],
+                lottery: d.lottery || {}
+            }));
+        } catch (_) {}
+    };
+
+    const applyMainData = (d, { render = true, cache = true } = {}) => {
+        if (!d || typeof d !== 'object') return false;
+
+        if (cache) writeMainCache(d);
+
+        const newMembersState = JSON.stringify(d.members || []);
+        const newNoticeState = JSON.stringify(d.notice || {});
+        const newLeaderboardState = JSON.stringify(d.lottery || {});
+        const newFundDistState = JSON.stringify(d.fundDistribution || {});
+
+        members = Array.isArray(d.members) ? d.members : [];
+        fundDistribution = d.fundDistribution || {};
+        notice = typeof d.notice === 'string' ? { text: d.notice } : (d.notice || {});
+        logoUrl = d.logoUrl || '';
+        importantLinks = Array.isArray(d.importantLinks) ? d.importantLinks : [];
+        appDownloadUrl = d.appDownloadUrl || '';
+        activityLog = Array.isArray(d.activityLog) ? d.activityLog : [];
+        lottery = {
+            participants: d.lottery?.participants || [],
+            history: d.lottery?.history || [],
+            liveDraw: d.lottery?.liveDraw
+        };
+
+        cachedMembersState = newMembersState;
+        cachedNoticeState = newNoticeState;
+        cachedLeaderboardState = newLeaderboardState;
+
+        if (render) {
+            mainAppContent.classList.remove('hidden');
+            document.getElementById('app-loader')?.classList.add('opacity-0');
+            switchView(window.location.hash ? ({
+                '#members':'view-members','#finance':'view-finance','#ranking':'view-ranking',
+                '#fund':'view-fund','#lottery':'view-lottery'
+            }[window.location.hash] || 'view-home') : 'view-home');
+            renderUI();
+            renderNoticeBoard();
+            renderHeaderLogo();
+            renderImportantLinks();
+            renderNotifications();
+            setupDepositHistorySearch();
+        }
+        return true;
+    };
+
+    const fetchGatewayData = async () => {
+        if (!ESCS_GATEWAY_URL || !navigator.onLine) return null;
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), ESCS_GATEWAY_TIMEOUT_MS);
+        try {
+            const response = await fetch(`${ESCS_GATEWAY_URL}?action=data`, {
+                method: 'GET',
+                cache: 'no-store',
+                credentials: 'omit',
+                signal: controller.signal,
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!response.ok) throw new Error(`Gateway HTTP ${response.status}`);
+            const payload = await response.json();
+            if (!payload?.ok || !payload.data || typeof payload.data !== 'object') return null;
+            return payload.data;
+        } catch (err) {
+            // Gateway is optional. Firebase remains the fallback/source of truth.
+            console.debug('Fast Gateway unavailable:', err?.name || err);
+            return null;
+        } finally {
+            clearTimeout(timeout);
+        }
+    };
+
+    const initFirebase = async () => {
+        // First paint: local cache immediately, then Gateway/Firebase race in the background.
+        hydrateFastCache();
+
+        const cachedLogo = (() => {
+            try { return localStorage.getItem('cached_logo_url'); } catch (_) { return null; }
+        })();
+        const favicon = document.getElementById('favicon');
+        if(cachedLogo) {
+            const loaderImg = document.getElementById('loader-logo-img'); if(loaderImg) loaderImg.src = cachedLogo;
+            const pwaImgCached = document.getElementById('pwa-logo-img'); if(pwaImgCached) pwaImgCached.src = cachedLogo;
+            if(favicon) favicon.href = cachedLogo;
+        }
+
+        // Start the optional fast read immediately; it never blocks Firebase initialization.
+        const gatewayPromise = fetchGatewayData().then(d => {
+            // Gateway is only an initial-read accelerator. Never overwrite fresher Firestore data.
+            if (d && !firebaseSnapshotReceived) applyMainData(d, { render: true, cache: true });
+            return d;
+        }).catch(() => null);
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // IndexedDB setup runs in the background; it must not delay first paint/auth.
+            enableMultiTabIndexedDbPersistence(db).then(() => {
                 console.log("অফলাইন ডাটা সক্রিয়!");
-            } catch (err) {
-                if (err.code == 'failed-precondition') {
-                    console.warn("অফলাইন পারসিস্টেন্স ব্যর্থ হয়েছে: একাধিক ট্যাব খোলা আছে।");
-                } else if (err.code == 'unimplemented') {
-                    console.warn("অফলাইন পারসিস্টেন্স ব্যর্থ হয়েছে: ব্রাউজার সাপোর্ট করে কাশী।");
+            }).catch(err => {
+                if (err?.code !== 'failed-precondition' && err?.code !== 'unimplemented') {
+                    console.warn("Offline persistence unavailable:", err);
                 }
-            }
-
-        } catch(e) { 
-            console.error("Firebase Initialization Error:", e); 
+            });
+        } catch(e) {
+            console.error("Firebase Initialization Error:", e);
+            // Gateway/cache can still keep the UI usable for read-only scenarios.
+            await gatewayPromise;
+            return;
         }
 
         onAuthStateChanged(auth, async (u) => {
             if(u) {
                 if (!visitorLogged) { logVisitor(); visitorLogged = true; }
-                mainAppContent.classList.remove('hidden'); document.getElementById('app-loader').classList.add('opacity-0'); setTimeout(()=>document.getElementById('app-loader').remove(),500);
-                
+                mainAppContent.classList.remove('hidden');
+                const loader = document.getElementById('app-loader');
+                if (loader) {
+                    loader.classList.add('opacity-0');
+                    setTimeout(() => loader.remove(), 180);
+                }
+
                 if(!window.location.hash) {
                     switchView('view-home');
                 } else {
@@ -3918,54 +4219,55 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
                 const docRef = doc(db, 'artifacts', appId, 'public-data', 'main');
                 onSnapshot(docRef, (s) => {
                     const d = s.data(); if(!d) return;
-                    
+                    firebaseSnapshotReceived = true;
+
+                    const previousMembersState = cachedMembersState;
+                    const previousNoticeState = cachedNoticeState;
+                    const previousLeaderboardState = cachedLeaderboardState;
+                    const previousFundDistState = JSON.stringify(fundDistribution);
+
+                    applyMainData(d, { render: false, cache: true });
+
+                    // Re-render only when relevant data actually changed.
                     const newMembersState = JSON.stringify(d.members || []);
                     const newNoticeState = JSON.stringify(d.notice || {});
                     const newLeaderboardState = JSON.stringify(d.lottery || {});
                     const newFundDistState = JSON.stringify(d.fundDistribution || {});
-
-                    members = d.members||[]; fundDistribution = d.fundDistribution||{};
-                    notice = typeof d.notice==='string' ? {text:d.notice} : (d.notice||{});
-                    logoUrl = d.logoUrl||''; importantLinks = d.importantLinks||[]; appDownloadUrl = d.appDownloadUrl||'';
-                    activityLog = d.activityLog||[];
-                    lottery = { participants: d.lottery?.participants||[], history: d.lottery?.history||[], liveDraw: d.lottery?.liveDraw };
-                    
-                    if(d.lottery?.liveDraw?.ts > lastDrawTime && !isFirstSnapshot) {
-                         lastDrawTime = d.lottery.liveDraw.ts; 
-                         window.location.hash = 'lottery'; 
-                    }
-                    isFirstSnapshot = false;
-
-                    // Re-render UI when relevant data changes
-                    if (newMembersState !== cachedMembersState || newFundDistState !== JSON.stringify(fundDistribution)) {
-                        cachedMembersState = newMembersState;
+                    if (newMembersState !== previousMembersState || newFundDistState !== previousFundDistState) {
                         renderUI();
                         setupDepositHistorySearch();
                     }
-                    if (newNoticeState !== cachedNoticeState) {
-                        cachedNoticeState = newNoticeState;
+                    if (newNoticeState !== previousNoticeState) {
                         renderNoticeBoard();
                     }
-                    if (newLeaderboardState !== cachedLeaderboardState || newFundDistState !== JSON.stringify(fundDistribution)) {
-                        cachedLeaderboardState = newLeaderboardState;
-                        if (window.location.hash === '#ranking') {
-                            renderLeaderboard();
-                        }
+                    if (newLeaderboardState !== previousLeaderboardState || newFundDistState !== previousFundDistState) {
+                        if (window.location.hash === '#ranking') renderLeaderboard();
                     }
 
-                    renderHeaderLogo(); 
-                    renderImportantLinks(); 
+                    renderHeaderLogo();
+                    renderImportantLinks();
                     renderNotifications();
 
-                    if(!initialLoadComplete) { 
-                        initialLoadComplete = true; 
-                        
-                        setTimeout(() => handleStartupSequence(), 2000);
+                    if(d.lottery?.liveDraw?.ts > lastDrawTime && !isFirstSnapshot) {
+                        lastDrawTime = d.lottery.liveDraw.ts;
+                        window.location.hash = 'lottery';
+                    }
+                    isFirstSnapshot = false;
+
+                    if(!initialLoadComplete) {
+                        initialLoadComplete = true;
+                        requestAnimationFrame(() => handleStartupSequence());
                     }
                 });
-            } else { try { await signInAnonymously(auth); } catch(e){console.error(e);} }
+            } else {
+                try { await signInAnonymously(auth); } catch(e){ console.error(e); }
+            }
         });
+
+        // Observe completion without ever waiting for it before app startup.
+        void gatewayPromise;
     };
+
     const setupDepositHistorySearch = () => {
         const yearSelect = document.getElementById('deposit-history-year');
         const monthSelect = document.getElementById('deposit-history-month');
@@ -4064,9 +4366,29 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
     document.body.style.overflow = active ? 'hidden' : '';
   }
 
-  window.downloadMemberInfoPDF = async function(member){
+  let escsPdfPromise = null;
+function ensurePdfLibraries(){
+    if (window.jspdf?.jsPDF && typeof window.html2canvas === 'function') return Promise.resolve();
+    if (escsPdfPromise) return escsPdfPromise;
+    escsPdfPromise = Promise.all([
+        new Promise((resolve,reject)=>{
+            const s=document.createElement('script');
+            s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            s.onload=resolve; s.onerror=reject; document.head.appendChild(s);
+        }),
+        new Promise((resolve,reject)=>{
+            const s=document.createElement('script');
+            s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            s.onload=resolve; s.onerror=reject; document.head.appendChild(s);
+        })
+    ]);
+    return escsPdfPromise;
+}
+
+window.downloadMemberInfoPDF = async function(member){
     setPdfLoading(true);
     try{
+      await ensurePdfLibraries();
       member = member || window.activeMember;
       if(!member){ throw new Error('সদস্যের তথ্য পাওয়া যায়নি।'); }
 
