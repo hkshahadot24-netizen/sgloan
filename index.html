@@ -3615,31 +3615,21 @@ body{padding-bottom:88px!important}main{padding-bottom:96px!important}
         if(c) { c.innerHTML = ''; c.classList.add('hidden'); }
         const btn = document.getElementById('footer-app-btn');
         
-        btn.onclick = async (e) => {
+        // Native Android APK is stored in the hosting repository root beside the main HTML file.
+        // Keep this path fixed so the footer button always downloads the native ESCS app.
+        const nativeAppUrl = './ESCS.apk';
+        btn.onclick = (e) => {
             e.preventDefault();
-            if (isAppInstalled) {
-                showMessage('অ্যাপটি ইতিমধ্যে আপনার ডিভাইসে ইন্সটল করা আছে!', 'info');
-            } else if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    deferredPrompt = null;
-                    isAppInstalled = true;
-                }
-            } else {
-                if (appDownloadUrl) { 
-                    window.open(appDownloadUrl, '_blank'); 
-                } else { 
-                    const appLink = importantLinks.find(l => l.name.toLowerCase().includes('app') || l.name.includes('অ্যাপ'));
-                    if(appLink) { 
-                        window.open(appLink.url, '_blank'); 
-                    } else { 
-                        showMessage('আপনার ব্রাউজার থেকে সরাসরি ইন্সটল অপশনটি ব্যবহার করুন।', 'info'); 
-                    }
-                }
-            }
+            const downloadLink = document.createElement('a');
+            downloadLink.href = nativeAppUrl;
+            downloadLink.download = 'ESCS.apk';
+            downloadLink.rel = 'noopener';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            downloadLink.remove();
         };
-        btn.href = "#"; 
+        btn.href = nativeAppUrl;
+        btn.setAttribute('download', 'ESCS.apk');
         btn.removeAttribute('target');
     };
 
